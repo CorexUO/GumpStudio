@@ -1,0 +1,99 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net461</TargetFramework>
+    <RootNamespace>GumpStudio</RootNamespace>
+    <UseWindowsForms>true</UseWindowsForms>
+    <FileUpgradeFlags />
+    <AssemblyTitle>Gump Studio.NET</AssemblyTitle>
+    <Company>Bradley Uffner</Company>
+    <Product>Gump Studio.NET</Product>
+    <Description>Gump Studio</Description>
+    <Copyright>January 2008</Copyright>
+    <AssemblyVersion>1.9.2</AssemblyVersion>
+    <FileVersion>1.9.2</FileVersion>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+    <ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Version>1.9.2</Version>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>..\output\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="UOFont">
+      <HintPath>lib\UOFont.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Forms\GumpArtBrowser.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GumpArtBrowser.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="HuePickerControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="FontBrowser.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Forms\LargeTextEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\StaticArtBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\DesignerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\GumpArtBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\PluginManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\frmSplash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\frmAboutBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Forms\ClilocBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>README.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="squirrel.windows" Version="1.9.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ultima\Ultima.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Forms\GumpArtBrowser.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GumpArtBrowser.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>
