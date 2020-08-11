@@ -3,12 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <OutputPath>..\output\</OutputPath>
+    <OutputPath>..\output\Plugins\</OutputPath>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Squirrel.Windows" Version="1.9.1" />
-  </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\GumpStudio\GumpStudio.csproj" />

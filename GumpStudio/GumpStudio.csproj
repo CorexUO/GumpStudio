@@ -81,9 +81,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="squirrel.windows" Version="1.9.1" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Ultima\Ultima.csproj" />
   </ItemGroup>
   <ItemGroup>

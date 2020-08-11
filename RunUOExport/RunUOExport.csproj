@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <OutputPath>..\output\</OutputPath>
+    <OutputPath>..\output\Plugins\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
