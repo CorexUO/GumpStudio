@@ -159,7 +159,7 @@ namespace GumpStudio.Elements
 
         public string ToRunUOString()
         {
-            string text = TextType == HTMLElementType.Localized ? $"AddHtmlLocalized({X}, {Y}, {Width}, {Height}, {CliLocID}, {ShowScrollbar.ToString().ToLower()}, {ShowBackground.ToString().ToLower()});" : $"AddHtml({X}, {Y}, {Width}, {Height}, \"{HTML.Replace( "\"", "\\\"" )}\", {ShowScrollbar.ToString().ToLower()});";
+            string text = TextType == HTMLElementType.Localized ? $"AddHtmlLocalized({X}, {Y}, {Width}, {Height}, {CliLocID}, {ShowBackground.ToString().ToLower()}, {ShowScrollbar.ToString().ToLower()});" : $"AddHtml({X}, {Y}, {Width}, {Height}, \"{HTML.Replace( "\"", "\\\"" )}\", {ShowBackground.ToString().ToLower()}, {ShowScrollbar.ToString().ToLower()}});";
 
             return text;
         }
