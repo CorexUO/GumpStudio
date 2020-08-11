@@ -132,7 +132,7 @@ namespace GumpStudio.Elements
 
         public string ToRunUOString()
         {
-            return $"AddImage({X}, {Y}, {ItemID});";
+            return $"AddItem({X}, {Y}, {ItemID});";
         }
     }
 }

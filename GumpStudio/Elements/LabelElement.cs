@@ -218,7 +218,7 @@ namespace GumpStudio.Elements
 
         public string ToRunUOString()
         {
-            return $"AddLabel({X}, {Y}, @\"{Text.Replace( "\"", "\\\"" )});";
+            return $"AddLabel({X}, {Y}, {Hue} ,\"{Text.Replace( "\"", "\\\"" )}\");";
         }
     }
 }
