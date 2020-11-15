@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>9.0.30729</ProductVersion>
-    <TargetFramework>net45</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
     <AssemblyTitle>Ultima SDK</AssemblyTitle>
     <AssemblyVersion>4.3.2</AssemblyVersion>
     <FileVersion>4.3.2</FileVersion>

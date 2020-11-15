@@ -1,9 +1,6 @@
 .vs/
-GumpStudio/obj/
-RunUOExport/bin/
-RunUOExport/obj/
+bin/
+obj/
 output/
-SnapToGrid/bin/
-SnapToGrid/obj/
-Ultima/obj/
-Ultima/bin/
+
+*.user
