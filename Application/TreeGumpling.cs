@@ -8,14 +8,14 @@ using GumpStudio.Elements;
 
 namespace GumpStudio
 {
-  public class TreeGumpling : TreeItem
-  {
-    public GroupElement Gumpling;
+	public class TreeGumpling : TreeItem
+	{
+		public GroupElement Gumpling;
 
-    public TreeGumpling(string Text, GroupElement Gumpling)
-    {
-      this.Text = Text;
-      this.Gumpling = Gumpling;
-    }
-  }
+		public TreeGumpling(string Text, GroupElement Gumpling)
+		{
+			this.Text = Text;
+			this.Gumpling = Gumpling;
+		}
+	}
 }

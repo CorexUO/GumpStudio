@@ -5,20 +5,19 @@
 // Assembly location: C:\GumpStudio_1_8_R3_quinted-02\GumpStudioCore.dll
 
 using System;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
 using GumpStudio.Forms;
-using GumpStudio.Properties;
 
 namespace GumpStudio
 {
-    internal sealed class GumpDesignerMain
-    {
-        [STAThread]
-        public static void Main()
-        {
-            Application.EnableVisualStyles();
-            Application.Run( new DesignerForm() );
-        }
-    }
+	internal sealed class GumpDesignerMain
+	{
+		[STAThread]
+		public static void Main()
+		{
+			Application.EnableVisualStyles();
+			Application.Run(new DesignerForm());
+		}
+	}
 }

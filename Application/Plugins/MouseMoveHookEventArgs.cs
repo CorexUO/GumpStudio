@@ -10,11 +10,11 @@ using System.Windows.Forms;
 
 namespace GumpStudio.Plugins
 {
-  public class MouseMoveHookEventArgs : EventArgs
-  {
-    public Keys Keys;
-    public MouseButtons MouseButtons;
-    public Point MouseLocation;
-    public MoveModeType MoveMode;
-  }
+	public class MouseMoveHookEventArgs : EventArgs
+	{
+		public Keys Keys;
+		public MouseButtons MouseButtons;
+		public Point MouseLocation;
+		public MoveModeType MoveMode;
+	}
 }

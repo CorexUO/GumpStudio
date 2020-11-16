@@ -5,7 +5,7 @@ namespace Ultima
 		private ClientWindowHandle m_Window;
 		private ClientProcessHandle m_ProcessID;
 
-		public ClientWindowHandle Window { get { return m_Window; } set { m_Window = value; } }
+		public ClientWindowHandle Window { get => m_Window; set => m_Window = value; }
 
 		public WindowProcessStream(ClientWindowHandle window)
 		{
@@ -17,8 +17,9 @@ namespace Ultima
 		{
 			get
 			{
-				if (NativeMethods.IsWindow(m_Window) != 0 && !m_ProcessID.IsInvalid)
+				if (NativeMethods.IsWindow(m_Window) != 0 && !m_ProcessID.IsInvalid) {
 					return m_ProcessID;
+				}
 
 				NativeMethods.GetWindowThreadProcessId(m_Window, ref m_ProcessID);
 

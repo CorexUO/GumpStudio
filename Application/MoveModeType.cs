@@ -6,18 +6,18 @@
 
 namespace GumpStudio
 {
-  public enum MoveModeType
-  {
-    None,
-    SelectionBox,
-    ResizeTopLeft,
-    ResizeTopRight,
-    ResizeBottomRight,
-    ResizeBottomLeft,
-    Move,
-    ResizeLeft,
-    ResizeTop,
-    ResizeRight,
-    ResizeBottom,
-  }
+	public enum MoveModeType
+	{
+		None,
+		SelectionBox,
+		ResizeTopLeft,
+		ResizeTopRight,
+		ResizeBottomRight,
+		ResizeBottomLeft,
+		Move,
+		ResizeLeft,
+		ResizeTop,
+		ResizeRight,
+		ResizeBottom,
+	}
 }

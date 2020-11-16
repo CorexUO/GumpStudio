@@ -1,30 +1,36 @@
 ﻿using System.Drawing;
-using GumpStudio;
+
 using GumpStudio.Forms;
-using GumpStudio.Plugins;
 
-namespace GumpStudioCore.Plugins
+namespace GumpStudio.Plugins
 {
-    public class SnapToGridExtender : ElementExtender
-    {
-        private DesignerForm _designer;
-        public GridConfiguration Config { get; set; }
+	public class SnapToGridExtender : ElementExtender
+	{
+		private readonly DesignerForm _designer;
+		public GridConfiguration Config { get; set; }
 
-        public SnapToGridExtender( DesignerForm designerForm )
-        {
-            _designer = designerForm;
-        }
+		public SnapToGridExtender(DesignerForm designerForm)
+		{
+			_designer = designerForm;
+		}
 
-        public int SnapXToGrid( int X ) => X / Config.GridSize.Width * Config.GridSize.Width;
-        public int SnapYToGrid( int Y ) => Y / Config.GridSize.Height * Config.GridSize.Height;
+		public int SnapXToGrid(int X)
+		{
+			return X / Config.GridSize.Width * Config.GridSize.Width;
+		}
 
-        public Point SnapToGrid( Point Position )
-        {
-            Point result = Position;
-            result.X = SnapXToGrid( Position.X );
-            result.Y = SnapXToGrid( Position.Y );
+		public int SnapYToGrid(int Y)
+		{
+			return Y / Config.GridSize.Height * Config.GridSize.Height;
+		}
 
-            return result;
-        }
-    }
+		public Point SnapToGrid(Point Position)
+		{
+			var result = Position;
+			result.X = SnapXToGrid(Position.X);
+			result.Y = SnapXToGrid(Position.Y);
+
+			return result;
+		}
+	}
 }

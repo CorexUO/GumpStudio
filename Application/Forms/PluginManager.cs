@@ -4,13 +4,13 @@
 // MVID: A77D32E5-7519-4865-AA26-DCCB34429732
 // Assembly location: C:\GumpStudio_1_8_R3_quinted-02\GumpStudioCore.dll
 
-using GumpStudio.Plugins;
 using System;
 using System.Collections;
-using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+
 using GumpStudio.Forms;
+using GumpStudio.Plugins;
 
 namespace GumpStudio
 {
@@ -47,7 +47,7 @@ namespace GumpStudio
 
 		private void cmdAdd_Click(object sender, EventArgs e)
 		{
-			PluginInfo pluginInfo = (PluginInfo)_lstAvailable.Items[_lstAvailable.SelectedIndex];
+			var pluginInfo = (PluginInfo)_lstAvailable.Items[_lstAvailable.SelectedIndex];
 			_lstAvailable.Items.RemoveAt(_lstAvailable.SelectedIndex);
 			_lstLoaded.Items.Add(pluginInfo);
 		}
@@ -59,10 +59,12 @@ namespace GumpStudio
 
 		private void cmdMoveDown_Click(object sender, EventArgs e)
 		{
-			int selectedIndex = _lstLoaded.SelectedIndex;
-			if (selectedIndex >= _lstLoaded.Items.Count - 2)
+			var selectedIndex = _lstLoaded.SelectedIndex;
+			if (selectedIndex >= _lstLoaded.Items.Count - 2) {
 				return;
-			object objectValue = RuntimeHelpers.GetObjectValue(_lstLoaded.SelectedItem);
+			}
+
+			var objectValue = RuntimeHelpers.GetObjectValue(_lstLoaded.SelectedItem);
 			_lstLoaded.Items.RemoveAt(selectedIndex);
 			_lstLoaded.Items.Insert(selectedIndex + 1, RuntimeHelpers.GetObjectValue(objectValue));
 			_lstLoaded.SelectedIndex = selectedIndex + 1;
@@ -70,10 +72,12 @@ namespace GumpStudio
 
 		private void cmdMoveUp_Click(object sender, EventArgs e)
 		{
-			int selectedIndex = _lstLoaded.SelectedIndex;
-			if (selectedIndex <= 0)
+			var selectedIndex = _lstLoaded.SelectedIndex;
+			if (selectedIndex <= 0) {
 				return;
-			object objectValue = RuntimeHelpers.GetObjectValue(_lstLoaded.SelectedItem);
+			}
+
+			var objectValue = RuntimeHelpers.GetObjectValue(_lstLoaded.SelectedItem);
 			_lstLoaded.Items.RemoveAt(selectedIndex);
 			_lstLoaded.Items.Insert(selectedIndex - 1, RuntimeHelpers.GetObjectValue(objectValue));
 			_lstLoaded.SelectedIndex = selectedIndex - 1;
@@ -84,28 +88,24 @@ namespace GumpStudio
 			IEnumerator enumerator = null;
 			MessageBox.Show("You will need to restart the program for plugin changes to take effect.");
 			PluginInfo[] pluginInfoArray = null;
-			try
-			{
-				foreach (object obj in _lstLoaded.Items)
-				{
-					PluginInfo objectValue = (PluginInfo)RuntimeHelpers.GetObjectValue(obj);
+			try {
+				foreach (var obj in _lstLoaded.Items) {
+					var objectValue = (PluginInfo)RuntimeHelpers.GetObjectValue(obj);
 
-					if (pluginInfoArray != null)
-					{
+					if (pluginInfoArray != null) {
 						Array.Resize(ref pluginInfoArray, pluginInfoArray.Length + 1);
 					}
-					else
-					{
+					else {
 						pluginInfoArray = new PluginInfo[1];
 					}
 
 					pluginInfoArray[pluginInfoArray.Length - 1] = objectValue;
 				}
 			}
-			finally
-			{
-				if (enumerator is IDisposable)
+			finally {
+				if (enumerator is IDisposable) {
 					(enumerator as IDisposable).Dispose();
+				}
 			}
 			MainForm.PluginTypesToLoad = pluginInfoArray;
 			MainForm.WritePluginsToLoad();
@@ -114,244 +114,244 @@ namespace GumpStudio
 
 		private void cmdRemove_Click(object sender, EventArgs e)
 		{
-			PluginInfo pluginInfo = (PluginInfo)_lstLoaded.Items[_lstLoaded.SelectedIndex];
+			var pluginInfo = (PluginInfo)_lstLoaded.Items[_lstLoaded.SelectedIndex];
 			_lstLoaded.Items.RemoveAt(_lstLoaded.SelectedIndex);
 			_lstAvailable.Items.Add(pluginInfo);
 		}
 
 		private void InitializeComponent()
 		{
-			this._Label1 = new System.Windows.Forms.Label();
-			this._cmdMoveUp = new System.Windows.Forms.Button();
-			this._cmdMoveDown = new System.Windows.Forms.Button();
-			this._cmdOK = new System.Windows.Forms.Button();
-			this._GroupBox1 = new System.Windows.Forms.GroupBox();
-			this._txtDescription = new System.Windows.Forms.TextBox();
-			this._txtVersion = new System.Windows.Forms.TextBox();
-			this._txtEmail = new System.Windows.Forms.TextBox();
-			this._txtAuthor = new System.Windows.Forms.TextBox();
-			this._Label4 = new System.Windows.Forms.Label();
-			this._Label3 = new System.Windows.Forms.Label();
-			this._Label2 = new System.Windows.Forms.Label();
-			this._cmdCancel = new System.Windows.Forms.Button();
-			this._cmdAdd = new System.Windows.Forms.Button();
-			this._cmdRemove = new System.Windows.Forms.Button();
-			this._lstAvailable = new System.Windows.Forms.ListBox();
-			this._Label6 = new System.Windows.Forms.Label();
-			this._lstLoaded = new System.Windows.Forms.ListBox();
-			this._GroupBox1.SuspendLayout();
-			this.SuspendLayout();
+			_Label1 = new System.Windows.Forms.Label();
+			_cmdMoveUp = new System.Windows.Forms.Button();
+			_cmdMoveDown = new System.Windows.Forms.Button();
+			_cmdOK = new System.Windows.Forms.Button();
+			_GroupBox1 = new System.Windows.Forms.GroupBox();
+			_txtDescription = new System.Windows.Forms.TextBox();
+			_txtVersion = new System.Windows.Forms.TextBox();
+			_txtEmail = new System.Windows.Forms.TextBox();
+			_txtAuthor = new System.Windows.Forms.TextBox();
+			_Label4 = new System.Windows.Forms.Label();
+			_Label3 = new System.Windows.Forms.Label();
+			_Label2 = new System.Windows.Forms.Label();
+			_cmdCancel = new System.Windows.Forms.Button();
+			_cmdAdd = new System.Windows.Forms.Button();
+			_cmdRemove = new System.Windows.Forms.Button();
+			_lstAvailable = new System.Windows.Forms.ListBox();
+			_Label6 = new System.Windows.Forms.Label();
+			_lstLoaded = new System.Windows.Forms.ListBox();
+			_GroupBox1.SuspendLayout();
+			SuspendLayout();
 			// 
 			// _Label1
 			// 
-			this._Label1.AutoSize = true;
-			this._Label1.Location = new System.Drawing.Point(8, 8);
-			this._Label1.Name = "_Label1";
-			this._Label1.Size = new System.Drawing.Size(80, 13);
-			this._Label1.TabIndex = 2;
-			this._Label1.Text = "Loaded Plugins";
+			_Label1.AutoSize = true;
+			_Label1.Location = new System.Drawing.Point(8, 8);
+			_Label1.Name = "_Label1";
+			_Label1.Size = new System.Drawing.Size(80, 13);
+			_Label1.TabIndex = 2;
+			_Label1.Text = "Loaded Plugins";
 			// 
 			// _cmdMoveUp
 			// 
-			this._cmdMoveUp.Enabled = false;
-			this._cmdMoveUp.Image = global::GumpStudio.Properties.Resources.cmdMoveUp_Image;
-			this._cmdMoveUp.Location = new System.Drawing.Point(154, 24);
-			this._cmdMoveUp.Name = "_cmdMoveUp";
-			this._cmdMoveUp.Size = new System.Drawing.Size(28, 32);
-			this._cmdMoveUp.TabIndex = 3;
-			this._cmdMoveUp.Click += new System.EventHandler(this.cmdMoveUp_Click);
+			_cmdMoveUp.Enabled = false;
+			_cmdMoveUp.Image = global::GumpStudio.Properties.Resources.cmdMoveUp_Image;
+			_cmdMoveUp.Location = new System.Drawing.Point(154, 24);
+			_cmdMoveUp.Name = "_cmdMoveUp";
+			_cmdMoveUp.Size = new System.Drawing.Size(28, 32);
+			_cmdMoveUp.TabIndex = 3;
+			_cmdMoveUp.Click += new System.EventHandler(cmdMoveUp_Click);
 			// 
 			// _cmdMoveDown
 			// 
-			this._cmdMoveDown.Enabled = false;
-			this._cmdMoveDown.Image = global::GumpStudio.Properties.Resources.cmdMoveDown_Image;
-			this._cmdMoveDown.Location = new System.Drawing.Point(154, 104);
-			this._cmdMoveDown.Name = "_cmdMoveDown";
-			this._cmdMoveDown.Size = new System.Drawing.Size(28, 32);
-			this._cmdMoveDown.TabIndex = 4;
-			this._cmdMoveDown.Click += new System.EventHandler(this.cmdMoveDown_Click);
+			_cmdMoveDown.Enabled = false;
+			_cmdMoveDown.Image = global::GumpStudio.Properties.Resources.cmdMoveDown_Image;
+			_cmdMoveDown.Location = new System.Drawing.Point(154, 104);
+			_cmdMoveDown.Name = "_cmdMoveDown";
+			_cmdMoveDown.Size = new System.Drawing.Size(28, 32);
+			_cmdMoveDown.TabIndex = 4;
+			_cmdMoveDown.Click += new System.EventHandler(cmdMoveDown_Click);
 			// 
 			// _cmdOK
 			// 
-			this._cmdOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this._cmdOK.Location = new System.Drawing.Point(176, 304);
-			this._cmdOK.Name = "_cmdOK";
-			this._cmdOK.Size = new System.Drawing.Size(72, 23);
-			this._cmdOK.TabIndex = 6;
-			this._cmdOK.Text = "OK";
-			this._cmdOK.Click += new System.EventHandler(this.cmdOK_Click);
+			_cmdOK.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left);
+			_cmdOK.Location = new System.Drawing.Point(176, 304);
+			_cmdOK.Name = "_cmdOK";
+			_cmdOK.Size = new System.Drawing.Size(72, 23);
+			_cmdOK.TabIndex = 6;
+			_cmdOK.Text = "OK";
+			_cmdOK.Click += new System.EventHandler(cmdOK_Click);
 			// 
 			// _GroupBox1
 			// 
-			this._GroupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this._GroupBox1.Controls.Add(this._txtDescription);
-			this._GroupBox1.Controls.Add(this._txtVersion);
-			this._GroupBox1.Controls.Add(this._txtEmail);
-			this._GroupBox1.Controls.Add(this._txtAuthor);
-			this._GroupBox1.Controls.Add(this._Label4);
-			this._GroupBox1.Controls.Add(this._Label3);
-			this._GroupBox1.Controls.Add(this._Label2);
-			this._GroupBox1.Location = new System.Drawing.Point(8, 144);
-			this._GroupBox1.Name = "_GroupBox1";
-			this._GroupBox1.Size = new System.Drawing.Size(320, 154);
-			this._GroupBox1.TabIndex = 7;
-			this._GroupBox1.TabStop = false;
-			this._GroupBox1.Text = "Description";
+			_GroupBox1.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left);
+			_GroupBox1.Controls.Add(_txtDescription);
+			_GroupBox1.Controls.Add(_txtVersion);
+			_GroupBox1.Controls.Add(_txtEmail);
+			_GroupBox1.Controls.Add(_txtAuthor);
+			_GroupBox1.Controls.Add(_Label4);
+			_GroupBox1.Controls.Add(_Label3);
+			_GroupBox1.Controls.Add(_Label2);
+			_GroupBox1.Location = new System.Drawing.Point(8, 144);
+			_GroupBox1.Name = "_GroupBox1";
+			_GroupBox1.Size = new System.Drawing.Size(320, 154);
+			_GroupBox1.TabIndex = 7;
+			_GroupBox1.TabStop = false;
+			_GroupBox1.Text = "Description";
 			// 
 			// _txtDescription
 			// 
-			this._txtDescription.Location = new System.Drawing.Point(6, 19);
-			this._txtDescription.Multiline = true;
-			this._txtDescription.Name = "_txtDescription";
-			this._txtDescription.ReadOnly = true;
-			this._txtDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-			this._txtDescription.Size = new System.Drawing.Size(308, 51);
-			this._txtDescription.TabIndex = 7;
+			_txtDescription.Location = new System.Drawing.Point(6, 19);
+			_txtDescription.Multiline = true;
+			_txtDescription.Name = "_txtDescription";
+			_txtDescription.ReadOnly = true;
+			_txtDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+			_txtDescription.Size = new System.Drawing.Size(308, 51);
+			_txtDescription.TabIndex = 7;
 			// 
 			// _txtVersion
 			// 
-			this._txtVersion.Location = new System.Drawing.Point(56, 76);
-			this._txtVersion.Name = "_txtVersion";
-			this._txtVersion.ReadOnly = true;
-			this._txtVersion.Size = new System.Drawing.Size(258, 20);
-			this._txtVersion.TabIndex = 6;
+			_txtVersion.Location = new System.Drawing.Point(56, 76);
+			_txtVersion.Name = "_txtVersion";
+			_txtVersion.ReadOnly = true;
+			_txtVersion.Size = new System.Drawing.Size(258, 20);
+			_txtVersion.TabIndex = 6;
 			// 
 			// _txtEmail
 			// 
-			this._txtEmail.Location = new System.Drawing.Point(56, 128);
-			this._txtEmail.Name = "_txtEmail";
-			this._txtEmail.ReadOnly = true;
-			this._txtEmail.Size = new System.Drawing.Size(258, 20);
-			this._txtEmail.TabIndex = 5;
+			_txtEmail.Location = new System.Drawing.Point(56, 128);
+			_txtEmail.Name = "_txtEmail";
+			_txtEmail.ReadOnly = true;
+			_txtEmail.Size = new System.Drawing.Size(258, 20);
+			_txtEmail.TabIndex = 5;
 			// 
 			// _txtAuthor
 			// 
-			this._txtAuthor.Location = new System.Drawing.Point(56, 102);
-			this._txtAuthor.Name = "_txtAuthor";
-			this._txtAuthor.ReadOnly = true;
-			this._txtAuthor.Size = new System.Drawing.Size(258, 20);
-			this._txtAuthor.TabIndex = 4;
+			_txtAuthor.Location = new System.Drawing.Point(56, 102);
+			_txtAuthor.Name = "_txtAuthor";
+			_txtAuthor.ReadOnly = true;
+			_txtAuthor.Size = new System.Drawing.Size(258, 20);
+			_txtAuthor.TabIndex = 4;
 			// 
 			// _Label4
 			// 
-			this._Label4.AutoSize = true;
-			this._Label4.Location = new System.Drawing.Point(8, 79);
-			this._Label4.Name = "_Label4";
-			this._Label4.Size = new System.Drawing.Size(42, 13);
-			this._Label4.TabIndex = 2;
-			this._Label4.Text = "Version";
-			this._Label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			_Label4.AutoSize = true;
+			_Label4.Location = new System.Drawing.Point(8, 79);
+			_Label4.Name = "_Label4";
+			_Label4.Size = new System.Drawing.Size(42, 13);
+			_Label4.TabIndex = 2;
+			_Label4.Text = "Version";
+			_Label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// _Label3
 			// 
-			this._Label3.AutoSize = true;
-			this._Label3.Location = new System.Drawing.Point(6, 131);
-			this._Label3.Name = "_Label3";
-			this._Label3.Size = new System.Drawing.Size(44, 13);
-			this._Label3.TabIndex = 1;
-			this._Label3.Text = "Contact";
-			this._Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			_Label3.AutoSize = true;
+			_Label3.Location = new System.Drawing.Point(6, 131);
+			_Label3.Name = "_Label3";
+			_Label3.Size = new System.Drawing.Size(44, 13);
+			_Label3.TabIndex = 1;
+			_Label3.Text = "Contact";
+			_Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// _Label2
 			// 
-			this._Label2.AutoSize = true;
-			this._Label2.Location = new System.Drawing.Point(12, 105);
-			this._Label2.Name = "_Label2";
-			this._Label2.Size = new System.Drawing.Size(38, 13);
-			this._Label2.TabIndex = 0;
-			this._Label2.Text = "Author";
-			this._Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+			_Label2.AutoSize = true;
+			_Label2.Location = new System.Drawing.Point(12, 105);
+			_Label2.Name = "_Label2";
+			_Label2.Size = new System.Drawing.Size(38, 13);
+			_Label2.TabIndex = 0;
+			_Label2.Text = "Author";
+			_Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
 			// _cmdCancel
 			// 
-			this._cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-			this._cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this._cmdCancel.Location = new System.Drawing.Point(254, 304);
-			this._cmdCancel.Name = "_cmdCancel";
-			this._cmdCancel.Size = new System.Drawing.Size(75, 23);
-			this._cmdCancel.TabIndex = 8;
-			this._cmdCancel.Text = "Cancel";
-			this._cmdCancel.Click += new System.EventHandler(this.cmdCancel_Click);
+			_cmdCancel.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left);
+			_cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+			_cmdCancel.Location = new System.Drawing.Point(254, 304);
+			_cmdCancel.Name = "_cmdCancel";
+			_cmdCancel.Size = new System.Drawing.Size(75, 23);
+			_cmdCancel.TabIndex = 8;
+			_cmdCancel.Text = "Cancel";
+			_cmdCancel.Click += new System.EventHandler(cmdCancel_Click);
 			// 
 			// _cmdAdd
 			// 
-			this._cmdAdd.Enabled = false;
-			this._cmdAdd.Image = global::GumpStudio.Properties.Resources.cmdAdd_Image;
-			this._cmdAdd.Location = new System.Drawing.Point(154, 56);
-			this._cmdAdd.Name = "_cmdAdd";
-			this._cmdAdd.Size = new System.Drawing.Size(28, 23);
-			this._cmdAdd.TabIndex = 9;
-			this._cmdAdd.Click += new System.EventHandler(this.cmdAdd_Click);
+			_cmdAdd.Enabled = false;
+			_cmdAdd.Image = global::GumpStudio.Properties.Resources.cmdAdd_Image;
+			_cmdAdd.Location = new System.Drawing.Point(154, 56);
+			_cmdAdd.Name = "_cmdAdd";
+			_cmdAdd.Size = new System.Drawing.Size(28, 23);
+			_cmdAdd.TabIndex = 9;
+			_cmdAdd.Click += new System.EventHandler(cmdAdd_Click);
 			// 
 			// _cmdRemove
 			// 
-			this._cmdRemove.Enabled = false;
-			this._cmdRemove.Image = global::GumpStudio.Properties.Resources.cmdRemove_Image;
-			this._cmdRemove.Location = new System.Drawing.Point(154, 80);
-			this._cmdRemove.Name = "_cmdRemove";
-			this._cmdRemove.Size = new System.Drawing.Size(28, 23);
-			this._cmdRemove.TabIndex = 10;
-			this._cmdRemove.Click += new System.EventHandler(this.cmdRemove_Click);
+			_cmdRemove.Enabled = false;
+			_cmdRemove.Image = global::GumpStudio.Properties.Resources.cmdRemove_Image;
+			_cmdRemove.Location = new System.Drawing.Point(154, 80);
+			_cmdRemove.Name = "_cmdRemove";
+			_cmdRemove.Size = new System.Drawing.Size(28, 23);
+			_cmdRemove.TabIndex = 10;
+			_cmdRemove.Click += new System.EventHandler(cmdRemove_Click);
 			// 
 			// _lstAvailable
 			// 
-			this._lstAvailable.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-			this._lstAvailable.IntegralHeight = false;
-			this._lstAvailable.Location = new System.Drawing.Point(188, 24);
-			this._lstAvailable.Name = "_lstAvailable";
-			this._lstAvailable.Size = new System.Drawing.Size(140, 112);
-			this._lstAvailable.TabIndex = 11;
-			this._lstAvailable.SelectedIndexChanged += new System.EventHandler(this.Plugins_SelectedIndexChanged);
+			_lstAvailable.Anchor = ((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left);
+			_lstAvailable.IntegralHeight = false;
+			_lstAvailable.Location = new System.Drawing.Point(188, 24);
+			_lstAvailable.Name = "_lstAvailable";
+			_lstAvailable.Size = new System.Drawing.Size(140, 112);
+			_lstAvailable.TabIndex = 11;
+			_lstAvailable.SelectedIndexChanged += new System.EventHandler(Plugins_SelectedIndexChanged);
 			// 
 			// _Label6
 			// 
-			this._Label6.AutoSize = true;
-			this._Label6.Location = new System.Drawing.Point(184, 8);
-			this._Label6.Name = "_Label6";
-			this._Label6.Size = new System.Drawing.Size(87, 13);
-			this._Label6.TabIndex = 12;
-			this._Label6.Text = "Available Plugins";
+			_Label6.AutoSize = true;
+			_Label6.Location = new System.Drawing.Point(184, 8);
+			_Label6.Name = "_Label6";
+			_Label6.Size = new System.Drawing.Size(87, 13);
+			_Label6.TabIndex = 12;
+			_Label6.Text = "Available Plugins";
 			// 
 			// _lstLoaded
 			// 
-			this._lstLoaded.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-			this._lstLoaded.IntegralHeight = false;
-			this._lstLoaded.Location = new System.Drawing.Point(8, 24);
-			this._lstLoaded.Name = "_lstLoaded";
-			this._lstLoaded.Size = new System.Drawing.Size(140, 112);
-			this._lstLoaded.TabIndex = 13;
-			this._lstLoaded.SelectedIndexChanged += new System.EventHandler(this.Plugins_SelectedIndexChanged);
+			_lstLoaded.Anchor = ((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+			| System.Windows.Forms.AnchorStyles.Left);
+			_lstLoaded.IntegralHeight = false;
+			_lstLoaded.Location = new System.Drawing.Point(8, 24);
+			_lstLoaded.Name = "_lstLoaded";
+			_lstLoaded.Size = new System.Drawing.Size(140, 112);
+			_lstLoaded.TabIndex = 13;
+			_lstLoaded.SelectedIndexChanged += new System.EventHandler(Plugins_SelectedIndexChanged);
 			// 
 			// PluginManager
 			// 
-			this.AcceptButton = this._cmdOK;
-			this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-			this.CancelButton = this._cmdCancel;
-			this.ClientSize = new System.Drawing.Size(336, 336);
-			this.Controls.Add(this._lstLoaded);
-			this.Controls.Add(this._Label6);
-			this.Controls.Add(this._lstAvailable);
-			this.Controls.Add(this._cmdCancel);
-			this.Controls.Add(this._GroupBox1);
-			this.Controls.Add(this._cmdOK);
-			this.Controls.Add(this._Label1);
-			this.Controls.Add(this._cmdRemove);
-			this.Controls.Add(this._cmdAdd);
-			this.Controls.Add(this._cmdMoveDown);
-			this.Controls.Add(this._cmdMoveUp);
-			this.MaximizeBox = false;
-			this.MaximumSize = new System.Drawing.Size(352, 1200);
-			this.MinimizeBox = false;
-			this.MinimumSize = new System.Drawing.Size(352, 370);
-			this.Name = "PluginManager";
-			this.Text = "Plugin Manager";
-			this.Load += new System.EventHandler(this.PluginManager_Load);
-			this._GroupBox1.ResumeLayout(false);
-			this._GroupBox1.PerformLayout();
-			this.ResumeLayout(false);
-			this.PerformLayout();
+			AcceptButton = _cmdOK;
+			AutoScaleBaseSize = new System.Drawing.Size(5, 13);
+			CancelButton = _cmdCancel;
+			ClientSize = new System.Drawing.Size(336, 336);
+			Controls.Add(_lstLoaded);
+			Controls.Add(_Label6);
+			Controls.Add(_lstAvailable);
+			Controls.Add(_cmdCancel);
+			Controls.Add(_GroupBox1);
+			Controls.Add(_cmdOK);
+			Controls.Add(_Label1);
+			Controls.Add(_cmdRemove);
+			Controls.Add(_cmdAdd);
+			Controls.Add(_cmdMoveDown);
+			Controls.Add(_cmdMoveUp);
+			MaximizeBox = false;
+			MaximumSize = new System.Drawing.Size(352, 1200);
+			MinimizeBox = false;
+			MinimumSize = new System.Drawing.Size(352, 370);
+			Name = "PluginManager";
+			Text = "Plugin Manager";
+			Load += new System.EventHandler(PluginManager_Load);
+			_GroupBox1.ResumeLayout(false);
+			_GroupBox1.PerformLayout();
+			ResumeLayout(false);
+			PerformLayout();
 
 		}
 
@@ -360,66 +360,76 @@ namespace GumpStudio
 			_lstLoaded.Items.Clear();
 			_lstAvailable.Items.Clear();
 
-			if (OrderList != null)
-			{
-				foreach (PluginInfo order in OrderList)
-				{
-					bool flag = false;
+			if (OrderList != null) {
+				foreach (var order in OrderList) {
+					var flag = false;
 
-					foreach (object availablePlugin in AvailablePlugins)
-					{
-						if (((BasePlugin)RuntimeHelpers.GetObjectValue(availablePlugin)).Info.Equals(order))
+					foreach (var availablePlugin in AvailablePlugins) {
+						if (((BasePlugin)RuntimeHelpers.GetObjectValue(availablePlugin)).Info.Equals(order)) {
 							flag = true;
+						}
 					}
 
-					if (flag)
+					if (flag) {
 						_lstLoaded.Items.Add(order);
+					}
 				}
 			}
 
-			foreach (object availablePlugin in AvailablePlugins)
-			{
-				BasePlugin objectValue = (BasePlugin)RuntimeHelpers.GetObjectValue(availablePlugin);
+			foreach (var availablePlugin in AvailablePlugins) {
+				var objectValue = (BasePlugin)RuntimeHelpers.GetObjectValue(availablePlugin);
 
-				if (!objectValue.IsLoaded)
-				{
-					PluginInfo info = objectValue.Info;
+				if (!objectValue.IsLoaded) {
+					var info = objectValue.Info;
 
-					if (!_lstLoaded.Items.Contains(info))
+					if (!_lstLoaded.Items.Contains(info)) {
 						_lstAvailable.Items.Add(info);
+					}
 				}
 			}
 		}
 
 		private void Plugins_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			ListBox listBox = (ListBox)sender;
+			var listBox = (ListBox)sender;
 
-			if (listBox.SelectedIndex == -1)
+			if (listBox.SelectedIndex == -1) {
 				return;
+			}
 
-			PluginInfo selectedItem = (PluginInfo)listBox.SelectedItem;
+			var selectedItem = (PluginInfo)listBox.SelectedItem;
 
 			_txtAuthor.Text = selectedItem.AuthorName;
 			_txtEmail.Text = selectedItem.AuthorContact;
 			_txtVersion.Text = selectedItem.Version;
 			_txtDescription.Text = selectedItem.Description;
-			if (_lstLoaded.SelectedIndex > 0)
+			if (_lstLoaded.SelectedIndex > 0) {
 				_cmdMoveUp.Enabled = true;
-			else
+			}
+			else {
 				_cmdMoveUp.Enabled = false;
-			if (_lstLoaded.SelectedIndex < listBox.Items.Count - 1)
+			}
+
+			if (_lstLoaded.SelectedIndex < listBox.Items.Count - 1) {
 				_cmdMoveDown.Enabled = true;
-			else
+			}
+			else {
 				_cmdMoveDown.Enabled = false;
-			if (_lstAvailable.SelectedIndex == -1)
+			}
+
+			if (_lstAvailable.SelectedIndex == -1) {
 				_cmdAdd.Enabled = false;
-			else
+			}
+			else {
 				_cmdAdd.Enabled = true;
-			if (_lstLoaded.SelectedIndex == -1)
+			}
+
+			if (_lstLoaded.SelectedIndex == -1) {
 				_cmdRemove.Enabled = false;
-			else
+			}
+			else {
 				_cmdRemove.Enabled = true;
+			}
 		}
 	}
 }

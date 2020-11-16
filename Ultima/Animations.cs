@@ -32,136 +32,137 @@ namespace Ultima
 		/// </summary>
 		public static void Initialize()
 		{
-			string path = Files.GetFilePath("bodyconv.def");
+			var path = Files.GetFilePath("bodyconv.def");
 
-			if (path == null)
+			if (path == null) {
 				return;
+			}
 
 			List<int> list1 = new List<int>(), list2 = new List<int>(), list3 = new List<int>(), list4 = new List<int>();
 			int max1 = 0, max2 = 0, max3 = 0, max4 = 0;
 
-			using (StreamReader ip = new StreamReader(path))
-			{
+			using (var ip = new StreamReader(path)) {
 				string line;
 
-				while ((line = ip.ReadLine()) != null)
-				{
-					if ((line = line.Trim()).Length == 0 || line.StartsWith("#"))
+				while ((line = ip.ReadLine()) != null) {
+					if ((line = line.Trim()).Length == 0 || line.StartsWith("#")) {
 						continue;
+					}
 
-					try
-					{
-						string[] split = line.Split('\t');
+					try {
+						var split = line.Split('\t');
 
-						int original = System.Convert.ToInt32(split[0]);
-						int anim2 = System.Convert.ToInt32(split[1]);
+						var original = System.Convert.ToInt32(split[0]);
+						var anim2 = System.Convert.ToInt32(split[1]);
 						int anim3;
 						int anim4;
 						int anim5;
 
-						try
-						{
+						try {
 							anim3 = System.Convert.ToInt32(split[2]);
 						}
-						catch
-						{
+						catch {
 							anim3 = -1;
 						}
 
-						try
-						{
+						try {
 							anim4 = System.Convert.ToInt32(split[3]);
 						}
-						catch
-						{
+						catch {
 							anim4 = -1;
 						}
 
-						try
-						{
+						try {
 							anim5 = System.Convert.ToInt32(split[4]);
 						}
-						catch
-						{
+						catch {
 							anim5 = -1;
 						}
 
-						if (anim2 != -1)
-						{
-							if (anim2 == 68)
+						if (anim2 != -1) {
+							if (anim2 == 68) {
 								anim2 = 122;
+							}
 
-							if (original > max1)
+							if (original > max1) {
 								max1 = original;
+							}
 
 							list1.Add(original);
 							list1.Add(anim2);
 						}
 
-						if (anim3 != -1)
-						{
-							if (original > max2)
+						if (anim3 != -1) {
+							if (original > max2) {
 								max2 = original;
+							}
 
 							list2.Add(original);
 							list2.Add(anim3);
 						}
 
-						if (anim4 != -1)
-						{
-							if (original > max3)
+						if (anim4 != -1) {
+							if (original > max3) {
 								max3 = original;
+							}
 
 							list3.Add(original);
 							list3.Add(anim4);
 						}
 
-						if (anim5 != -1)
-						{
-							if (original > max4)
+						if (anim5 != -1) {
+							if (original > max4) {
 								max4 = original;
+							}
 
 							list4.Add(original);
 							list4.Add(anim5);
 						}
 					}
-					catch
-					{
+					catch {
 					}
 				}
 			}
 
 			Table1 = new int[max1 + 1];
 
-			for (int i = 0; i < Table1.Length; ++i)
+			for (var i = 0; i < Table1.Length; ++i) {
 				Table1[i] = -1;
+			}
 
-			for (int i = 0; i < list1.Count; i += 2)
+			for (var i = 0; i < list1.Count; i += 2) {
 				Table1[list1[i]] = list1[i + 1];
+			}
 
 			Table2 = new int[max2 + 1];
 
-			for (int i = 0; i < Table2.Length; ++i)
+			for (var i = 0; i < Table2.Length; ++i) {
 				Table2[i] = -1;
+			}
 
-			for (int i = 0; i < list2.Count; i += 2)
+			for (var i = 0; i < list2.Count; i += 2) {
 				Table2[list2[i]] = list2[i + 1];
+			}
 
 			Table3 = new int[max3 + 1];
 
-			for (int i = 0; i < Table3.Length; ++i)
+			for (var i = 0; i < Table3.Length; ++i) {
 				Table3[i] = -1;
+			}
 
-			for (int i = 0; i < list3.Count; i += 2)
+			for (var i = 0; i < list3.Count; i += 2) {
 				Table3[list3[i]] = list3[i + 1];
+			}
 
 			Table4 = new int[max4 + 1];
 
-			for (int i = 0; i < Table4.Length; ++i)
+			for (var i = 0; i < Table4.Length; ++i) {
 				Table4[i] = -1;
+			}
 
-			for (int i = 0; i < list4.Count; i += 2)
+			for (var i = 0; i < list4.Count; i += 2) {
 				Table4[list4[i]] = list4[i + 1];
+			}
 		}
 
 		/// <summary>
@@ -170,17 +171,21 @@ namespace Ultima
 		/// <returns>True if it is, false if not.</returns>
 		public static bool Contains(int body)
 		{
-			if (Table1 != null && body >= 0 && body < Table1.Length && Table1[body] != -1)
+			if (Table1 != null && body >= 0 && body < Table1.Length && Table1[body] != -1) {
 				return true;
+			}
 
-			if (Table2 != null && body >= 0 && body < Table2.Length && Table2[body] != -1)
+			if (Table2 != null && body >= 0 && body < Table2.Length && Table2[body] != -1) {
 				return true;
+			}
 
-			if (Table3 != null && body >= 0 && body < Table3.Length && Table3[body] != -1)
+			if (Table3 != null && body >= 0 && body < Table3.Length && Table3[body] != -1) {
 				return true;
+			}
 
-			if (Table4 != null && body >= 0 && body < Table4.Length && Table4[body] != -1)
+			if (Table4 != null && body >= 0 && body < Table4.Length && Table4[body] != -1) {
 				return true;
+			}
 
 			return false;
 		}
@@ -218,45 +223,37 @@ namespace Ultima
 		/// </returns>
 		public static int Convert(ref int body)
 		{
-			if (Table1 != null && body >= 0 && body < Table1.Length)
-			{
-				int val = Table1[body];
+			if (Table1 != null && body >= 0 && body < Table1.Length) {
+				var val = Table1[body];
 
-				if (val != -1)
-				{
+				if (val != -1) {
 					body = val;
 					return 2;
 				}
 			}
 
-			if (Table2 != null && body >= 0 && body < Table2.Length)
-			{
-				int val = Table2[body];
+			if (Table2 != null && body >= 0 && body < Table2.Length) {
+				var val = Table2[body];
 
-				if (val != -1)
-				{
+				if (val != -1) {
 					body = val;
 					return 3;
 				}
 			}
 
-			if (Table3 != null && body >= 0 && body < Table3.Length)
-			{
-				int val = Table3[body];
+			if (Table3 != null && body >= 0 && body < Table3.Length) {
+				var val = Table3[body];
 
-				if (val != -1)
-				{
+				if (val != -1) {
 					body = val;
 					return 4;
 				}
 			}
 
-			if (Table4 != null && body >= 0 && body < Table4.Length)
-			{
-				int val = Table4[body];
+			if (Table4 != null && body >= 0 && body < Table4.Length) {
+				var val = Table4[body];
 
-				if (val != -1)
-				{
+				if (val != -1) {
 					body = val;
 					return 5;
 				}
@@ -273,48 +270,43 @@ namespace Ultima
 		/// <returns></returns>
 		public static int GetTrueBody(int FileType, int index)
 		{
-			switch (FileType)
-			{
+			switch (FileType) {
 				default:
 				case 1:
 					return index;
 				case 2:
-					if (Table1 != null && index >= 0)
-					{
-						for (int i = 0; i < Table1.Length; ++i)
-						{
-							if (Table1[i] == index)
+					if (Table1 != null && index >= 0) {
+						for (var i = 0; i < Table1.Length; ++i) {
+							if (Table1[i] == index) {
 								return i;
+							}
 						}
 					}
 					break;
 				case 3:
-					if (Table2 != null && index >= 0)
-					{
-						for (int i = 0; i < Table2.Length; ++i)
-						{
-							if (Table2[i] == index)
+					if (Table2 != null && index >= 0) {
+						for (var i = 0; i < Table2.Length; ++i) {
+							if (Table2[i] == index) {
 								return i;
+							}
 						}
 					}
 					break;
 				case 4:
-					if (Table3 != null && index >= 0)
-					{
-						for (int i = 0; i < Table3.Length; ++i)
-						{
-							if (Table3[i] == index)
+					if (Table3 != null && index >= 0) {
+						for (var i = 0; i < Table3.Length; ++i) {
+							if (Table3[i] == index) {
 								return i;
+							}
 						}
 					}
 					break;
 				case 5:
-					if (Table4 != null && index >= 0)
-					{
-						for (int i = 0; i < Table4.Length; ++i)
-						{
-							if (Table4[i] == index)
+					if (Table4 != null && index >= 0) {
+						for (var i = 0; i < Table4.Length; ++i) {
+							if (Table4[i] == index) {
 								return i;
+							}
 						}
 					}
 					break;
@@ -371,71 +363,76 @@ namespace Ultima
 		/// <returns></returns>
 		public static Frame[] GetAnimation(int body, int action, int direction, ref int hue, bool preserveHue, bool FirstFrame)
 		{
-			if (preserveHue)
+			if (preserveHue) {
 				Translate(ref body);
-			else
+			}
+			else {
 				Translate(ref body, ref hue);
+			}
 
-			int fileType = BodyConverter.Convert(ref body);
+			var fileType = BodyConverter.Convert(ref body);
 
-			FileIndex fileIndex;
-			int index;
-			GetFileIndex(body, action, direction, fileType, out fileIndex, out index);
+			GetFileIndex(body, action, direction, fileType, out var fileIndex, out var index);
 
-			int length, extra;
-			bool patched;
-			Stream stream = fileIndex.Seek(index, out length, out extra, out patched);
+			var stream = fileIndex.Seek(index, out var length, out var extra, out var patched);
 
-			if (stream == null)
+			if (stream == null) {
 				return null;
-			if (m_StreamBuffer == null || m_StreamBuffer.Length < length)
+			}
+
+			if (m_StreamBuffer == null || m_StreamBuffer.Length < length) {
 				m_StreamBuffer = new byte[length];
+			}
+
 			stream.Read(m_StreamBuffer, 0, length);
 			m_MemoryStream = new MemoryStream(m_StreamBuffer, false);
 
-			bool flip = direction > 4;
+			var flip = direction > 4;
 			Frame[] frames;
-			using (BinaryReader bin = new BinaryReader(m_MemoryStream))
-			{
-				ushort[] palette = new ushort[0x100];
+			using (var bin = new BinaryReader(m_MemoryStream)) {
+				var palette = new ushort[0x100];
 
-				for (int i = 0; i < 0x100; ++i)
+				for (var i = 0; i < 0x100; ++i) {
 					palette[i] = (ushort)(bin.ReadUInt16() ^ 0x8000);
+				}
 
-				int start = (int)bin.BaseStream.Position;
-				int frameCount = bin.ReadInt32();
+				var start = (int)bin.BaseStream.Position;
+				var frameCount = bin.ReadInt32();
 
-				int[] lookups = new int[frameCount];
+				var lookups = new int[frameCount];
 
-				for (int i = 0; i < frameCount; ++i)
+				for (var i = 0; i < frameCount; ++i) {
 					lookups[i] = start + bin.ReadInt32();
+				}
 
-				bool onlyHueGrayPixels = (hue & 0x8000) != 0;
+				var onlyHueGrayPixels = (hue & 0x8000) != 0;
 
 				hue = (hue & 0x3FFF) - 1;
 
 				Hue hueObject;
 
-				if (hue >= 0 && hue < Hues.List.Length)
+				if (hue >= 0 && hue < Hues.List.Length) {
 					hueObject = Hues.List[hue];
-				else
+				}
+				else {
 					hueObject = null;
+				}
 
-				if (FirstFrame)
+				if (FirstFrame) {
 					frameCount = 1;
+				}
+
 				frames = new Frame[frameCount];
 
-				for (int i = 0; i < frameCount; ++i)
-				{
+				for (var i = 0; i < frameCount; ++i) {
 					bin.BaseStream.Seek(lookups[i], SeekOrigin.Begin);
 					frames[i] = new Frame(palette, bin, flip);
 
-					if (hueObject != null)
-					{
-						if (frames[i] != null)
-						{
-							if (frames[i].Bitmap != null)
+					if (hueObject != null) {
+						if (frames[i] != null) {
+							if (frames[i].Bitmap != null) {
 								hueObject.ApplyTo(frames[i].Bitmap, onlyHueGrayPixels);
+							}
 						}
 					}
 				}
@@ -447,40 +444,36 @@ namespace Ultima
 
 		public static Frame[] GetAnimation(int body, int action, int direction, int fileType)
 		{
-			FileIndex fileIndex;
-			int index;
-			GetFileIndex(body, action, direction, fileType, out fileIndex, out index);
+			GetFileIndex(body, action, direction, fileType, out var fileIndex, out var index);
 
-			int length, extra;
-			bool patched;
 
-			Stream stream = fileIndex.Seek(index, out length, out extra, out patched);
+			var stream = fileIndex.Seek(index, out var length, out var extra, out var patched);
 
-			if (stream == null)
+			if (stream == null) {
 				return null;
+			}
 
+			var flip = direction > 4;
 
-			bool flip = direction > 4;
+			using (var bin = new BinaryReader(stream)) {
+				var palette = new ushort[0x100];
 
-			using (BinaryReader bin = new BinaryReader(stream))
-			{
-				ushort[] palette = new ushort[0x100];
-
-				for (int i = 0; i < 0x100; ++i)
+				for (var i = 0; i < 0x100; ++i) {
 					palette[i] = (ushort)(bin.ReadUInt16() ^ 0x8000);
+				}
 
-				int start = (int)bin.BaseStream.Position;
-				int frameCount = bin.ReadInt32();
+				var start = (int)bin.BaseStream.Position;
+				var frameCount = bin.ReadInt32();
 
-				int[] lookups = new int[frameCount];
+				var lookups = new int[frameCount];
 
-				for (int i = 0; i < frameCount; ++i)
+				for (var i = 0; i < frameCount; ++i) {
 					lookups[i] = start + bin.ReadInt32();
+				}
 
-				Frame[] frames = new Frame[frameCount];
+				var frames = new Frame[frameCount];
 
-				for (int i = 0; i < frameCount; ++i)
-				{
+				for (var i = 0; i < frameCount; ++i) {
 					bin.BaseStream.Seek(lookups[i], SeekOrigin.Begin);
 					frames[i] = new Frame(palette, bin, flip);
 				}
@@ -497,10 +490,11 @@ namespace Ultima
 		/// <param name="body"></param>
 		public static void Translate(ref int body)
 		{
-			if (m_Table == null)
+			if (m_Table == null) {
 				LoadTable();
-			if (body <= 0 || body >= m_Table.Length)
-			{
+			}
+
+			if (body <= 0 || body >= m_Table.Length) {
 				body = 0;
 				return;
 			}
@@ -515,44 +509,42 @@ namespace Ultima
 		/// <param name="hue"></param>
 		public static void Translate(ref int body, ref int hue)
 		{
-			if (m_Table == null)
+			if (m_Table == null) {
 				LoadTable();
-			if (body <= 0 || body >= m_Table.Length)
-			{
+			}
+
+			if (body <= 0 || body >= m_Table.Length) {
 				body = 0;
 				return;
 			}
 
-			int table = m_Table[body];
+			var table = m_Table[body];
 
-			if ((table & (1 << 31)) != 0)
-			{
+			if ((table & (1 << 31)) != 0) {
 				body = table & 0x7FFF;
 
-				int vhue = (hue & 0x3FFF) - 1;
+				var vhue = (hue & 0x3FFF) - 1;
 
-				if (vhue < 0 || vhue >= Hues.List.Length)
+				if (vhue < 0 || vhue >= Hues.List.Length) {
 					hue = (table >> 15) & 0xFFFF;
+				}
 			}
 		}
 
 		private static void LoadTable()
 		{
-			int count = 400 + ((m_FileIndex.Index.Length - 35000) / 175);
+			var count = 400 + ((m_FileIndex.Index.Length - 35000) / 175);
 
 			m_Table = new int[count];
 
-			for (int i = 0; i < count; ++i)
-			{
-				object o = BodyTable.m_Entries[i];
+			for (var i = 0; i < count; ++i) {
+				var o = BodyTable.m_Entries[i];
 
-				if (o == null || BodyConverter.Contains(i))
-				{
+				if (o == null || BodyConverter.Contains(i)) {
 					m_Table[i] = i;
 				}
-				else
-				{
-					BodyTableEntry bte = (BodyTableEntry)o;
+				else {
+					var bte = (BodyTableEntry)o;
 
 					m_Table[i] = bte.OldID | (1 << 31) | ((bte.NewHue & 0xFFFF) << 15);
 				}
@@ -569,16 +561,14 @@ namespace Ultima
 		public static bool IsActionDefined(int body, int action, int direction)
 		{
 			Translate(ref body);
-			int fileType = BodyConverter.Convert(ref body);
-			FileIndex fileIndex;
-			int index;
-			GetFileIndex(body, action, direction, fileType, out fileIndex, out index);
+			var fileType = BodyConverter.Convert(ref body);
+			GetFileIndex(body, action, direction, fileType, out var fileIndex, out var index);
 
-			int length, extra;
-			bool patched;
-			bool valid = fileIndex.Valid(index, out length, out extra, out patched);
-			if ((!valid) || (length < 1))
+			var valid = fileIndex.Valid(index, out var length, out var extra, out var patched);
+			if ((!valid) || (length < 1)) {
 				return false;
+			}
+
 			return true;
 		}
 
@@ -592,18 +582,18 @@ namespace Ultima
 		/// <returns></returns>
 		public static bool IsAnimDefinied(int body, int action, int dir, int fileType)
 		{
-			FileIndex fileIndex;
-			int index;
-			GetFileIndex(body, action, dir, fileType, out fileIndex, out index);
+			GetFileIndex(body, action, dir, fileType, out var fileIndex, out var index);
 
-			int length, extra;
-			bool patched;
-			Stream stream = fileIndex.Seek(index, out length, out extra, out patched);
-			bool def = true;
-			if ((stream == null) || (length == 0))
+			var stream = fileIndex.Seek(index, out var length, out var extra, out var patched);
+			var def = true;
+			if ((stream == null) || (length == 0)) {
 				def = false;
-			if (stream != null)
+			}
+
+			if (stream != null) {
 				stream.Close();
+			}
+
 			return def;
 		}
 
@@ -615,8 +605,7 @@ namespace Ultima
 		public static int GetAnimCount(int fileType)
 		{
 			int count;
-			switch (fileType)
-			{
+			switch (fileType) {
 				default:
 				case 1:
 					count = 400 + (int)(m_FileIndex.IdxLength - 35000 * 12) / (12 * 175);
@@ -645,47 +634,65 @@ namespace Ultima
 		/// <returns></returns>
 		public static int GetAnimLength(int body, int fileType)
 		{
-			int length = 0;
-			switch (fileType)
-			{
+			var length = 0;
+			switch (fileType) {
 				default:
 				case 1:
-					if (body < 200)
+					if (body < 200) {
 						length = 22; //high
-					else if (body < 400)
+					}
+					else if (body < 400) {
 						length = 13; //low
-					else
+					}
+					else {
 						length = 35; //people
+					}
+
 					break;
 				case 2:
-					if (body < 200)
+					if (body < 200) {
 						length = 22; //high
-					else
+					}
+					else {
 						length = 13; //low
+					}
+
 					break;
 				case 3:
-					if (body < 300)
+					if (body < 300) {
 						length = 13;
-					else if (body < 400)
+					}
+					else if (body < 400) {
 						length = 22;
-					else
+					}
+					else {
 						length = 35;
+					}
+
 					break;
 				case 4:
-					if (body < 200)
+					if (body < 200) {
 						length = 22;
-					else if (body < 400)
+					}
+					else if (body < 400) {
 						length = 13;
-					else
+					}
+					else {
 						length = 35;
+					}
+
 					break;
 				case 5:
-					if (body < 200)
+					if (body < 200) {
 						length = 22;
-					else if (body < 400)
+					}
+					else if (body < 400) {
 						length = 13;
-					else
+					}
+					else {
 						length = 35;
+					}
+
 					break;
 			}
 			return length;
@@ -702,65 +709,81 @@ namespace Ultima
 		/// <param name="index"></param>
 		private static void GetFileIndex(int body, int action, int direction, int fileType, out FileIndex fileIndex, out int index)
 		{
-			switch (fileType)
-			{
+			switch (fileType) {
 				default:
 				case 1:
 					fileIndex = m_FileIndex;
-					if (body < 200)
+					if (body < 200) {
 						index = body * 110;
-					else if (body < 400)
+					}
+					else if (body < 400) {
 						index = 22000 + ((body - 200) * 65);
-					else
+					}
+					else {
 						index = 35000 + ((body - 400) * 175);
+					}
 
 					break;
 				case 2:
 					fileIndex = m_FileIndex2;
-					if (body < 200)
+					if (body < 200) {
 						index = body * 110;
-					else
+					}
+					else {
 						index = 22000 + ((body - 200) * 65);
+					}
 
 					break;
 				case 3:
 					fileIndex = m_FileIndex3;
-					if (body < 300)
+					if (body < 300) {
 						index = body * 65;
-					else if (body < 400)
+					}
+					else if (body < 400) {
 						index = 33000 + ((body - 300) * 110);
-					else
+					}
+					else {
 						index = 35000 + ((body - 400) * 175);
+					}
 
 					break;
 				case 4:
 					fileIndex = m_FileIndex4;
-					if (body < 200)
+					if (body < 200) {
 						index = body * 110;
-					else if (body < 400)
+					}
+					else if (body < 400) {
 						index = 22000 + ((body - 200) * 65);
-					else
+					}
+					else {
 						index = 35000 + ((body - 400) * 175);
+					}
 
 					break;
 				case 5:
 					fileIndex = m_FileIndex5;
 					if ((body < 200) && (body != 34)) // looks strange, though it works.
+{
 						index = body * 110;
-					else if (body < 400)
+					}
+					else if (body < 400) {
 						index = 22000 + ((body - 200) * 65);
-					else
+					}
+					else {
 						index = 35000 + ((body - 400) * 175);
+					}
 
 					break;
 			}
 
 			index += action * 5;
 
-			if (direction <= 4)
+			if (direction <= 4) {
 				index += direction;
-			else
+			}
+			else {
 				index += direction - (direction - 4) * 2;
+			}
 		}
 
 		/// <summary>
@@ -771,12 +794,14 @@ namespace Ultima
 		public static string GetFileName(int body)
 		{
 			Translate(ref body);
-			int fileType = BodyConverter.Convert(ref body);
+			var fileType = BodyConverter.Convert(ref body);
 
-			if (fileType == 1)
+			if (fileType == 1) {
 				return "anim.mul";
-			else
+			}
+			else {
 				return String.Format("anim{0}.mul", fileType);
+			}
 		}
 	}
 
@@ -802,47 +827,47 @@ namespace Ultima
 
 			int width = bin.ReadUInt16();
 			int height = bin.ReadUInt16();
-			if (height == 0 || width == 0)
+			if (height == 0 || width == 0) {
 				return;
-			Bitmap bmp = new Bitmap(width, height, PixelFormat.Format16bppArgb1555);
-			BitmapData bd = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, PixelFormat.Format16bppArgb1555);
-			ushort* line = (ushort*)bd.Scan0;
-			int delta = bd.Stride >> 1;
+			}
+
+			var bmp = new Bitmap(width, height, PixelFormat.Format16bppArgb1555);
+			var bd = bmp.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.WriteOnly, PixelFormat.Format16bppArgb1555);
+			var line = (ushort*)bd.Scan0;
+			var delta = bd.Stride >> 1;
 
 			int header;
 
-			int xBase = xCenter - 0x200;
-			int yBase = (yCenter + height) - 0x200;
+			var xBase = xCenter - 0x200;
+			var yBase = (yCenter + height) - 0x200;
 
-			if (!flip)
-			{
+			if (!flip) {
 				line += xBase;
 				line += yBase * delta;
 
-				while ((header = bin.ReadInt32()) != 0x7FFF7FFF)
-				{
+				while ((header = bin.ReadInt32()) != 0x7FFF7FFF) {
 					header ^= DoubleXor;
 
-					ushort* cur = line + ((((header >> 12) & 0x3FF) * delta) + ((header >> 22) & 0x3FF));
-					ushort* end = cur + (header & 0xFFF);
-					while (cur < end)
+					var cur = line + ((((header >> 12) & 0x3FF) * delta) + ((header >> 22) & 0x3FF));
+					var end = cur + (header & 0xFFF);
+					while (cur < end) {
 						*cur++ = palette[bin.ReadByte()];
+					}
 				}
 			}
-			else
-			{
+			else {
 				line -= xBase - width + 1;
 				line += yBase * delta;
 
-				while ((header = bin.ReadInt32()) != 0x7FFF7FFF)
-				{
+				while ((header = bin.ReadInt32()) != 0x7FFF7FFF) {
 					header ^= DoubleXor;
 
-					ushort* cur = line + ((((header >> 12) & 0x3FF) * delta) - ((header >> 22) & 0x3FF));
-					ushort* end = cur - (header & 0xFFF);
+					var cur = line + ((((header >> 12) & 0x3FF) * delta) - ((header >> 22) & 0x3FF));
+					var end = cur - (header & 0xFFF);
 
-					while (cur > end)
+					while (cur > end) {
 						*cur-- = palette[bin.ReadByte()];
+					}
 				}
 
 				xCenter = width - xCenter;
@@ -881,42 +906,41 @@ namespace Ultima
 		{
 			m_Entries = new Hashtable();
 
-			string filePath = Files.GetFilePath("body.def");
+			var filePath = Files.GetFilePath("body.def");
 
-			if (filePath == null)
+			if (filePath == null) {
 				return;
+			}
 
-			using (StreamReader def = new StreamReader(filePath))
-			{
+			using (var def = new StreamReader(filePath)) {
 				string line;
 
-				while ((line = def.ReadLine()) != null)
-				{
-					if ((line = line.Trim()).Length == 0 || line.StartsWith("#"))
+				while ((line = def.ReadLine()) != null) {
+					if ((line = line.Trim()).Length == 0 || line.StartsWith("#")) {
 						continue;
+					}
 
-					try
-					{
-						int index1 = line.IndexOf("{");
-						int index2 = line.IndexOf("}");
+					try {
+						var index1 = line.IndexOf("{");
+						var index2 = line.IndexOf("}");
 
-						string param1 = line.Substring(0, index1);
-						string param2 = line.Substring(index1 + 1, index2 - index1 - 1);
-						string param3 = line.Substring(index2 + 1);
+						var param1 = line.Substring(0, index1);
+						var param2 = line.Substring(index1 + 1, index2 - index1 - 1);
+						var param3 = line.Substring(index2 + 1);
 
-						int indexOf = param2.IndexOf(',');
+						var indexOf = param2.IndexOf(',');
 
-						if (indexOf > -1)
+						if (indexOf > -1) {
 							param2 = param2.Substring(0, indexOf).Trim();
+						}
 
-						int iParam1 = Convert.ToInt32(param1.Trim());
-						int iParam2 = Convert.ToInt32(param2.Trim());
-						int iParam3 = Convert.ToInt32(param3.Trim());
+						var iParam1 = Convert.ToInt32(param1.Trim());
+						var iParam2 = Convert.ToInt32(param2.Trim());
+						var iParam3 = Convert.ToInt32(param3.Trim());
 
 						m_Entries[iParam1] = new BodyTableEntry(iParam2, iParam1, iParam3);
 					}
-					catch
-					{
+					catch {
 					}
 				}
 			}

@@ -46,8 +46,8 @@ namespace Ultima
 		/// </summary>
 		public string Name
 		{
-			get { return m_Name; }
-			set { m_Name = value; }
+			get => m_Name;
+			set => m_Name = value;
 		}
 
 		/// <summary>
@@ -55,8 +55,8 @@ namespace Ultima
 		/// </summary>
 		public short TextureID
 		{
-			get { return m_TexID; }
-			set { m_TexID = value; }
+			get => m_TexID;
+			set => m_TexID = value;
 		}
 
 		/// <summary>
@@ -64,8 +64,8 @@ namespace Ultima
 		/// </summary>
 		public TileFlag Flags
 		{
-			get { return m_Flags; }
-			set { m_Flags = value; }
+			get => m_Flags;
+			set => m_Flags = value;
 		}
 
 		/// <summary>
@@ -73,113 +73,176 @@ namespace Ultima
 		/// </summary>
 		public int Unk1
 		{
-			get { return m_Unk1; }
-			set { m_Unk1 = value; }
+			get => m_Unk1;
+			set => m_Unk1 = value;
 		}
 
 		public void ReadData(string[] split)
 		{
-			int i = 1;
+			var i = 1;
 			m_Name = split[i++];
 			m_TexID = (short)TileData.ConvertStringToInt(split[i++]);
 			m_Unk1 = TileData.ConvertStringToInt(split[i++]);
 			m_Flags = 0;
 			int temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Background;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Weapon;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Transparent;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Translucent;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Wall;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Damaging;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Impassable;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Wet;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Unknown1;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Surface;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Bridge;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Generic;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Window;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.NoShoot;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.ArticleA;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.ArticleAn;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Internal;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Foliage;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.PartialHue;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Unknown2;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Map;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Container;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Wearable;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.LightSource;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Animation;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.HoverOver;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Unknown3;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Armor;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Roof;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Door;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.StairBack;
+			}
+
 			temp = System.Convert.ToByte(split[i++]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.StairRight;
+			}
 		}
 	}
 
@@ -264,8 +327,8 @@ namespace Ultima
 		/// </summary>
 		public string Name
 		{
-			get { return m_Name; }
-			set { m_Name = value; }
+			get => m_Name;
+			set => m_Name = value;
 		}
 
 		/// <summary>
@@ -274,8 +337,8 @@ namespace Ultima
 		/// </summary>
 		public short Animation
 		{
-			get { return m_Animation; }
-			set { m_Animation = value; }
+			get => m_Animation;
+			set => m_Animation = value;
 		}
 
 		/// <summary>
@@ -284,8 +347,8 @@ namespace Ultima
 		/// </summary>
 		public TileFlag Flags
 		{
-			get { return m_Flags; }
-			set { m_Flags = value; }
+			get => m_Flags;
+			set => m_Flags = value;
 		}
 
 		/// <summary>
@@ -293,53 +356,41 @@ namespace Ultima
 		/// </summary>
 		public int Unk1
 		{
-			get { return m_Unk1; }
-			set { m_Unk1 = value; }
+			get => m_Unk1;
+			set => m_Unk1 = value;
 		}
 
 		/// <summary>
 		/// Whether or not this item is flagged as '<see cref="TileFlag.Background" />'.
 		/// <seealso cref="TileFlag" />
 		/// </summary>
-		public bool Background
-		{
-			get { return ((m_Flags & TileFlag.Background) != 0); }
-		}
+		public bool Background => ((m_Flags & TileFlag.Background) != 0);
 
 		/// <summary>
 		/// Whether or not this item is flagged as '<see cref="TileFlag.Bridge" />'.
 		/// <seealso cref="TileFlag" />
 		/// </summary>
-		public bool Bridge
-		{
-			get { return ((m_Flags & TileFlag.Bridge) != 0); }
-		}
+		public bool Bridge => ((m_Flags & TileFlag.Bridge) != 0);
 
 		/// <summary>
 		/// Whether or not this item is flagged as '<see cref="TileFlag.Impassable" />'.
 		/// <seealso cref="TileFlag" />
 		/// </summary>
-		public bool Impassable
-		{
-			get { return ((m_Flags & TileFlag.Impassable) != 0); }
-		}
+		public bool Impassable => ((m_Flags & TileFlag.Impassable) != 0);
 
 		/// <summary>
 		/// Whether or not this item is flagged as '<see cref="TileFlag.Surface" />'.
 		/// <seealso cref="TileFlag" />
 		/// </summary>
-		public bool Surface
-		{
-			get { return ((m_Flags & TileFlag.Surface) != 0); }
-		}
+		public bool Surface => ((m_Flags & TileFlag.Surface) != 0);
 
 		/// <summary>
 		/// Gets the weight of this item.
 		/// </summary>
 		public byte Weight
 		{
-			get { return m_Weight; }
-			set { m_Weight = value; }
+			get => m_Weight;
+			set => m_Weight = value;
 		}
 
 		/// <summary>
@@ -347,8 +398,8 @@ namespace Ultima
 		/// </summary>
 		public byte Quality
 		{
-			get { return m_Quality; }
-			set { m_Quality = value; }
+			get => m_Quality;
+			set => m_Quality = value;
 		}
 
 		/// <summary>
@@ -356,8 +407,8 @@ namespace Ultima
 		/// </summary>
 		public byte Quantity
 		{
-			get { return m_Quantity; }
-			set { m_Quantity = value; }
+			get => m_Quantity;
+			set => m_Quantity = value;
 		}
 
 		/// <summary>
@@ -365,8 +416,8 @@ namespace Ultima
 		/// </summary>
 		public byte Value
 		{
-			get { return m_Value; }
-			set { m_Value = value; }
+			get => m_Value;
+			set => m_Value = value;
 		}
 
 		/// <summary>
@@ -374,8 +425,8 @@ namespace Ultima
 		/// </summary>
 		public byte Hue
 		{
-			get { return m_Hue; }
-			set { m_Hue = value; }
+			get => m_Hue;
+			set => m_Hue = value;
 		}
 
 		/// <summary>
@@ -383,8 +434,8 @@ namespace Ultima
 		/// </summary>
 		public byte StackingOffset
 		{
-			get { return m_StackOffset; }
-			set { m_StackOffset = value; }
+			get => m_StackOffset;
+			set => m_StackOffset = value;
 		}
 
 		/// <summary>
@@ -392,8 +443,8 @@ namespace Ultima
 		/// </summary>
 		public byte Height
 		{
-			get { return m_Height; }
-			set { m_Height = value; }
+			get => m_Height;
+			set => m_Height = value;
 		}
 
 		/// <summary>
@@ -401,8 +452,8 @@ namespace Ultima
 		/// </summary>
 		public short MiscData
 		{
-			get { return m_MiscData; }
-			set { m_MiscData = value; }
+			get => m_MiscData;
+			set => m_MiscData = value;
 		}
 
 		/// <summary>
@@ -410,8 +461,8 @@ namespace Ultima
 		/// </summary>
 		public byte Unk2
 		{
-			get { return m_Unk2; }
-			set { m_Unk2 = value; }
+			get => m_Unk2;
+			set => m_Unk2 = value;
 		}
 
 		/// <summary>
@@ -419,8 +470,8 @@ namespace Ultima
 		/// </summary>
 		public byte Unk3
 		{
-			get { return m_Unk3; }
-			set { m_Unk3 = value; }
+			get => m_Unk3;
+			set => m_Unk3 = value;
 		}
 
 		/// <summary>
@@ -430,10 +481,12 @@ namespace Ultima
 		{
 			get
 			{
-				if ((m_Flags & TileFlag.Bridge) != 0)
+				if ((m_Flags & TileFlag.Bridge) != 0) {
 					return m_Height / 2;
-				else
+				}
+				else {
 					return m_Height;
+				}
 			}
 		}
 
@@ -441,10 +494,7 @@ namespace Ultima
 		/// Whether or not this item is wearable as '<see cref="TileFlag.Wearable" />'.
 		/// <seealso cref="TileFlag" />
 		/// </summary>
-		public bool Wearable
-		{
-			get { return ((m_Flags & TileFlag.Wearable) != 0); }
-		}
+		public bool Wearable => ((m_Flags & TileFlag.Wearable) != 0);
 
 		public void ReadData(string[] split)
 		{
@@ -460,104 +510,167 @@ namespace Ultima
 			m_Unk1 = System.Convert.ToInt32(split[10]);
 			m_Unk2 = System.Convert.ToByte(split[11]);
 			m_Unk3 = System.Convert.ToByte(split[12]);
-			
+
 			m_Flags = 0;
 			int temp = System.Convert.ToByte(split[13]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Background;
+			}
+
 			temp = System.Convert.ToByte(split[14]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Weapon;
+			}
+
 			temp = System.Convert.ToByte(split[15]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Transparent;
+			}
+
 			temp = System.Convert.ToByte(split[16]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Translucent;
+			}
+
 			temp = System.Convert.ToByte(split[17]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Wall;
+			}
+
 			temp = System.Convert.ToByte(split[18]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Damaging;
+			}
+
 			temp = System.Convert.ToByte(split[19]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Impassable;
+			}
+
 			temp = System.Convert.ToByte(split[20]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Wet;
+			}
+
 			temp = System.Convert.ToByte(split[21]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Unknown1;
+			}
+
 			temp = System.Convert.ToByte(split[22]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Surface;
+			}
+
 			temp = System.Convert.ToByte(split[23]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Bridge;
+			}
+
 			temp = System.Convert.ToByte(split[24]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Generic;
+			}
+
 			temp = System.Convert.ToByte(split[25]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Window;
+			}
+
 			temp = System.Convert.ToByte(split[26]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.NoShoot;
+			}
+
 			temp = System.Convert.ToByte(split[27]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.ArticleA;
+			}
+
 			temp = System.Convert.ToByte(split[28]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.ArticleAn;
+			}
+
 			temp = System.Convert.ToByte(split[29]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Internal;
+			}
+
 			temp = System.Convert.ToByte(split[30]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Foliage;
+			}
+
 			temp = System.Convert.ToByte(split[31]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.PartialHue;
+			}
+
 			temp = System.Convert.ToByte(split[32]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Unknown2;
+			}
+
 			temp = System.Convert.ToByte(split[33]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Map;
+			}
+
 			temp = System.Convert.ToByte(split[34]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Container;
+			}
+
 			temp = System.Convert.ToByte(split[35]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Wearable;
+			}
+
 			temp = System.Convert.ToByte(split[36]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.LightSource;
+			}
+
 			temp = System.Convert.ToByte(split[37]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Animation;
+			}
+
 			temp = System.Convert.ToByte(split[38]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.HoverOver;
+			}
+
 			temp = System.Convert.ToByte(split[39]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Unknown3;
+			}
+
 			temp = System.Convert.ToByte(split[40]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Armor;
+			}
+
 			temp = System.Convert.ToByte(split[41]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Roof;
+			}
+
 			temp = System.Convert.ToByte(split[42]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.Door;
+			}
+
 			temp = System.Convert.ToByte(split[43]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.StairBack;
+			}
+
 			temp = System.Convert.ToByte(split[44]);
-			if (temp != 0)
+			if (temp != 0) {
 				m_Flags |= TileFlag.StairRight;
+			}
 		}
 	}
 
@@ -719,8 +832,8 @@ namespace Ultima
 		/// </summary>
 		public static LandData[] LandTable
 		{
-			get { return m_LandData; }
-			set { m_LandData = value; }
+			get => m_LandData;
+			set => m_LandData = value;
 		}
 
 		/// <summary>
@@ -728,32 +841,32 @@ namespace Ultima
 		/// </summary>
 		public static ItemData[] ItemTable
 		{
-			get { return m_ItemData; }
-			set { m_ItemData = value; }
+			get => m_ItemData;
+			set => m_ItemData = value;
 		}
 
-		public static int[] HeightTable
-		{
-			get { return m_HeightTable; }
-		}
+		public static int[] HeightTable => m_HeightTable;
 
-		private static byte[] m_StringBuffer = new byte[20];
+		private static readonly byte[] m_StringBuffer = new byte[20];
 		private static string ReadNameString(BinaryReader bin)
 		{
 			bin.Read(m_StringBuffer, 0, 20);
 
 			int count;
 
-			for (count = 0; count < 20 && m_StringBuffer[count] != 0; ++count) ;
+			for (count = 0; count < 20 && m_StringBuffer[count] != 0; ++count) {
+				;
+			}
 
 			return Encoding.Default.GetString(m_StringBuffer, 0, count);
 		}
 
-		public unsafe static string ReadNameString(byte* buffer)
+		public static unsafe string ReadNameString(byte* buffer)
 		{
 			int count;
-			for (count = 0; count < 20 && *buffer != 0; ++count)
+			for (count = 0; count < 20 && *buffer != 0; ++count) {
 				m_StringBuffer[count] = *buffer++;
+			}
 
 			return Encoding.Default.GetString(m_StringBuffer, 0, count);
 		}
@@ -770,84 +883,72 @@ namespace Ultima
 			Initialize();
 		}
 
-		public unsafe static void Initialize()
+		public static unsafe void Initialize()
 		{
-			string filePath = Files.GetFilePath("tiledata.mul");
+			var filePath = Files.GetFilePath("tiledata.mul");
 
-			if (filePath != null)
-			{
-				using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
-				{
-					bool useNeWTileDataFormat = Art.IsUOAHS();
+			if (filePath != null) {
+				using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+					var useNeWTileDataFormat = Art.IsUOAHS();
 					landheader = new int[512];
-					int j = 0;
+					var j = 0;
 					m_LandData = new LandData[0x4000];
 
-					byte[] buffer = new byte[fs.Length];
-					GCHandle gc = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+					var buffer = new byte[fs.Length];
+					var gc = GCHandle.Alloc(buffer, GCHandleType.Pinned);
 					long currpos = 0;
-					try
-					{
+					try {
 						fs.Read(buffer, 0, buffer.Length);
-						for (int i = 0; i < 0x4000; i += 32)
-						{
-							IntPtr ptrheader = new IntPtr((long)gc.AddrOfPinnedObject() + currpos);
+						for (var i = 0; i < 0x4000; i += 32) {
+							var ptrheader = new IntPtr((long)gc.AddrOfPinnedObject() + currpos);
 							currpos += 4;
 							landheader[j++] = (int)Marshal.PtrToStructure(ptrheader, typeof(int));
-							for (int count = 0; count < 32; ++count)
-							{
-								IntPtr ptr = new IntPtr((long)gc.AddrOfPinnedObject() + currpos);
-								if (useNeWTileDataFormat)
-								{
+							for (var count = 0; count < 32; ++count) {
+								var ptr = new IntPtr((long)gc.AddrOfPinnedObject() + currpos);
+								if (useNeWTileDataFormat) {
 									currpos += sizeof(NewLandTileDataMul);
-									NewLandTileDataMul cur = (NewLandTileDataMul)Marshal.PtrToStructure(ptr, typeof(NewLandTileDataMul));
+									var cur = (NewLandTileDataMul)Marshal.PtrToStructure(ptr, typeof(NewLandTileDataMul));
 									m_LandData[i + count] = new LandData(cur);
 								}
-								else
-								{
+								else {
 									currpos += sizeof(OldLandTileDataMul);
-									OldLandTileDataMul cur = (OldLandTileDataMul)Marshal.PtrToStructure(ptr, typeof(OldLandTileDataMul));
+									var cur = (OldLandTileDataMul)Marshal.PtrToStructure(ptr, typeof(OldLandTileDataMul));
 									m_LandData[i + count] = new LandData(cur);
 								}
 							}
 						}
-						
-						long remaining = buffer.Length - currpos;
-						int structsize = useNeWTileDataFormat ? sizeof(NewItemTileDataMul) : sizeof(OldItemTileDataMul);
+
+						var remaining = buffer.Length - currpos;
+						var structsize = useNeWTileDataFormat ? sizeof(NewItemTileDataMul) : sizeof(OldItemTileDataMul);
 						itemheader = new int[(remaining / ((structsize * 32) + 4))];
-						int itemlength = itemheader.Length * 32;
+						var itemlength = itemheader.Length * 32;
 
 						m_ItemData = new ItemData[itemlength];
 						m_HeightTable = new int[itemlength];
 
 						j = 0;
-						for (int i = 0; i < itemlength; i += 32)
-						{
-							IntPtr ptrheader = new IntPtr((long)gc.AddrOfPinnedObject() + currpos);
+						for (var i = 0; i < itemlength; i += 32) {
+							var ptrheader = new IntPtr((long)gc.AddrOfPinnedObject() + currpos);
 							currpos += 4;
 							itemheader[j++] = (int)Marshal.PtrToStructure(ptrheader, typeof(int));
-							for (int count = 0; count < 32; ++count)
-							{
-								IntPtr ptr = new IntPtr((long)gc.AddrOfPinnedObject() + currpos);
-								if (useNeWTileDataFormat)
-								{
+							for (var count = 0; count < 32; ++count) {
+								var ptr = new IntPtr((long)gc.AddrOfPinnedObject() + currpos);
+								if (useNeWTileDataFormat) {
 									currpos += sizeof(NewItemTileDataMul);
-									NewItemTileDataMul cur = (NewItemTileDataMul)Marshal.PtrToStructure(ptr, typeof(NewItemTileDataMul));
+									var cur = (NewItemTileDataMul)Marshal.PtrToStructure(ptr, typeof(NewItemTileDataMul));
 									m_ItemData[i + count] = new ItemData(cur);
 									m_HeightTable[i + count] = cur.height;
 								}
-								else
-								{
+								else {
 									currpos += sizeof(OldItemTileDataMul);
-									OldItemTileDataMul cur = (OldItemTileDataMul)Marshal.PtrToStructure(ptr, typeof(OldItemTileDataMul));
+									var cur = (OldItemTileDataMul)Marshal.PtrToStructure(ptr, typeof(OldItemTileDataMul));
 									m_ItemData[i + count] = new ItemData(cur);
 									m_HeightTable[i + count] = cur.height;
 								}
 							}
 						}
 					}
-					finally
-					{
+					finally {
 						gc.Free();
 					}
 				}
@@ -860,42 +961,43 @@ namespace Ultima
 		/// <param name="FileName"></param>
 		public static void SaveTileData(string FileName)
 		{
-			using (FileStream fs = new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write))
-			{
-				using (BinaryWriter bin = new BinaryWriter(fs))
-				{
-					int j = 0;
-					bool useNewTileDataFormat = Art.IsUOAHS();
-					for (int i = 0; i < 0x4000; ++i)
-					{
-						if ((i & 0x1F) == 0)
+			using (var fs = new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write)) {
+				using (var bin = new BinaryWriter(fs)) {
+					var j = 0;
+					var useNewTileDataFormat = Art.IsUOAHS();
+					for (var i = 0; i < 0x4000; ++i) {
+						if ((i & 0x1F) == 0) {
 							bin.Write(landheader[j++]); //header
+						}
 
 						bin.Write((int)m_LandData[i].Flags);
-						if(useNewTileDataFormat)
-							bin.Write((int)m_LandData[i].Unk1);
+						if (useNewTileDataFormat) {
+							bin.Write(m_LandData[i].Unk1);
+						}
 
 						bin.Write(m_LandData[i].TextureID);
-						byte[] b = new byte[20];
-						if (m_LandData[i].Name != null)
-						{
-							byte[] bb = Encoding.Default.GetBytes(m_LandData[i].Name);
-							if (bb.Length > 20)
+						var b = new byte[20];
+						if (m_LandData[i].Name != null) {
+							var bb = Encoding.Default.GetBytes(m_LandData[i].Name);
+							if (bb.Length > 20) {
 								Array.Resize(ref bb, 20);
+							}
+
 							bb.CopyTo(b, 0);
 						}
 						bin.Write(b);
 					}
 					j = 0;
-					for (int i = 0; i < m_ItemData.Length; ++i)
-					{
-						if ((i & 0x1F) == 0)
+					for (var i = 0; i < m_ItemData.Length; ++i) {
+						if ((i & 0x1F) == 0) {
 							bin.Write(itemheader[j++]); // header
+						}
 
 						bin.Write((int)m_ItemData[i].Flags);
-						if(useNewTileDataFormat)
-							bin.Write((int)m_ItemData[i].Unk1);
-						   
+						if (useNewTileDataFormat) {
+							bin.Write(m_ItemData[i].Unk1);
+						}
+
 						bin.Write(m_ItemData[i].Weight);
 						bin.Write(m_ItemData[i].Quality);
 						bin.Write(m_ItemData[i].MiscData);
@@ -907,12 +1009,13 @@ namespace Ultima
 						bin.Write(m_ItemData[i].StackingOffset); //unk4
 						bin.Write(m_ItemData[i].Value); //unk5
 						bin.Write(m_ItemData[i].Height);
-						byte[] b = new byte[20];
-						if (m_ItemData[i].Name != null)
-						{
-							byte[] bb = Encoding.Default.GetBytes(m_ItemData[i].Name);
-							if (bb.Length > 20)
+						var b = new byte[20];
+						if (m_ItemData[i].Name != null) {
+							var bb = Encoding.Default.GetBytes(m_ItemData[i].Name);
+							if (bb.Length > 20) {
 								Array.Resize(ref bb, 20);
+							}
+
 							bb.CopyTo(b, 0);
 						}
 						bin.Write(b);
@@ -927,17 +1030,15 @@ namespace Ultima
 		/// <param name="FileName"></param>
 		public static void ExportItemDataToCSV(string FileName)
 		{
-			using (StreamWriter Tex = new StreamWriter(new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite), System.Text.Encoding.GetEncoding(1252)))
-			{
+			using (var Tex = new StreamWriter(new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite), System.Text.Encoding.GetEncoding(1252))) {
 				Tex.Write("ID;Name;Weight/Quantity;Layer/Quality;Gump/AnimID;Height;Hue;Class/Quantity;StackingOffset;MiscData;Unknown1;Unknown2;Unknown3");
 				Tex.Write(";Background;Weapon;Transparent;Translucent;Wall;Damage;Impassible;Wet;Unknow1");
 				Tex.Write(";Surface;Bridge;Generic;Window;NoShoot;PrefixA;PrefixAn;Internal;Foliage;PartialHue");
 				Tex.Write(";Unknow2;Map;Container/Height;Wearable;Lightsource;Animation;HoverOver");
 				Tex.WriteLine(";Unknow3;Armor;Roof;Door;StairBack;StairRight");
 
-				for (int i = 0; i < m_ItemData.Length; ++i)
-				{
-					ItemData tile = m_ItemData[i];
+				for (var i = 0; i < m_ItemData.Length; ++i) {
+					var tile = m_ItemData[i];
 					Tex.Write(String.Format("0x{0:X4}", i));
 					Tex.Write(String.Format(";{0}", tile.Name));
 					Tex.Write(";" + tile.Weight);
@@ -994,17 +1095,15 @@ namespace Ultima
 		/// <param name="FileName"></param>
 		public static void ExportLandDataToCSV(string FileName)
 		{
-			using (StreamWriter Tex = new StreamWriter(new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite)))
-			{
+			using (var Tex = new StreamWriter(new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite))) {
 				Tex.Write("ID;Name;TextureID;HSAUnk1");
 				Tex.Write(";Background;Weapon;Transparent;Translucent;Wall;Damage;Impassible;Wet;Unknow1");
 				Tex.Write(";Surface;Bridge;Generic;Window;NoShoot;PrefixA;PrefixAn;Internal;Foliage;PartialHue");
 				Tex.Write(";Unknow2;Map;Container/Height;Wearable;Lightsource;Animation;HoverOver");
 				Tex.WriteLine(";Unknow3;Armor;Roof;Door;StairBack;StairRight");
 
-				for (int i = 0; i < m_LandData.Length; ++i)
-				{
-					LandData tile = m_LandData[i];
+				for (var i = 0; i < m_LandData.Length; ++i) {
+					var tile = m_LandData[i];
 					Tex.Write(String.Format("0x{0:X4}", i));
 					Tex.Write(";" + tile.Name);
 					Tex.Write(";" + String.Format("0x{0:X4}", tile.TextureID));
@@ -1049,37 +1148,41 @@ namespace Ultima
 		public static int ConvertStringToInt(string text)
 		{
 			int result;
-			if (text.Contains("0x"))
-			{
-				string convert = text.Replace("0x", "");
-				int.TryParse(convert, System.Globalization.NumberStyles.HexNumber, null, out result);
+			if (text.Contains("0x")) {
+				var convert = text.Replace("0x", "");
+				Int32.TryParse(convert, System.Globalization.NumberStyles.HexNumber, null, out result);
 			}
-			else
-				int.TryParse(text, System.Globalization.NumberStyles.Integer, null, out result);
+			else {
+				Int32.TryParse(text, System.Globalization.NumberStyles.Integer, null, out result);
+			}
 
 			return result;
 		}
 
 		public static void ImportItemDataFromCSV(string FileName)
 		{
-			if (!File.Exists(FileName))
+			if (!File.Exists(FileName)) {
 				return;
-			using (StreamReader sr = new StreamReader(FileName))
-			{
-				string line;
-				while ((line = sr.ReadLine()) != null)
-				{
-					if ((line = line.Trim()).Length == 0 || line.StartsWith("#"))
-						continue;
-					if (line.StartsWith("ID;"))
-						continue;
-					try
-					{
-						string[] split = line.Split(';');
-						if (split.Length < 45)
-							continue;
+			}
 
-						int id = ConvertStringToInt(split[0]);
+			using (var sr = new StreamReader(FileName)) {
+				string line;
+				while ((line = sr.ReadLine()) != null) {
+					if ((line = line.Trim()).Length == 0 || line.StartsWith("#")) {
+						continue;
+					}
+
+					if (line.StartsWith("ID;")) {
+						continue;
+					}
+
+					try {
+						var split = line.Split(';');
+						if (split.Length < 45) {
+							continue;
+						}
+
+						var id = ConvertStringToInt(split[0]);
 						m_ItemData[id].ReadData(split);
 					}
 					catch { }
@@ -1090,24 +1193,28 @@ namespace Ultima
 
 		public static void ImportLandDataFromCSV(string FileName)
 		{
-			if (!File.Exists(FileName))
+			if (!File.Exists(FileName)) {
 				return;
-			using (StreamReader sr = new StreamReader(FileName))
-			{
-				string line;
-				while ((line = sr.ReadLine()) != null)
-				{
-					if ((line = line.Trim()).Length == 0 || line.StartsWith("#"))
-						continue;
-					if (line.StartsWith("ID;"))
-						continue;
-					try
-					{
-						string[] split = line.Split(';');
-						if (split.Length < 36)
-							continue;
+			}
 
-						int id = ConvertStringToInt(split[0]);
+			using (var sr = new StreamReader(FileName)) {
+				string line;
+				while ((line = sr.ReadLine()) != null) {
+					if ((line = line.Trim()).Length == 0 || line.StartsWith("#")) {
+						continue;
+					}
+
+					if (line.StartsWith("ID;")) {
+						continue;
+					}
+
+					try {
+						var split = line.Split(';');
+						if (split.Length < 36) {
+							continue;
+						}
+
+						var id = ConvertStringToInt(split[0]);
 						m_LandData[id].ReadData(split);
 					}
 					catch { }

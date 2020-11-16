@@ -4,13 +4,13 @@ namespace Ultima
 {
 	public sealed class HuedTileList
 	{
-		private List<HuedTile> m_Tiles;
+		private readonly List<HuedTile> m_Tiles;
 		public HuedTileList()
 		{
 			m_Tiles = new List<HuedTile>();
 		}
 
-		public int Count { get { return m_Tiles.Count; } }
+		public int Count => m_Tiles.Count;
 
 		public void Add(ushort id, short hue, sbyte z)
 		{
@@ -19,10 +19,12 @@ namespace Ultima
 
 		public HuedTile[] ToArray()
 		{
-			HuedTile[] tiles = new HuedTile[Count];
+			var tiles = new HuedTile[Count];
 
-			if (m_Tiles.Count > 0)
+			if (m_Tiles.Count > 0) {
 				m_Tiles.CopyTo(tiles);
+			}
+
 			m_Tiles.Clear();
 
 			return tiles;
@@ -31,14 +33,14 @@ namespace Ultima
 
 	public sealed class TileList
 	{
-		private List<Tile> m_Tiles;
+		private readonly List<Tile> m_Tiles;
 
 		public TileList()
 		{
 			m_Tiles = new List<Tile>();
 		}
 
-		public int Count { get { return m_Tiles.Count; } }
+		public int Count => m_Tiles.Count;
 
 		public void Add(ushort id, sbyte z)
 		{
@@ -51,9 +53,11 @@ namespace Ultima
 
 		public Tile[] ToArray()
 		{
-			Tile[] tiles = new Tile[Count];
-			if (m_Tiles.Count > 0)
+			var tiles = new Tile[Count];
+			if (m_Tiles.Count > 0) {
 				m_Tiles.CopyTo(tiles);
+			}
+
 			m_Tiles.Clear();
 
 			return tiles;
@@ -67,14 +71,14 @@ namespace Ultima
 
 	public sealed class MTileList
 	{
-		private List<MTile> m_Tiles;
+		private readonly List<MTile> m_Tiles;
 
 		public MTileList()
 		{
 			m_Tiles = new List<MTile>();
 		}
 
-		public int Count { get { return m_Tiles.Count; } }
+		public int Count => m_Tiles.Count;
 
 		public void Add(ushort id, sbyte z)
 		{
@@ -91,10 +95,12 @@ namespace Ultima
 
 		public MTile[] ToArray()
 		{
-			MTile[] tiles = new MTile[Count];
+			var tiles = new MTile[Count];
 
-			if (m_Tiles.Count > 0)
+			if (m_Tiles.Count > 0) {
 				m_Tiles.CopyTo(tiles);
+			}
+
 			m_Tiles.Clear();
 
 			return tiles;
@@ -107,25 +113,29 @@ namespace Ultima
 
 		public void Set(int i, ushort id, sbyte z)
 		{
-			if (i < Count)
+			if (i < Count) {
 				m_Tiles[i].Set(id, z);
+			}
 		}
 
 		public void Set(int i, ushort id, sbyte z, sbyte flag)
 		{
-			if (i < Count)
+			if (i < Count) {
 				m_Tiles[i].Set(id, z, flag);
+			}
 		}
 
 		public void Set(int i, ushort id, sbyte z, sbyte flag, int unk1)
 		{
-			if (i < Count)
+			if (i < Count) {
 				m_Tiles[i].Set(id, z, flag, unk1);
+			}
 		}
 		public void Remove(int i)
 		{
-			if (i < Count)
+			if (i < Count) {
 				m_Tiles.RemoveAt(i);
+			}
 		}
 	}
 }

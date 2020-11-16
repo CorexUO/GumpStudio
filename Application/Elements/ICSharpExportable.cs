@@ -1,7 +1,7 @@
 ﻿namespace GumpStudio.Elements
 {
-    public interface ICSharpExportable
-    {
-        string ToCSharpString();
-    }
+	public interface ICSharpExportable
+	{
+		string ToCSharpString();
+	}
 }

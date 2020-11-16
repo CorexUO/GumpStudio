@@ -6,14 +6,14 @@
 
 namespace GumpStudio
 {
-  public abstract class TreeItem
-  {
-    public TreeItem Parent;
-    public string Text;
+	public abstract class TreeItem
+	{
+		public TreeItem Parent;
+		public string Text;
 
-    public override string ToString()
-    {
-      return this.Text;
-    }
-  }
+		public override string ToString()
+		{
+			return Text;
+		}
+	}
 }

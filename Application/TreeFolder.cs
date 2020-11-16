@@ -8,30 +8,30 @@ using System.Collections;
 
 namespace GumpStudio
 {
-  public class TreeFolder : TreeItem
-  {
-    protected ArrayList Children = new ArrayList();
+	public class TreeFolder : TreeItem
+	{
+		protected ArrayList Children = new ArrayList();
 
-    public TreeFolder(string Text)
-    {
-      this.Text = Text;
-    }
+		public TreeFolder(string Text)
+		{
+			this.Text = Text;
+		}
 
-    public void AddItem(TreeItem Item)
-    {
-      this.Children.Add(Item);
-      Item.Parent = this;
-    }
+		public void AddItem(TreeItem Item)
+		{
+			Children.Add(Item);
+			Item.Parent = this;
+		}
 
-    public ArrayList GetChildren()
-    {
-      return this.Children;
-    }
+		public ArrayList GetChildren()
+		{
+			return Children;
+		}
 
-    public void RemoveItem(TreeItem Item)
-    {
-      this.Children.Remove(Item);
-      Item.Parent = null;
-    }
-  }
+		public void RemoveItem(TreeItem Item)
+		{
+			Children.Remove(Item);
+			Item.Parent = null;
+		}
+	}
 }

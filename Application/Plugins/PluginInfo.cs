@@ -22,8 +22,7 @@ namespace GumpStudio.Plugins
 			AuthorContact = authorContact;
 			Description = description;
 
-			unchecked
-			{
+			unchecked {
 				var hash = 1;
 
 				var comparer = EqualityComparer<string>.Default;

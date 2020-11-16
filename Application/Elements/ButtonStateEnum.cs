@@ -6,9 +6,9 @@
 
 namespace GumpStudio.Elements
 {
-  public enum ButtonStateEnum
-  {
-    Normal,
-    Pressed,
-  }
+	public enum ButtonStateEnum
+	{
+		Normal,
+		Pressed,
+	}
 }

@@ -6,9 +6,9 @@
 
 namespace GumpStudio.Elements
 {
-  public enum ButtonTypeEnum
-  {
-    Page,
-    Reply,
-  }
+	public enum ButtonTypeEnum
+	{
+		Page,
+		Reply,
+	}
 }

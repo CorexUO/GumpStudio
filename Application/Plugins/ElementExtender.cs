@@ -8,10 +8,10 @@ using System.Windows.Forms;
 
 namespace GumpStudio.Plugins
 {
-  public abstract class ElementExtender
-  {
-    public virtual void AddContextMenus(ref MenuItem GroupMenu, ref MenuItem PositionMenu, ref MenuItem OrderMenu, ref MenuItem MiscMenu)
-    {
-    }
-  }
+	public abstract class ElementExtender
+	{
+		public virtual void AddContextMenus(ref MenuItem GroupMenu, ref MenuItem PositionMenu, ref MenuItem OrderMenu, ref MenuItem MiscMenu)
+		{
+		}
+	}
 }

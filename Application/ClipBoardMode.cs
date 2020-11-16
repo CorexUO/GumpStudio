@@ -6,9 +6,9 @@
 
 namespace GumpStudio
 {
-  public enum ClipBoardMode
-  {
-    Cut,
-    Copy,
-  }
+	public enum ClipBoardMode
+	{
+		Cut,
+		Copy,
+	}
 }

@@ -6,9 +6,9 @@
 
 namespace GumpStudio.Elements
 {
-  public enum HTMLElementType
-  {
-    HTML,
-    Localized,
-  }
+	public enum HTMLElementType
+	{
+		HTML,
+		Localized,
+	}
 }

@@ -11,7 +11,7 @@ namespace Ultima
 	{
 		public static List<SpeechEntry> Entries { get; set; }
 
-		private static byte[] m_Buffer = new byte[128];
+		private static readonly byte[] m_Buffer = new byte[128];
 
 		static SpeechList()
 		{
@@ -23,34 +23,33 @@ namespace Ultima
 		/// </summary>
 		public static void Initialize()
 		{
-			string path = Files.GetFilePath("speech.mul");
-			if (path == null)
-			{
+			var path = Files.GetFilePath("speech.mul");
+			if (path == null) {
 				Entries = new List<SpeechEntry>(0);
 				return;
 			}
 			Entries = new List<SpeechEntry>();
-			using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
-			{
-				byte[] buffer = new byte[fs.Length];
-				unsafe
-				{
-					int order = 0;
+			using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+				var buffer = new byte[fs.Length];
+				unsafe {
+					var order = 0;
 					fs.Read(buffer, 0, buffer.Length);
-					fixed (byte* data = buffer)
-					{
-						byte* bindat = (byte*)data;
-						byte* bindatend = bindat + buffer.Length;
+					fixed (byte* data = buffer) {
+						var bindat = data;
+						var bindatend = bindat + buffer.Length;
 
-						while (bindat != bindatend)
-						{
-							short id = (short)((*bindat++ >> 8) | (*bindat++)); //Swapped Endian
-							short length = (short)((*bindat++ >> 8) | (*bindat++));
-							if (length > 128)
+						while (bindat != bindatend) {
+							var id = (short)((*bindat++ >> 8) | (*bindat++)); //Swapped Endian
+							var length = (short)((*bindat++ >> 8) | (*bindat++));
+							if (length > 128) {
 								length = 128;
-							for (int i = 0; i < length; ++i)
+							}
+
+							for (var i = 0; i < length; ++i) {
 								m_Buffer[i] = *bindat++;
-							string keyword = Encoding.UTF8.GetString(m_Buffer, 0, length);
+							}
+
+							var keyword = Encoding.UTF8.GetString(m_Buffer, 0, length);
 							Entries.Add(new SpeechEntry(id, keyword, order));
 							++order;
 						}
@@ -66,15 +65,12 @@ namespace Ultima
 		public static void SaveSpeechList(string FileName)
 		{
 			Entries.Sort(new OrderComparer());
-			using (FileStream fs = new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write))
-			{
-				using (BinaryWriter bin = new BinaryWriter(fs))
-				{
-					foreach (SpeechEntry entry in Entries)
-					{
+			using (var fs = new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write)) {
+				using (var bin = new BinaryWriter(fs)) {
+					foreach (var entry in Entries) {
 						bin.Write(NativeMethods.SwapEndian(entry.ID));
-						byte[] utf8String = Encoding.UTF8.GetBytes(entry.KeyWord);
-						short length = (short)utf8String.Length;
+						var utf8String = Encoding.UTF8.GetBytes(entry.KeyWord);
+						var length = (short)utf8String.Length;
 						bin.Write(NativeMethods.SwapEndian(length));
 						bin.Write(utf8String);
 					}
@@ -84,11 +80,9 @@ namespace Ultima
 
 		public static void ExportToCSV(string FileName)
 		{
-			using (StreamWriter Tex = new StreamWriter(new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite), System.Text.Encoding.Unicode))
-			{
+			using (var Tex = new StreamWriter(new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite), System.Text.Encoding.Unicode)) {
 				Tex.WriteLine("Order;ID;KeyWord");
-				foreach (SpeechEntry entry in Entries)
-				{
+				foreach (var entry in Entries) {
 					Tex.WriteLine(String.Format("{0};{1};{2}", entry.Order, entry.ID, entry.KeyWord));
 				}
 			}
@@ -97,26 +91,30 @@ namespace Ultima
 		public static void ImportFromCSV(string FileName)
 		{
 			Entries = new List<SpeechEntry>(0);
-			if (!File.Exists(FileName))
+			if (!File.Exists(FileName)) {
 				return;
-			using (StreamReader sr = new StreamReader(FileName))
-			{
-				string line;
-				while ((line = sr.ReadLine()) != null)
-				{
-					if ((line = line.Trim()).Length == 0 || line.StartsWith("#"))
-						continue;
-					if ((line.Contains("Order")) && (line.Contains("KeyWord")))
-						continue;
-					try
-					{
-						string[] split = line.Split(';');
-						if (split.Length < 3)
-							continue;
+			}
 
-						int order = ConvertStringToInt(split[0]);
-						int id = ConvertStringToInt(split[1]);
-						string word = split[2];
+			using (var sr = new StreamReader(FileName)) {
+				string line;
+				while ((line = sr.ReadLine()) != null) {
+					if ((line = line.Trim()).Length == 0 || line.StartsWith("#")) {
+						continue;
+					}
+
+					if ((line.Contains("Order")) && (line.Contains("KeyWord"))) {
+						continue;
+					}
+
+					try {
+						var split = line.Split(';');
+						if (split.Length < 3) {
+							continue;
+						}
+
+						var order = ConvertStringToInt(split[0]);
+						var id = ConvertStringToInt(split[1]);
+						var word = split[2];
 						word = word.Replace("\"", "");
 						Entries.Add(new SpeechEntry((short)id, word, order));
 					}
@@ -128,13 +126,13 @@ namespace Ultima
 		public static int ConvertStringToInt(string text)
 		{
 			int result;
-			if (text.Contains("0x"))
-			{
-				string convert = text.Replace("0x", "");
-				int.TryParse(convert, System.Globalization.NumberStyles.HexNumber, null, out result);
+			if (text.Contains("0x")) {
+				var convert = text.Replace("0x", "");
+				Int32.TryParse(convert, System.Globalization.NumberStyles.HexNumber, null, out result);
 			}
-			else
-				int.TryParse(text, System.Globalization.NumberStyles.Integer, null, out result);
+			else {
+				Int32.TryParse(text, System.Globalization.NumberStyles.Integer, null, out result);
+			}
 
 			return result;
 		}
@@ -142,7 +140,7 @@ namespace Ultima
 		#region SortComparer
 		public class IDComparer : IComparer<SpeechEntry>
 		{
-			private bool m_desc;
+			private readonly bool m_desc;
 
 			public IDComparer(bool desc)
 			{
@@ -151,18 +149,21 @@ namespace Ultima
 
 			public int Compare(SpeechEntry objA, SpeechEntry objB)
 			{
-				if (objA.ID == objB.ID)
+				if (objA.ID == objB.ID) {
 					return 0;
-				else if (m_desc)
+				}
+				else if (m_desc) {
 					return (objA.ID < objB.ID) ? 1 : -1;
-				else
+				}
+				else {
 					return (objA.ID < objB.ID) ? -1 : 1;
+				}
 			}
 		}
 
 		public class KeyWordComparer : IComparer<SpeechEntry>
 		{
-			private bool m_desc;
+			private readonly bool m_desc;
 
 			public KeyWordComparer(bool desc)
 			{
@@ -171,10 +172,12 @@ namespace Ultima
 
 			public int Compare(SpeechEntry objA, SpeechEntry objB)
 			{
-				if (m_desc)
+				if (m_desc) {
 					return String.Compare(objB.KeyWord, objA.KeyWord);
-				else
+				}
+				else {
 					return String.Compare(objA.KeyWord, objB.KeyWord);
+				}
 			}
 		}
 
@@ -182,10 +185,12 @@ namespace Ultima
 		{
 			public int Compare(SpeechEntry objA, SpeechEntry objB)
 			{
-				if (objA.Order == objB.Order)
+				if (objA.Order == objB.Order) {
 					return 0;
-				else
+				}
+				else {
 					return (objA.Order < objB.Order) ? -1 : 1;
+				}
 			}
 		}
 

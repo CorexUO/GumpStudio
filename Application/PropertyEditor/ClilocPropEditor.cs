@@ -9,34 +9,33 @@ using System.ComponentModel;
 using System.Drawing.Design;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
+
 using GumpStudio.Forms;
 
 namespace GumpStudio
 {
-    public class ClilocPropEditor : UITypeEditor
-    {
-        protected IWindowsFormsEditorService edSvc;
+	public class ClilocPropEditor : UITypeEditor
+	{
+		protected IWindowsFormsEditorService edSvc;
 
-        public override object EditValue( ITypeDescriptorContext context, IServiceProvider provider, object value )
-        {
-            if ( provider != null )
-            {
-                edSvc = (IWindowsFormsEditorService) provider.GetService( typeof( IWindowsFormsEditorService ) );
-            }
+		public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
+		{
+			if (provider != null) {
+				edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
+			}
 
-            if ( edSvc == null )
-            {
-                return value;
-            }
+			if (edSvc == null) {
+				return value;
+			}
 
-            ClilocBrowser clilocBrowser = new ClilocBrowser();
+			var clilocBrowser = new ClilocBrowser();
 
-            return edSvc.ShowDialog( clilocBrowser ) == DialogResult.OK ? clilocBrowser.ClilocID : value;
-        }
+			return edSvc.ShowDialog(clilocBrowser) == DialogResult.OK ? clilocBrowser.ClilocID : value;
+		}
 
-        public override UITypeEditorEditStyle GetEditStyle( ITypeDescriptorContext context )
-        {
-            return UITypeEditorEditStyle.Modal;
-        }
-    }
+		public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
+		{
+			return UITypeEditorEditStyle.Modal;
+		}
+	}
 }
