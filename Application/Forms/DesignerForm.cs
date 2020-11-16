@@ -16,6 +16,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
 using Ultima;
@@ -1455,6 +1456,24 @@ namespace GumpStudio.Forms
 
         }
 
+        private sealed class DeserializationBinder : SerializationBinder
+        {
+            public static readonly DeserializationBinder Instance = new DeserializationBinder();
+
+            private DeserializationBinder()
+            { }
+
+            public override Type BindToType(string assemblyName, string typeName)
+            {
+                var asm = Assembly.GetExecutingAssembly();
+
+                if (assemblyName.Contains("GumpStudioCore"))
+                    assemblyName = asm.FullName;
+
+                return Type.GetType($"{typeName}, {assemblyName}");
+            }
+        }
+
         public void LoadFrom( string Path )
         {
             IEnumerator enumerator = null;
@@ -1465,7 +1484,7 @@ namespace GumpStudio.Forms
             try
             {
                 fileStream = new FileStream( Path, FileMode.Open );
-                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                BinaryFormatter binaryFormatter = new BinaryFormatter { Binder = DeserializationBinder.Instance };
                 Stacks = (ArrayList) binaryFormatter.Deserialize( fileStream );
                 try
                 {
@@ -1514,7 +1533,7 @@ namespace GumpStudio.Forms
             if ( _OpenDialog.ShowDialog() != DialogResult.OK )
                 return;
             FileStream fileStream = new FileStream( _OpenDialog.FileName, FileMode.Open );
-            GroupElement groupElement = (GroupElement) new BinaryFormatter().Deserialize( fileStream );
+            GroupElement groupElement = (GroupElement) new BinaryFormatter { Binder = DeserializationBinder.Instance }.Deserialize( fileStream );
             groupElement.mIsBaseWindow = false;
             groupElement.RecalculateBounds();
             Point point = new Point( 0, 0 );
@@ -1672,7 +1691,7 @@ namespace GumpStudio.Forms
             if ( _OpenDialog.ShowDialog() != DialogResult.OK )
                 return;
             FileStream fileStream = new FileStream( _OpenDialog.FileName, FileMode.Open );
-            GroupElement Gumpling = (GroupElement) new BinaryFormatter().Deserialize( fileStream );
+            GroupElement Gumpling = (GroupElement) new BinaryFormatter { Binder = DeserializationBinder.Instance }.Deserialize( fileStream );
             Gumpling.mIsBaseWindow = false;
             Gumpling.RecalculateBounds();
             Point point = new Point( 0, 0 );
@@ -2218,7 +2237,7 @@ namespace GumpStudio.Forms
                 Target1.Clear( Color.Black );
             HookPreRenderEventHandler hookPreRender = HookPreRender;
             hookPreRender?.Invoke( Canvas );
-            if ( ( !ShowPage0 || ElementStack == Stacks[0] ? 0 : 1 ) != 0 )
+            if ( Stacks.Count > 0 && ( !ShowPage0 || ElementStack == Stacks[0] ? 0 : 1 ) != 0 )
                 ( (BaseElement) Stacks[0] ).Render( Target1 );
             ElementStack.Render( Target1 );
 
@@ -2267,7 +2286,7 @@ namespace GumpStudio.Forms
             ElementStack.UpdateParent -= new BaseElement.UpdateParentEventHandler( ChangeActiveElementEventHandler );
             ElementStack.Repaint -= new BaseElement.RepaintEventHandler( RefreshView );
             FileStream fileStream = new FileStream( Path, FileMode.Create );
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            BinaryFormatter binaryFormatter = new BinaryFormatter { Binder = DeserializationBinder.Instance };
             binaryFormatter.Serialize( fileStream, Stacks );
             binaryFormatter.Serialize( fileStream, GumpProperties );
             fileStream.Close();
@@ -2357,7 +2376,7 @@ namespace GumpStudio.Forms
             if ( PluginTypesToLoad != null )
             {
                 FileStream fileStream = new FileStream( Application.StartupPath + "\\LoadInfo.bin", FileMode.Create );
-                new BinaryFormatter().Serialize( fileStream, PluginTypesToLoad );
+                new BinaryFormatter { Binder = DeserializationBinder.Instance }.Serialize( fileStream, PluginTypesToLoad );
                 fileStream.Close();
             }
             else
