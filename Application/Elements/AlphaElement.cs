@@ -11,7 +11,7 @@ using System.Runtime.Serialization;
 namespace GumpStudio.Elements
 {
     [Serializable]
-    public class AlphaElement : ResizeableElement, IRunUOExportable
+    public class AlphaElement : ResizeableElement, ICSharpExportable
     {
         public override string Type => "Alpha Area";
 
@@ -44,7 +44,7 @@ namespace GumpStudio.Elements
             solidBrush.Dispose();
         }
 
-        public string ToRunUOString()
+        public string ToCSharpString()
         {
             return $"AddAlphaRegion({X}, {Y}, {Width}, {Height});";
         }

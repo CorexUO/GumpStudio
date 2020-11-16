@@ -16,7 +16,7 @@ using Ultima;
 namespace GumpStudio.Elements
 {
     [Serializable]
-    public class TiledElement : ResizeableElement, IRunUOExportable
+    public class TiledElement : ResizeableElement, ICSharpExportable
     {
         protected bool DoingRenderRetry;
         protected Bitmap ImageCache;
@@ -77,7 +77,7 @@ namespace GumpStudio.Elements
             RefreshCache();
         }
 
-        public string ToRunUOString()
+        public string ToCSharpString()
         {
             return $"AddImageTiled({X}, {Y}, {Width}, {Height}, {GumpID});";
         }

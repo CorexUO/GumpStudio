@@ -19,7 +19,7 @@ using UnicodeFonts = UOFont.UnicodeFonts;
 namespace GumpStudio.Elements
 {
     [Serializable]
-    public class LabelElement : BaseElement, IRunUOExportable
+    public class LabelElement : BaseElement, ICSharpExportable
     {
         protected Bitmap mCache;
         protected bool mCropped;
@@ -216,7 +216,7 @@ namespace GumpStudio.Elements
             Target.DrawImage( mCache, Location );
         }
 
-        public string ToRunUOString()
+        public string ToCSharpString()
         {
             return $"AddLabel({X}, {Y}, {Hue} ,\"{Text.Replace( "\"", "\\\"" )}\");";
         }

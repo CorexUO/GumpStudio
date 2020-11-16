@@ -14,7 +14,7 @@ using Ultima;
 namespace GumpStudio.Elements
 {
     [Serializable]
-    public class HTMLElement : ResizeableElement, IRunUOExportable
+    public class HTMLElement : ResizeableElement, ICSharpExportable
     {
         protected Bitmap imgBack;
         protected Bitmap imgDown;
@@ -157,7 +157,7 @@ namespace GumpStudio.Elements
             solidBrush.Dispose();
         }
 
-        public string ToRunUOString()
+        public string ToCSharpString()
         {
             string text = TextType == HTMLElementType.Localized ? $"AddHtmlLocalized({X}, {Y}, {Width}, {Height}, {CliLocID}, {ShowBackground.ToString().ToLower()}, {ShowScrollbar.ToString().ToLower()});" : $"AddHtml({X}, {Y}, {Width}, {Height}, \"{HTML.Replace( "\"", "\\\"" )}\", {ShowBackground.ToString().ToLower()}, {ShowScrollbar.ToString().ToLower()});";
 

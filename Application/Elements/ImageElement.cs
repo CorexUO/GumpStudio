@@ -14,7 +14,7 @@ using Ultima;
 namespace GumpStudio.Elements
 {
     [Serializable]
-    public class ImageElement : BaseElement, IRunUOExportable
+    public class ImageElement : BaseElement, ICSharpExportable
     {
         protected Bitmap ImageCache;
         protected int mGumpID;
@@ -104,7 +104,7 @@ namespace GumpStudio.Elements
             }
         }
 
-        public string ToRunUOString()
+        public string ToCSharpString()
         {
             return $"AddImage({X}, {Y}, {GumpID});";
         }

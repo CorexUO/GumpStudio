@@ -14,7 +14,7 @@ using Ultima;
 namespace GumpStudio.Elements
 {
     [Serializable]
-    public class CheckboxElement : BaseElement, IRunUOExportable
+    public class CheckboxElement : BaseElement, ICSharpExportable
     {
         protected Image Image1Cache;
         protected Image Image2Cache;
@@ -127,7 +127,7 @@ namespace GumpStudio.Elements
             Target.DrawImage( mChecked ? Image2Cache : Image1Cache, Location );
         }
 
-        public string ToRunUOString()
+        public string ToCSharpString()
         {
             string typeText = "AddCheck";
 

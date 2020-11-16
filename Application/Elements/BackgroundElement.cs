@@ -16,7 +16,7 @@ using Ultima;
 namespace GumpStudio.Elements
 {
     [Serializable]
-    public class BackgroundElement : ResizeableElement, IDisposable, IRunUOExportable
+    public class BackgroundElement : ResizeableElement, IDisposable, ICSharpExportable
     {
         protected int mGumpID;
         protected Image[] mMultImageCache;
@@ -223,7 +223,7 @@ namespace GumpStudio.Elements
             Target.Clip = clip;
         }
 
-        public string ToRunUOString()
+        public string ToCSharpString()
         {
             return $"AddBackground({X}, {Y}, {Width}, {Height}, {GumpID});";
         }

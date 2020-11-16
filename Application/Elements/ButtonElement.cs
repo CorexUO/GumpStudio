@@ -14,7 +14,7 @@ using Ultima;
 namespace GumpStudio.Elements
 {
     [Serializable]
-    public class ButtonElement : BaseElement, IRunUOExportable
+    public class ButtonElement : BaseElement, ICSharpExportable
     {
         protected Bitmap Cache;
         protected string mCodeBehind;
@@ -143,7 +143,7 @@ namespace GumpStudio.Elements
             Target.DrawImage( Cache, Location );
         }
 
-        public string ToRunUOString()
+        public string ToCSharpString()
         {
             string buttonType = ButtonType == ButtonTypeEnum.Page ? "GumpButtonType.Page" : "GumpButtonType.Reply";
             return $"AddButton({X}, {Y}, {NormalID}, {PressedID}, {Name.Replace( " ", "" )}, {buttonType}, {Param});";

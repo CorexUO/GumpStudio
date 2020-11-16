@@ -18,7 +18,7 @@ using Ultima;
 namespace GumpStudio.Elements
 {
     [Serializable]
-    public class ItemElement : BaseElement, IRunUOExportable
+    public class ItemElement : BaseElement, ICSharpExportable
     {
         protected Image ImageCache;
         protected Hue mHue;
@@ -130,7 +130,7 @@ namespace GumpStudio.Elements
             }
         }
 
-        public string ToRunUOString()
+        public string ToCSharpString()
         {
             return $"AddItem({X}, {Y}, {ItemID});";
         }

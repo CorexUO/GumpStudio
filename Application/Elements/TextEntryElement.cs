@@ -16,7 +16,7 @@ using UnicodeFonts = UOFont.UnicodeFonts;
 namespace GumpStudio.Elements
 {
     [Serializable]
-    public class TextEntryElement : ResizeableElement, IRunUOExportable
+    public class TextEntryElement : ResizeableElement, ICSharpExportable
     {
         protected Bitmap mCache;
         protected Hue mHue;
@@ -138,7 +138,7 @@ namespace GumpStudio.Elements
             region.Dispose();
         }
 
-        public string ToRunUOString()
+        public string ToCSharpString()
         {
             return $"AddTextEntry({X}, {Y}, {Width}, {Height}, {Hue}, {Name.Replace( " ", "" )}, {InitialText.Replace( "\"", "\\\"" )});";
         }

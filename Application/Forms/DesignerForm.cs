@@ -692,23 +692,26 @@ namespace GumpStudio.Forms
 
         protected void EnumeratePlugins()
         {
-            if ( !Directory.Exists( Application.StartupPath + "\\Plugins" ) )
-                Directory.CreateDirectory( Application.StartupPath + "\\Plugins" );
             PluginTypesToLoad = GetPluginsToLoad();
-            foreach ( string file in Directory.GetFiles( Application.StartupPath + "\\Plugins", "*.dll" ) )
+
+            foreach ( string file in Directory.GetFiles( Application.StartupPath, "*.dll", SearchOption.AllDirectories ) )
             {
+                if ( file.EndsWith( "Ultima.dll", StringComparison.OrdinalIgnoreCase ) || file.EndsWith( "UOFont.dll", StringComparison.OrdinalIgnoreCase ) )
+                    continue;
+
                 foreach ( Type type in Assembly.LoadFile( file ).GetTypes() )
                 {
                     try
                     {
-                        if ( type.IsSubclassOf( typeof( BasePlugin ) ) & !type.IsAbstract )
+                        if ( type.IsSubclassOf( typeof( BasePlugin ) ) && !type.IsAbstract )
                         {
                             BasePlugin instance = (BasePlugin) Activator.CreateInstance( type );
-                            PluginInfo pluginInfo = instance.GetPluginInfo();
-                            AboutElementAppend = AboutElementAppend + "\r\n" + pluginInfo.PluginName + ": " + pluginInfo.Description + "\r\nAuthor: " + pluginInfo.AuthorName + "  (" + pluginInfo.AuthorEmail + ")\r\nVersion: " + pluginInfo.Version + "\r\n";
+                            PluginInfo pluginInfo = instance.Info;
+                            AboutElementAppend = AboutElementAppend + "\r\n" + pluginInfo.Name + ": " + pluginInfo.Description + "\r\nAuthor: " + pluginInfo.AuthorName + "  (" + pluginInfo.AuthorContact + ")\r\nVersion: " + pluginInfo.Version + "\r\n";
                             AvailablePlugins.Add( instance );
                         }
-                        if ( type.IsSubclassOf( typeof( BaseElement ) ) )
+
+                        if ( type.IsSubclassOf( typeof( BaseElement ) ) && !type.IsAbstract )
                             RegisteredTypes.Add( type );
                     }
                     catch ( Exception ex )
@@ -718,8 +721,10 @@ namespace GumpStudio.Forms
                     }
                 }
             }
+
             if ( PluginTypesToLoad == null )
                 return;
+
             foreach ( PluginInfo pluginInfo1 in PluginTypesToLoad )
             {
                 IEnumerator enumerator = null;
@@ -728,7 +733,7 @@ namespace GumpStudio.Forms
                     foreach ( object availablePlugin in AvailablePlugins )
                     {
                         BasePlugin objectValue = (BasePlugin) RuntimeHelpers.GetObjectValue( availablePlugin );
-                        PluginInfo pluginInfo2 = objectValue.GetPluginInfo();
+                        PluginInfo pluginInfo2 = objectValue.Info;
                         if ( pluginInfo1.Equals( pluginInfo2 ) )
                         {
                             objectValue.Load( this );
@@ -795,9 +800,9 @@ namespace GumpStudio.Forms
         protected PluginInfo[] GetPluginsToLoad()
         {
             PluginInfo[] pluginInfoArray = null;
-            if ( File.Exists( Application.StartupPath + "\\Plugins\\LoadInfo" ) )
+            if ( File.Exists( Application.StartupPath + "\\LoadInfo.bin" ) )
             {
-                FileStream fileStream = new FileStream( Application.StartupPath + "\\Plugins\\LoadInfo", FileMode.Open );
+                FileStream fileStream = new FileStream( Application.StartupPath + "\\LoadInfo.bin", FileMode.Open );
                 pluginInfoArray = (PluginInfo[]) new BinaryFormatter().Deserialize( fileStream );
                 fileStream.Close();
             }
@@ -2351,15 +2356,15 @@ namespace GumpStudio.Forms
         {
             if ( PluginTypesToLoad != null )
             {
-                FileStream fileStream = new FileStream( Application.StartupPath + "\\Plugins\\LoadInfo", FileMode.Create );
+                FileStream fileStream = new FileStream( Application.StartupPath + "\\LoadInfo.bin", FileMode.Create );
                 new BinaryFormatter().Serialize( fileStream, PluginTypesToLoad );
                 fileStream.Close();
             }
             else
             {
-                if ( !File.Exists( Application.StartupPath + "\\Plugins\\LoadInfo" ) )
+                if ( !File.Exists( Application.StartupPath + "\\LoadInfo.bin") )
                     return;
-                File.Delete( Application.StartupPath + "\\Plugins\\LoadInfo" );
+                File.Delete( Application.StartupPath + "\\LoadInfo.bin");
             }
         }
 

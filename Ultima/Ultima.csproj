@@ -8,7 +8,6 @@
     <FileVersion>4.3.2</FileVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <OutputPath>..\output\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
