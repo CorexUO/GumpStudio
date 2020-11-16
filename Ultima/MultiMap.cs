@@ -19,9 +19,12 @@ namespace Ultima
 		public static unsafe Bitmap GetMultiMap()
 		{
 			var path = Files.GetFilePath("Multimap.rle");
-			if (path != null) {
-				using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-					using (var bin = new BinaryReader(fs)) {
+			if (path != null)
+			{
+				using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+				{
+					using (var bin = new BinaryReader(fs))
+					{
 						int width, height;
 						byte pixel;
 						int count;
@@ -37,26 +40,32 @@ namespace Ultima
 
 						var cur = line;
 						var len = (int)(bin.BaseStream.Length - bin.BaseStream.Position);
-						if (m_StreamBuffer == null || m_StreamBuffer.Length < len) {
+						if (m_StreamBuffer == null || m_StreamBuffer.Length < len)
+						{
 							m_StreamBuffer = new byte[len];
 						}
 
 						bin.Read(m_StreamBuffer, 0, len);
 						var j = 0;
-						while (j != len) {
+						while (j != len)
+						{
 							pixel = m_StreamBuffer[j++];
 							count = (pixel & 0x7f);
 
-							if ((pixel & 0x80) != 0) {
+							if ((pixel & 0x80) != 0)
+							{
 								c = 0x8000;//Color.Black;
 							}
-							else {
+							else
+							{
 								c = 0xffff;//Color.White;
 							}
 
-							for (i = 0; i < count; ++i) {
+							for (i = 0; i < count; ++i)
+							{
 								cur[x++] = c;
-								if (x >= width) {
+								if (x >= width)
+								{
 									cur += delta;
 									x = 0;
 								}
@@ -87,18 +96,24 @@ namespace Ultima
 			var delta = bd.Stride >> 1;
 			var cur = line;
 			curcolor = cur[0]; //init
-			for (var y = 0; y < image.Height; ++y, line += delta) {
+			for (var y = 0; y < image.Height; ++y, line += delta)
+			{
 				cur = line;
-				for (var x = 0; x < image.Width; ++x) {
+				for (var x = 0; x < image.Width; ++x)
+				{
 					var c = cur[x];
 
-					if (c == curcolor) {
+					if (c == curcolor)
+					{
 						++data;
-						if (data == 0x7f) {
-							if (curcolor == 0xffff) {
+						if (data == 0x7f)
+						{
+							if (curcolor == 0xffff)
+							{
 								mask = 0x0;
 							}
-							else {
+							else
+							{
 								mask = 0x80;
 							}
 
@@ -107,11 +122,14 @@ namespace Ultima
 							data = 1;
 						}
 					}
-					else {
-						if (curcolor == 0xffff) {
+					else
+					{
+						if (curcolor == 0xffff)
+						{
 							mask = 0x0;
 						}
-						else {
+						else
+						{
 							mask = 0x80;
 						}
 
@@ -122,10 +140,12 @@ namespace Ultima
 					}
 				}
 			}
-			if (curcolor == 0xffff) {
+			if (curcolor == 0xffff)
+			{
 				mask = 0x0;
 			}
-			else {
+			else
+			{
 				mask = 0x80;
 			}
 
@@ -143,8 +163,10 @@ namespace Ultima
 		{
 			Bitmap bmp;
 			var path = Files.GetFilePath(String.Format("facet0{0}.mul", id));
-			if (path != null) {
-				using (var reader = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))) {
+			if (path != null)
+			{
+				using (var reader = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)))
+				{
 					int width = reader.ReadInt16();
 					int height = reader.ReadInt16();
 
@@ -153,17 +175,21 @@ namespace Ultima
 					var line = (ushort*)bd.Scan0;
 					var delta = bd.Stride >> 1;
 
-					for (var y = 0; y < height; y++, line += delta) {
+					for (var y = 0; y < height; y++, line += delta)
+					{
 						var colorsCount = reader.ReadInt32() / 3;
 						var endline = line + delta;
 						var cur = line;
 						ushort* end;
-						for (var c = 0; c < colorsCount; c++) {
+						for (var c = 0; c < colorsCount; c++)
+						{
 							var count = reader.ReadByte();
 							var color = reader.ReadInt16();
 							end = cur + count;
-							while (cur < end) {
-								if (cur > endline) {
+							while (cur < end)
+							{
+								if (cur > endline)
+								{
 									break;
 								}
 
@@ -188,13 +214,15 @@ namespace Ultima
 			var width = sourceBitmap.Width;
 			var height = sourceBitmap.Height;
 
-			using (var writer = new BinaryWriter(new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite))) {
+			using (var writer = new BinaryWriter(new FileStream(path, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite)))
+			{
 				writer.Write((short)width);
 				writer.Write((short)height);
 				var bd = sourceBitmap.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadOnly, PixelFormat.Format16bppArgb1555);
 				var line = (ushort*)bd.Scan0;
 				var delta = bd.Stride >> 1;
-				for (var y = 0; y < height; y++, line += delta) {
+				for (var y = 0; y < height; y++, line += delta)
+				{
 					var pos = writer.BaseStream.Position;
 					writer.Write(0);//bytes count for current line
 
@@ -202,9 +230,11 @@ namespace Ultima
 					var colorsCount = 0;
 					var x = 0;
 
-					while (x < width) {
+					while (x < width)
+					{
 						var hue = line[x];
-						while (x < width && colorsCount < Byte.MaxValue && hue == line[x]) {
+						while (x < width && colorsCount < Byte.MaxValue && hue == line[x])
+						{
 							++colorsCount;
 							++x;
 						}

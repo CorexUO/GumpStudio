@@ -25,18 +25,23 @@ namespace GumpStudio
 			IEnumerator enumerator = null;
 			Stack = new ArrayList();
 			GumpProperties = (GumpProperties)Designer.GumpProperties.Clone();
-			try {
-				foreach (var stack in Designer.Stacks) {
+			try
+			{
+				foreach (var stack in Designer.Stacks)
+				{
 					var objectValue = (GroupElement)RuntimeHelpers.GetObjectValue(stack);
 					var groupElement = (GroupElement)objectValue.Clone();
 					Stack.Add(groupElement);
-					if (objectValue == Designer.ElementStack) {
+					if (objectValue == Designer.ElementStack)
+					{
 						ElementStack = groupElement;
 					}
 				}
 			}
-			finally {
-				if (enumerator is IDisposable) {
+			finally
+			{
+				if (enumerator is IDisposable)
+				{
 					(enumerator as IDisposable).Dispose();
 				}
 			}

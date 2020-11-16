@@ -60,7 +60,8 @@ namespace GumpStudio
 		private void cmdMoveDown_Click(object sender, EventArgs e)
 		{
 			var selectedIndex = _lstLoaded.SelectedIndex;
-			if (selectedIndex >= _lstLoaded.Items.Count - 2) {
+			if (selectedIndex >= _lstLoaded.Items.Count - 2)
+			{
 				return;
 			}
 
@@ -73,7 +74,8 @@ namespace GumpStudio
 		private void cmdMoveUp_Click(object sender, EventArgs e)
 		{
 			var selectedIndex = _lstLoaded.SelectedIndex;
-			if (selectedIndex <= 0) {
+			if (selectedIndex <= 0)
+			{
 				return;
 			}
 
@@ -88,22 +90,28 @@ namespace GumpStudio
 			IEnumerator enumerator = null;
 			MessageBox.Show("You will need to restart the program for plugin changes to take effect.");
 			PluginInfo[] pluginInfoArray = null;
-			try {
-				foreach (var obj in _lstLoaded.Items) {
+			try
+			{
+				foreach (var obj in _lstLoaded.Items)
+				{
 					var objectValue = (PluginInfo)RuntimeHelpers.GetObjectValue(obj);
 
-					if (pluginInfoArray != null) {
+					if (pluginInfoArray != null)
+					{
 						Array.Resize(ref pluginInfoArray, pluginInfoArray.Length + 1);
 					}
-					else {
+					else
+					{
 						pluginInfoArray = new PluginInfo[1];
 					}
 
 					pluginInfoArray[pluginInfoArray.Length - 1] = objectValue;
 				}
 			}
-			finally {
-				if (enumerator is IDisposable) {
+			finally
+			{
+				if (enumerator is IDisposable)
+				{
 					(enumerator as IDisposable).Dispose();
 				}
 			}
@@ -360,29 +368,37 @@ namespace GumpStudio
 			_lstLoaded.Items.Clear();
 			_lstAvailable.Items.Clear();
 
-			if (OrderList != null) {
-				foreach (var order in OrderList) {
+			if (OrderList != null)
+			{
+				foreach (var order in OrderList)
+				{
 					var flag = false;
 
-					foreach (var availablePlugin in AvailablePlugins) {
-						if (((BasePlugin)RuntimeHelpers.GetObjectValue(availablePlugin)).Info.Equals(order)) {
+					foreach (var availablePlugin in AvailablePlugins)
+					{
+						if (((BasePlugin)RuntimeHelpers.GetObjectValue(availablePlugin)).Info.Equals(order))
+						{
 							flag = true;
 						}
 					}
 
-					if (flag) {
+					if (flag)
+					{
 						_lstLoaded.Items.Add(order);
 					}
 				}
 			}
 
-			foreach (var availablePlugin in AvailablePlugins) {
+			foreach (var availablePlugin in AvailablePlugins)
+			{
 				var objectValue = (BasePlugin)RuntimeHelpers.GetObjectValue(availablePlugin);
 
-				if (!objectValue.IsLoaded) {
+				if (!objectValue.IsLoaded)
+				{
 					var info = objectValue.Info;
 
-					if (!_lstLoaded.Items.Contains(info)) {
+					if (!_lstLoaded.Items.Contains(info))
+					{
 						_lstAvailable.Items.Add(info);
 					}
 				}
@@ -393,7 +409,8 @@ namespace GumpStudio
 		{
 			var listBox = (ListBox)sender;
 
-			if (listBox.SelectedIndex == -1) {
+			if (listBox.SelectedIndex == -1)
+			{
 				return;
 			}
 
@@ -403,31 +420,39 @@ namespace GumpStudio
 			_txtEmail.Text = selectedItem.AuthorContact;
 			_txtVersion.Text = selectedItem.Version;
 			_txtDescription.Text = selectedItem.Description;
-			if (_lstLoaded.SelectedIndex > 0) {
+			if (_lstLoaded.SelectedIndex > 0)
+			{
 				_cmdMoveUp.Enabled = true;
 			}
-			else {
+			else
+			{
 				_cmdMoveUp.Enabled = false;
 			}
 
-			if (_lstLoaded.SelectedIndex < listBox.Items.Count - 1) {
+			if (_lstLoaded.SelectedIndex < listBox.Items.Count - 1)
+			{
 				_cmdMoveDown.Enabled = true;
 			}
-			else {
+			else
+			{
 				_cmdMoveDown.Enabled = false;
 			}
 
-			if (_lstAvailable.SelectedIndex == -1) {
+			if (_lstAvailable.SelectedIndex == -1)
+			{
 				_cmdAdd.Enabled = false;
 			}
-			else {
+			else
+			{
 				_cmdAdd.Enabled = true;
 			}
 
-			if (_lstLoaded.SelectedIndex == -1) {
+			if (_lstLoaded.SelectedIndex == -1)
+			{
 				_cmdRemove.Enabled = false;
 			}
-			else {
+			else
+			{
 				_cmdRemove.Enabled = true;
 			}
 		}

@@ -33,11 +33,14 @@ namespace Ultima
 		{
 			get
 			{
-				if (m_ProcStream == null || m_ProcStream.Window != Handle) {
-					if (Running) {
+				if (m_ProcStream == null || m_ProcStream.Window != Handle)
+				{
+					if (Running)
+					{
 						m_ProcStream = new WindowProcessStream(Handle);
 					}
-					else {
+					else
+					{
 						m_ProcStream = null;
 					}
 				}
@@ -57,28 +60,33 @@ namespace Ultima
 			var lp = LocationPointer;
 			var pc = ProcessStream;
 
-			if (pc == null || lp == null) {
+			if (pc == null || lp == null)
+			{
 				return false;
 			}
 
 			pc.BeginAccess();
 
-			if (lp.PointerX > 0) {
+			if (lp.PointerX > 0)
+			{
 				pc.Seek(lp.PointerX, SeekOrigin.Begin);
 				x = Read(pc, lp.SizeX);
 			}
 
-			if (lp.PointerY > 0) {
+			if (lp.PointerY > 0)
+			{
 				pc.Seek(lp.PointerY, SeekOrigin.Begin);
 				y = Read(pc, lp.SizeY);
 			}
 
-			if (lp.PointerZ > 0) {
+			if (lp.PointerZ > 0)
+			{
 				pc.Seek(lp.PointerZ, SeekOrigin.Begin);
 				z = Read(pc, lp.SizeZ);
 			}
 
-			if (lp.PointerF > 0) {
+			if (lp.PointerF > 0)
+			{
 				pc.Seek(lp.PointerF, SeekOrigin.Begin);
 				facet = Read(pc, lp.SizeF);
 			}
@@ -94,7 +102,8 @@ namespace Ultima
 
 			pc.Read(buffer, 0, bytes);
 
-			switch (bytes) {
+			switch (bytes)
+			{
 				case 1: return (sbyte)buffer[0];
 				case 2: return (short)(buffer[0] | (buffer[1] << 8));
 				case 4: return buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
@@ -103,7 +112,8 @@ namespace Ultima
 			var val = 0;
 			var bits = 0;
 
-			for (var i = 0; i < buffer.Length; ++i) {
+			for (var i = 0; i < buffer.Length; ++i)
+			{
 				val |= buffer[i] << bits;
 				bits += 8;
 			}
@@ -113,7 +123,8 @@ namespace Ultima
 
 		public static int Search(ProcessStream pc, byte[] mask, byte[] vals)
 		{
-			if (mask.Length != vals.Length) {
+			if (mask.Length != vals.Length)
+			{
 				throw new Exception();
 			}
 
@@ -124,22 +135,27 @@ namespace Ultima
 
 			var read = new byte[readSize];
 
-			for (var i = 0; ; ++i) {
+			for (var i = 0; ; ++i)
+			{
 				pc.Seek(0x400000 + (i * chunkSize), SeekOrigin.Begin);
 				var count = pc.Read(read, 0, readSize);
 
-				if (count != readSize) {
+				if (count != readSize)
+				{
 					break;
 				}
 
-				for (var j = 0; j < chunkSize; ++j) {
+				for (var j = 0; j < chunkSize; ++j)
+				{
 					var ok = true;
 
-					for (var k = 0; ok && k < mask.Length; ++k) {
+					for (var k = 0; ok && k < mask.Length; ++k)
+					{
 						ok = ((read[j + k] & mask[k]) == vals[k]);
 					}
 
-					if (ok) {
+					if (ok)
+					{
 						pc.EndAccess();
 						return 0x400000 + (i * chunkSize) + j;
 					}
@@ -159,22 +175,27 @@ namespace Ultima
 
 			var read = new byte[readSize];
 
-			for (var i = 0; ; ++i) {
+			for (var i = 0; ; ++i)
+			{
 				pc.Seek(0x400000 + (i * chunkSize), SeekOrigin.Begin);
 				var count = pc.Read(read, 0, readSize);
 
-				if (count != readSize) {
+				if (count != readSize)
+				{
 					break;
 				}
 
-				for (var j = 0; j < chunkSize; ++j) {
+				for (var j = 0; j < chunkSize; ++j)
+				{
 					var ok = true;
 
-					for (var k = 0; ok && k < buffer.Length; ++k) {
+					for (var k = 0; ok && k < buffer.Length; ++k)
+					{
 						ok = (buffer[k] == read[j + k]);
 					}
 
-					if (ok) {
+					if (ok)
+					{
 						pc.EndAccess();
 						return 0x400000 + (i * chunkSize) + j;
 					}
@@ -197,7 +218,8 @@ namespace Ultima
 
 			var pc = ProcessStream;
 
-			if (pc == null) {
+			if (pc == null)
+			{
 				return;
 			}
 
@@ -220,7 +242,8 @@ namespace Ultima
 
 			var ptr = Search(pc, buffer);
 
-			if (ptr == 0) {
+			if (ptr == 0)
+			{
 				return;
 			}
 
@@ -246,7 +269,8 @@ namespace Ultima
 
 			var pc = ProcessStream;
 
-			if (pc == null) {
+			if (pc == null)
+			{
 				return;
 			}
 
@@ -255,37 +279,45 @@ namespace Ultima
 			int ptrZ = 0, sizeZ = 0;
 			int ptrF = 0, sizeF = 0;
 
-			for (var i = 0; i < info.Length; ++i) {
+			for (var i = 0; i < info.Length; ++i)
+			{
 				var ci = info[i];
 
 				var ptr = Search(pc, ci.Mask, ci.Vals);
 
-				if (ptr == 0) {
+				if (ptr == 0)
+				{
 					continue;
 				}
 
-				if (ptrX == 0 && ci.DetX.Length > 0) {
+				if (ptrX == 0 && ci.DetX.Length > 0)
+				{
 					GetCoordDetails(pc, ptr, ci.DetX, out ptrX, out sizeX);
 				}
 
-				if (ptrY == 0 && ci.DetY.Length > 0) {
+				if (ptrY == 0 && ci.DetY.Length > 0)
+				{
 					GetCoordDetails(pc, ptr, ci.DetY, out ptrY, out sizeY);
 				}
 
-				if (ptrZ == 0 && ci.DetZ.Length > 0) {
+				if (ptrZ == 0 && ci.DetZ.Length > 0)
+				{
 					GetCoordDetails(pc, ptr, ci.DetZ, out ptrZ, out sizeZ);
 				}
 
-				if (ptrF == 0 && ci.DetF.Length > 0) {
+				if (ptrF == 0 && ci.DetF.Length > 0)
+				{
 					GetCoordDetails(pc, ptr, ci.DetF, out ptrF, out sizeF);
 				}
 
-				if (ptrX != 0 && ptrY != 0 && ptrZ != 0 && ptrF != 0) {
+				if (ptrX != 0 && ptrY != 0 && ptrZ != 0 && ptrF != 0)
+				{
 					break;
 				}
 			}
 
-			if (ptrX != 0 || ptrY != 0 || ptrZ != 0 || ptrF != 0) {
+			if (ptrX != 0 || ptrY != 0 || ptrZ != 0 || ptrF != 0)
+			{
 				m_LocationPointer = new LocationPointer(ptrX, ptrY, ptrZ, ptrF, sizeX, sizeY, sizeZ, sizeF);
 			}
 		}
@@ -295,12 +327,14 @@ namespace Ultima
 			pc.Seek(ptr + dets[0], SeekOrigin.Begin);
 			coordPointer = Read(pc, dets[1]);
 
-			if (dets[2] < 0xFF) {
+			if (dets[2] < 0xFF)
+			{
 				pc.Seek(coordPointer, SeekOrigin.Begin);
 				coordPointer = Read(pc, dets[2]);
 			}
 
-			if (dets[3] < 0xFF) {
+			if (dets[3] < 0xFF)
+			{
 				pc.Seek(ptr + dets[3], SeekOrigin.Begin);
 				coordPointer += Read(pc, dets[4]);
 			}
@@ -319,7 +353,8 @@ namespace Ultima
 			 *	DWORD Facet;  
 			 *  
 			 */
-			if (dets.Length == 7 && dets[6] < 0xFF) {
+			if (dets.Length == 7 && dets[6] < 0xFF)
+			{
 				coordPointer += dets[6];
 			}
 			coordSize = dets[5];
@@ -344,7 +379,8 @@ namespace Ultima
 		{
 			get
 			{
-				if (NativeMethods.IsWindow(m_Handle) == 0) {
+				if (NativeMethods.IsWindow(m_Handle) == 0)
+				{
 					m_Handle = FindHandle();
 				}
 
@@ -383,12 +419,14 @@ namespace Ultima
 		{
 			var hWnd = Handle;
 
-			if (!hWnd.IsInvalid) {
+			if (!hWnd.IsInvalid)
+			{
 				NativeMethods.SetForegroundWindow(hWnd);
 
 				return true;
 			}
-			else {
+			else
+			{
 				return false;
 			}
 		}
@@ -401,8 +439,10 @@ namespace Ultima
 		{
 			var hWnd = Handle;
 
-			if (!hWnd.IsInvalid) {
-				for (var i = 0; i < text.Length; ++i) {
+			if (!hWnd.IsInvalid)
+			{
+				for (var i = 0; i < text.Length; ++i)
+				{
 					SendChar(hWnd, text[i]);
 				}
 
@@ -411,7 +451,8 @@ namespace Ultima
 
 				return true;
 			}
-			else {
+			else
+			{
 				return false;
 			}
 		}
@@ -430,15 +471,18 @@ namespace Ultima
 		{
 			ClientWindowHandle hWnd;
 
-			if (NativeMethods.IsWindow(hWnd = NativeMethods.FindWindowA("Ultima Online", null)) != 0) {
+			if (NativeMethods.IsWindow(hWnd = NativeMethods.FindWindowA("Ultima Online", null)) != 0)
+			{
 				return hWnd;
 			}
 
-			if (NativeMethods.IsWindow(hWnd = NativeMethods.FindWindowA("Ultima Online Third Dawn", null)) != 0) {
+			if (NativeMethods.IsWindow(hWnd = NativeMethods.FindWindowA("Ultima Online Third Dawn", null)) != 0)
+			{
 				return hWnd;
 			}
 
-			if (NativeMethods.IsWindow(hWnd = NativeMethods.FindWindowA("OgreGLWindow", null)) != 0) {
+			if (NativeMethods.IsWindow(hWnd = NativeMethods.FindWindowA("OgreGLWindow", null)) != 0)
+			{
 				m_Is_Iris2 = true;
 				return hWnd;
 			}

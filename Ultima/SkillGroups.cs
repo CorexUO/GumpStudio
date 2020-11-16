@@ -32,13 +32,17 @@ namespace Ultima
 			List = new List<SkillGroup>();
 			SkillList = new List<int>();
 
-			if (path != null) {
-				using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-					using (var bin = new BinaryReader(fs)) {
+			if (path != null)
+			{
+				using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+				{
+					using (var bin = new BinaryReader(fs))
+					{
 						var start = 4;
 						var strlen = 17;
 						var count = bin.ReadInt32();
-						if (count == -1) {
+						if (count == -1)
+						{
 							unicode = true;
 							count = bin.ReadInt32();
 							start *= 2;
@@ -46,25 +50,32 @@ namespace Ultima
 						}
 
 						List.Add(new SkillGroup("Misc"));
-						for (var i = 0; i < count - 1; ++i) {
+						for (var i = 0; i < count - 1; ++i)
+						{
 							int strbuild;
 							fs.Seek(start + (i * strlen), SeekOrigin.Begin);
 							var builder2 = new StringBuilder(17);
-							if (unicode) {
-								while ((strbuild = bin.ReadInt16()) != 0) {
+							if (unicode)
+							{
+								while ((strbuild = bin.ReadInt16()) != 0)
+								{
 									builder2.Append((char)strbuild);
 								}
 							}
-							else {
-								while ((strbuild = bin.ReadByte()) != 0) {
+							else
+							{
+								while ((strbuild = bin.ReadByte()) != 0)
+								{
 									builder2.Append((char)strbuild);
 								}
 							}
 							List.Add(new SkillGroup(builder2.ToString()));
 						}
 						fs.Seek(start + ((count - 1) * strlen), SeekOrigin.Begin);
-						try {
-							while (bin.BaseStream.Length != bin.BaseStream.Position) {
+						try
+						{
+							while (bin.BaseStream.Length != bin.BaseStream.Position)
+							{
 								SkillList.Add(bin.ReadInt32());
 							}
 						}
@@ -79,39 +90,51 @@ namespace Ultima
 		public static void Save(string path)
 		{
 			var mul = Path.Combine(path, "skillgrp.mul");
-			using (var fs = new FileStream(mul, FileMode.Create, FileAccess.Write, FileShare.Write)) {
-				using (var bin = new BinaryWriter(fs)) {
-					if (unicode) {
+			using (var fs = new FileStream(mul, FileMode.Create, FileAccess.Write, FileShare.Write))
+			{
+				using (var bin = new BinaryWriter(fs))
+				{
+					if (unicode)
+					{
 						bin.Write(-1);
 					}
 
 					bin.Write(List.Count);
 
-					foreach (var group in List) {
-						if (group.Name == "Misc") {
+					foreach (var group in List)
+					{
+						if (group.Name == "Misc")
+						{
 							continue;
 						}
 
 						byte[] name;
-						if (unicode) {
+						if (unicode)
+						{
 							name = new byte[34];
 						}
-						else {
+						else
+						{
 							name = new byte[17];
 						}
 
-						if (group.Name != null) {
-							if (unicode) {
+						if (group.Name != null)
+						{
+							if (unicode)
+							{
 								var bb = Encoding.Unicode.GetBytes(group.Name);
-								if (bb.Length > 34) {
+								if (bb.Length > 34)
+								{
 									Array.Resize(ref bb, 34);
 								}
 
 								bb.CopyTo(name, 0);
 							}
-							else {
+							else
+							{
 								var bb = Encoding.Default.GetBytes(group.Name);
-								if (bb.Length > 17) {
+								if (bb.Length > 17)
+								{
 									Array.Resize(ref bb, 17);
 								}
 
@@ -120,7 +143,8 @@ namespace Ultima
 						}
 						bin.Write(name);
 					}
-					foreach (var group in SkillList) {
+					foreach (var group in SkillList)
+					{
 						bin.Write(group);
 					}
 				}

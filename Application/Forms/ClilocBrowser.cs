@@ -49,21 +49,25 @@ namespace GumpStudio.Forms
 
 		private void ClilocBrowser_Load(object sender, EventArgs e)
 		{
-			foreach (var file in Directory.GetFiles(XMLSettings.CurrentOptions.ClientPath, "Cliloc.*")) {
+			foreach (var file in Directory.GetFiles(XMLSettings.CurrentOptions.ClientPath, "Cliloc.*"))
+			{
 				cboLanguage.Items.Add(Path.GetExtension(file).Substring(1));
 			}
 
-			if (ClilocCache == null) {
+			if (ClilocCache == null)
+			{
 				lstCliloc.SuspendLayout();
 
-				foreach (var entry in new StringList("enu").Entries) {
+				foreach (var entry in new StringList("enu").Entries)
+				{
 					lstCliloc.Items.Add(entry);
 				}
 
 				lstCliloc.ResumeLayout();
 				ClilocCache = lstCliloc;
 			}
-			else {
+			else
+			{
 				lstCliloc = ClilocCache;
 			}
 		}
@@ -71,14 +75,17 @@ namespace GumpStudio.Forms
 
 		protected override void Dispose(bool disposing)
 		{
-			try {
-				if ((!disposing || components == null ? 0 : 1) == 0) {
+			try
+			{
+				if ((!disposing || components == null ? 0 : 1) == 0)
+				{
 					return;
 				}
 
 				components?.Dispose();
 			}
-			finally {
+			finally
+			{
 				base.Dispose(disposing);
 			}
 		}

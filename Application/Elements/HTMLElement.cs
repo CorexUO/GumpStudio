@@ -112,7 +112,8 @@ namespace GumpStudio.Elements
 			imgDown = Gumps.GetGump(252);
 			imgLoc = Gumps.GetGump(254);
 			imgBack = Gumps.GetGump(256);
-			mBGElement = new BackgroundElement {
+			mBGElement = new BackgroundElement
+			{
 				GumpID = 3000
 			};
 		}
@@ -120,11 +121,13 @@ namespace GumpStudio.Elements
 		public override void Render(Graphics Target)
 		{
 			var solidBrush = new SolidBrush(Color.FromArgb(70, Color.White));
-			if (!mBackground) {
+			if (!mBackground)
+			{
 				Target.FillRectangle(solidBrush, Bounds);
 				Target.DrawRectangle(Pens.DarkGray, Bounds);
 			}
-			if (mScrollbar) {
+			if (mScrollbar)
+			{
 				Target.DrawImage(imgUp, X + Width - imgUp.Width, Y);
 				Target.DrawImage(imgLoc, X + Width - imgLoc.Width, Y + imgUp.Height);
 				var clip = Target.Clip;
@@ -133,7 +136,8 @@ namespace GumpStudio.Elements
 				var height = imgBack.Height;
 				var num = Y + Height - imgDown.Height;
 				var y = Y + imgUp.Height + imgLoc.Height;
-				while ((height >> 31 ^ y) <= (height >> 31 ^ num)) {
+				while ((height >> 31 ^ y) <= (height >> 31 ^ num))
+				{
 					Target.DrawImage(imgBack, X + Width - imgBack.Width, y);
 					y += height;
 				}
@@ -142,13 +146,15 @@ namespace GumpStudio.Elements
 			}
 			var rectangle1 = new Rectangle(Location, mBGElement.Size);
 			Rectangle rectangle2;
-			if (mBackground) {
+			if (mBackground)
+			{
 				mBGElement.Location = Location;
 				rectangle2 = !mScrollbar ? new Rectangle(Location, Size) : new Rectangle(Location, new Size(Width - imgBack.Width, Height));
 				mBGElement.Size = rectangle2.Size;
 				mBGElement.Render(Target);
 			}
-			else {
+			else
+			{
 				rectangle2 = Bounds;
 			}
 

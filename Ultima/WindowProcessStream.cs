@@ -17,7 +17,8 @@ namespace Ultima
 		{
 			get
 			{
-				if (NativeMethods.IsWindow(m_Window) != 0 && !m_ProcessID.IsInvalid) {
+				if (NativeMethods.IsWindow(m_Window) != 0 && !m_ProcessID.IsInvalid)
+				{
 					return m_ProcessID;
 				}
 

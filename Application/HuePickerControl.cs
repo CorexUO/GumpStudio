@@ -48,7 +48,8 @@ namespace GumpStudio
 		private void cboQuick_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			var s = "0";
-			switch (_cboQuick.Text) {
+			switch (_cboQuick.Text)
+			{
 				case "Colors":
 					s = "0";
 					break;
@@ -119,11 +120,14 @@ namespace GumpStudio
 		private void HuePickerControl_Load(object sender, EventArgs e)
 		{
 			_lstHue.Items.Clear();
-			foreach (var hue in Hues.List) {
-				if (hue.Index == mHue.Index) {
+			foreach (var hue in Hues.List)
+			{
+				if (hue.Index == mHue.Index)
+				{
 					_lstHue.SelectedIndex = _lstHue.Items.Add(hue);
 				}
-				else {
+				else
+				{
 					_lstHue.Items.Add(hue);
 				}
 			}
@@ -212,11 +216,13 @@ namespace GumpStudio
 		{
 			var graphics1 = e.Graphics;
 			graphics1.FillRectangle(Brushes.White, e.Bounds);
-			if ((e.State & DrawItemState.Selected) > DrawItemState.None) {
+			if ((e.State & DrawItemState.Selected) > DrawItemState.None)
+			{
 				var rect = new Rectangle(e.Bounds.X, e.Bounds.Y, 50, _lstHue.ItemHeight);
 				graphics1.FillRectangle(SystemBrushes.Highlight, rect);
 			}
-			else {
+			else
+			{
 				var rect = new Rectangle(e.Bounds.X, e.Bounds.Y, 50, _lstHue.ItemHeight);
 				graphics1.FillRectangle(SystemBrushes.Window, rect);
 			}
@@ -232,7 +238,8 @@ namespace GumpStudio
 			double y1 = bounds1.Y;
 			graphics2.DrawString(s, font, black, (float)num2, (float)y1);
 			var num3 = 0;
-			foreach (var color in hue.Colors) {
+			foreach (var color in hue.Colors)
+			{
 				var bounds2 = e.Bounds;
 				var x = bounds2.X + 35 + (int)Math.Round(num3 * (double)num1);
 				bounds2 = e.Bounds;
@@ -249,7 +256,8 @@ namespace GumpStudio
 		private void lstHue_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			mHue = (Hue)_lstHue.SelectedItem;
-			if (mHue == null) {
+			if (mHue == null)
+			{
 				return;
 			}
 

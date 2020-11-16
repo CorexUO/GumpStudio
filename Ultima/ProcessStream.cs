@@ -20,7 +20,8 @@ namespace Ultima
 
 		public virtual bool BeginAccess()
 		{
-			if (m_Open) {
+			if (m_Open)
+			{
 				return false;
 			}
 
@@ -32,7 +33,8 @@ namespace Ultima
 
 		public virtual void EndAccess()
 		{
-			if (!m_Open) {
+			if (!m_Open)
+			{
 				return;
 			}
 
@@ -50,13 +52,15 @@ namespace Ultima
 
 			var res = 0;
 
-			fixed (byte* p = buffer) {
+			fixed (byte* p = buffer)
+			{
 				NativeMethods.ReadProcessMemory(m_Process, m_Position, p + offset, count, ref res);
 			}
 
 			m_Position += count;
 
-			if (end) {
+			if (end)
+			{
 				EndAccess();
 			}
 
@@ -67,13 +71,15 @@ namespace Ultima
 		{
 			var end = !BeginAccess();
 
-			fixed (byte* p = buffer) {
+			fixed (byte* p = buffer)
+			{
 				NativeMethods.WriteProcessMemory(m_Process, m_Position, p + offset, count, 0);
 			}
 
 			m_Position += count;
 
-			if (end) {
+			if (end)
+			{
 				EndAccess();
 			}
 		}
@@ -92,7 +98,8 @@ namespace Ultima
 
 		public override long Seek(long offset, SeekOrigin origin)
 		{
-			switch (origin) {
+			switch (origin)
+			{
 				case SeekOrigin.Begin: m_Position = (int)offset; break;
 				case SeekOrigin.Current: m_Position += (int)offset; break;
 				case SeekOrigin.End: throw new NotSupportedException();

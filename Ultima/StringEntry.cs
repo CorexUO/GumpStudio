@@ -20,10 +20,12 @@ namespace Ultima
 			get => m_Text;
 			set
 			{
-				if (value == null) {
+				if (value == null)
+				{
 					m_Text = "";
 				}
-				else {
+				else
+				{
 					m_Text = value;
 				}
 			}
@@ -51,11 +53,13 @@ namespace Ultima
 
 		public string Format(params object[] args)
 		{
-			if (m_FmtTxt == null) {
+			if (m_FmtTxt == null)
+			{
 				m_FmtTxt = m_RegEx.Replace(m_Text, @"{$1}");
 			}
 
-			for (var i = 0; i < args.Length && i < 10; i++) {
+			for (var i = 0; i < args.Length && i < 10; i++)
+			{
 				m_Args[i + 1] = args[i];
 			}
 
@@ -64,12 +68,14 @@ namespace Ultima
 
 		public string SplitFormat(string argstr)
 		{
-			if (m_FmtTxt == null) {
+			if (m_FmtTxt == null)
+			{
 				m_FmtTxt = m_RegEx.Replace(m_Text, @"{$1}");
 			}
 
 			var args = argstr.Split('\t');// adds an extra on to the args array
-			for (var i = 0; i < args.Length && i < 10; i++) {
+			for (var i = 0; i < args.Length && i < 10; i++)
+			{
 				m_Args[i + 1] = args[i];
 			}
 

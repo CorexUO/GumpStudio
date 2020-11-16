@@ -13,11 +13,14 @@ namespace Ultima
 		{
 			get
 			{
-				if (m_SkillEntries == null) {
+				if (m_SkillEntries == null)
+				{
 					m_SkillEntries = new List<SkillInfo>();
-					for (var i = 0; i < m_FileIndex.Index.Length; ++i) {
+					for (var i = 0; i < m_FileIndex.Index.Length; ++i)
+					{
 						var info = GetSkill(i);
-						if (info == null) {
+						if (info == null)
+						{
 							break;
 						}
 
@@ -41,9 +44,11 @@ namespace Ultima
 		{
 			m_FileIndex = new FileIndex("skills.idx", "skills.mul", 16);
 			m_SkillEntries = new List<SkillInfo>();
-			for (var i = 0; i < m_FileIndex.Index.Length; ++i) {
+			for (var i = 0; i < m_FileIndex.Index.Length; ++i)
+			{
 				var info = GetSkill(i);
-				if (info == null) {
+				if (info == null)
+				{
 					break;
 				}
 
@@ -60,15 +65,18 @@ namespace Ultima
 		{
 
 			var stream = m_FileIndex.Seek(index, out var length, out var extra, out var patched);
-			if (stream == null) {
+			if (stream == null)
+			{
 				return null;
 			}
 
-			if (length == 0) {
+			if (length == 0)
+			{
 				return null;
 			}
 
-			using (var bin = new BinaryReader(stream)) {
+			using (var bin = new BinaryReader(stream))
+			{
 				var action = bin.ReadBoolean();
 				var name = ReadNameString(bin, length - 1);
 				return new SkillInfo(index, name, action, extra);
@@ -80,7 +88,8 @@ namespace Ultima
 		{
 			bin.Read(m_StringBuffer, 0, length);
 			int count;
-			for (count = 0; count < length && m_StringBuffer[count] != 0; ++count) {
+			for (count = 0; count < length && m_StringBuffer[count] != 0; ++count)
+			{
 				;
 			}
 
@@ -92,17 +101,22 @@ namespace Ultima
 			var idx = Path.Combine(path, "skills.idx");
 			var mul = Path.Combine(path, "skills.mul");
 			using (FileStream fsidx = new FileStream(idx, FileMode.Create, FileAccess.Write, FileShare.Write),
-							  fsmul = new FileStream(mul, FileMode.Create, FileAccess.Write, FileShare.Write)) {
+							  fsmul = new FileStream(mul, FileMode.Create, FileAccess.Write, FileShare.Write))
+			{
 				using (BinaryWriter binidx = new BinaryWriter(fsidx),
-									binmul = new BinaryWriter(fsmul)) {
-					for (var i = 0; i < m_FileIndex.Index.Length; ++i) {
+									binmul = new BinaryWriter(fsmul))
+				{
+					for (var i = 0; i < m_FileIndex.Index.Length; ++i)
+					{
 						var skill = (i < m_SkillEntries.Count) ? m_SkillEntries[i] : null;
-						if (skill == null) {
+						if (skill == null)
+						{
 							binidx.Write(-1); // lookup
 							binidx.Write(0); // length
 							binidx.Write(0); // extra
 						}
-						else {
+						else
+						{
 							binidx.Write((int)fsmul.Position); //lookup
 							var length = (int)fsmul.Position;
 							binmul.Write(skill.IsAction);
@@ -132,10 +146,12 @@ namespace Ultima
 			get => m_Name;
 			set
 			{
-				if (value == null) {
+				if (value == null)
+				{
 					m_Name = "";
 				}
-				else {
+				else
+				{
 					m_Name = value;
 				}
 			}

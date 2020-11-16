@@ -29,15 +29,19 @@ namespace GumpStudio.Elements
 			{
 				BaseElement[] baseElementArray = null;
 				IEnumerator enumerator = null;
-				try {
-					foreach (var mElement in mElements) {
+				try
+				{
+					foreach (var mElement in mElements)
+					{
 						var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(mElement);
 						baseElementArray = baseElementArray != null ? (BaseElement[])Utils.CopyArray(baseElementArray, new BaseElement[baseElementArray.Length + 1]) : new BaseElement[1];
 						baseElementArray[baseElementArray.Length - 1] = objectValue;
 					}
 				}
-				finally {
-					if (enumerator is IDisposable) {
+				finally
+				{
+					if (enumerator is IDisposable)
+					{
 						(enumerator as IDisposable).Dispose();
 					}
 				}
@@ -73,19 +77,25 @@ namespace GumpStudio.Elements
 			mIsBaseWindow = false;
 			mIsBaseWindow = IsBaseWindow;
 			mElements = new ArrayList();
-			if (Name != null) {
+			if (Name != null)
+			{
 				mName = Name;
 			}
 
-			if (Elements != null) {
+			if (Elements != null)
+			{
 				IEnumerator enumerator = null;
-				try {
-					foreach (var element in Elements) {
+				try
+				{
+					foreach (var element in Elements)
+					{
 						mElements.Add((BaseElement)RuntimeHelpers.GetObjectValue(element));
 					}
 				}
-				finally {
-					if (enumerator is IDisposable) {
+				finally
+				{
+					if (enumerator is IDisposable)
+					{
 						(enumerator as IDisposable).Dispose();
 					}
 				}
@@ -96,7 +106,8 @@ namespace GumpStudio.Elements
 		public override void AddContextMenus(ref MenuItem GroupMenu, ref MenuItem PositionMenu, ref MenuItem OrderMenu, ref MenuItem MiscMenu)
 		{
 			base.AddContextMenus(ref GroupMenu, ref PositionMenu, ref OrderMenu, ref MiscMenu);
-			if (mParent.GetSelectedElements().Count > 1) {
+			if (mParent.GetSelectedElements().Count > 1)
+			{
 				GroupMenu.MenuItems.Add(new MenuItem("Add Selection to Group", new EventHandler(DoAddMenu)));
 			}
 
@@ -106,31 +117,40 @@ namespace GumpStudio.Elements
 
 		public virtual void AddElement(BaseElement e)
 		{
-			if (mElements.Contains(e)) {
+			if (mElements.Contains(e))
+			{
 				return;
 			}
 
-			if (!mIsBaseWindow) {
+			if (!mIsBaseWindow)
+			{
 				Rectangle rectangle;
-				if (mElements.Count == 0) {
+				if (mElements.Count == 0)
+				{
 					rectangle = e.Bounds;
 				}
-				else {
+				else
+				{
 					rectangle = Rectangle.Union(Bounds, e.Bounds);
-					if (X != rectangle.X | Y != rectangle.Y) {
+					if (X != rectangle.X | Y != rectangle.Y)
+					{
 						IEnumerator enumerator = null;
 						var dx = X - rectangle.X;
 						var dy = Y - rectangle.Y;
-						try {
-							foreach (var mElement in mElements) {
+						try
+						{
+							foreach (var mElement in mElements)
+							{
 								var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(mElement);
 								var location = objectValue.Location;
 								location.Offset(dx, dy);
 								objectValue.Location = location;
 							}
 						}
-						finally {
-							if (enumerator is IDisposable) {
+						finally
+						{
+							if (enumerator is IDisposable)
+							{
 								(enumerator as IDisposable).Dispose();
 							}
 						}
@@ -157,8 +177,10 @@ namespace GumpStudio.Elements
 		public void BreakGroup()
 		{
 			IEnumerator enumerator = null;
-			try {
-				foreach (var mElement in mElements) {
+			try
+			{
+				foreach (var mElement in mElements)
+				{
 					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(mElement);
 					mParent.AddElement(objectValue);
 					objectValue.Selected = true;
@@ -166,8 +188,10 @@ namespace GumpStudio.Elements
 					objectValue.Location = point;
 				}
 			}
-			finally {
-				if (enumerator is IDisposable) {
+			finally
+			{
+				if (enumerator is IDisposable)
+				{
 					(enumerator as IDisposable).Dispose();
 				}
 			}
@@ -179,16 +203,20 @@ namespace GumpStudio.Elements
 			IEnumerator enumerator = null;
 			var Parent = (GroupElement)base.CloneMe();
 			Parent.mElements = new ArrayList();
-			try {
-				foreach (var mElement in mElements) {
+			try
+			{
+				foreach (var mElement in mElements)
+				{
 					var Element = ((BaseElement)RuntimeHelpers.GetObjectValue(mElement)).Clone();
 					Parent.mElements.Add(Element);
 					Parent.AttachEvents(Element);
 					Element.Reparent(Parent);
 				}
 			}
-			finally {
-				if (enumerator is IDisposable) {
+			finally
+			{
+				if (enumerator is IDisposable)
+				{
 					(enumerator as IDisposable).Dispose();
 				}
 			}
@@ -199,13 +227,17 @@ namespace GumpStudio.Elements
 		{
 			IEnumerator enumerator = null;
 			base.DebugDump();
-			try {
-				foreach (var mElement in mElements) {
+			try
+			{
+				foreach (var mElement in mElements)
+				{
 					((BaseElement)RuntimeHelpers.GetObjectValue(mElement)).DebugDump();
 				}
 			}
-			finally {
-				if (enumerator is IDisposable) {
+			finally
+			{
+				if (enumerator is IDisposable)
+				{
 					(enumerator as IDisposable).Dispose();
 				}
 			}
@@ -216,18 +248,23 @@ namespace GumpStudio.Elements
 			IEnumerator enumerator = null;
 			var arrayList = new ArrayList();
 			arrayList.AddRange(mParent.GetElements());
-			try {
-				foreach (var obj in arrayList) {
+			try
+			{
+				foreach (var obj in arrayList)
+				{
 					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(obj);
-					if (objectValue != this & objectValue.Selected) {
+					if (objectValue != this & objectValue.Selected)
+					{
 						AddElement(objectValue);
 						mParent.RemoveElement(objectValue);
 						objectValue.Selected = false;
 					}
 				}
 			}
-			finally {
-				if (enumerator is IDisposable) {
+			finally
+			{
+				if (enumerator is IDisposable)
+				{
 					(enumerator as IDisposable).Dispose();
 				}
 			}
@@ -242,12 +279,15 @@ namespace GumpStudio.Elements
 
 		protected void DoExportGumplingMenu(object sender, EventArgs e)
 		{
-			try {
-				var saveFileDialog = new SaveFileDialog {
+			try
+			{
+				var saveFileDialog = new SaveFileDialog
+				{
 					Filter = "Gumpling|*.gumpling",
 					AddExtension = true
 				};
-				if (saveFileDialog.ShowDialog() == DialogResult.OK) {
+				if (saveFileDialog.ShowDialog() == DialogResult.OK)
+				{
 					var mParent = this.mParent;
 					this.mParent.RemoveElement(this);
 					this.mParent = null;
@@ -259,7 +299,8 @@ namespace GumpStudio.Elements
 				}
 				saveFileDialog.Dispose();
 			}
-			catch (Exception ex) {
+			catch (Exception ex)
+			{
 				ProjectData.SetProjectError(ex);
 				//int num = (int) Interaction.MsgBox((object) ex.Message, MsgBoxStyle.OkOnly, (object) null);
 				MessageBox.Show(ex.Message);
@@ -271,18 +312,23 @@ namespace GumpStudio.Elements
 		{
 			BaseElement baseElement = null;
 			IEnumerator enumerator = null;
-			try {
-				foreach (var mElement in mElements) {
+			try
+			{
+				foreach (var mElement in mElements)
+				{
 					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(mElement);
 					var bounds = objectValue.Bounds;
 					bounds.Inflate(7, 7);
-					if (bounds.Contains(p)) {
+					if (bounds.Contains(p))
+					{
 						baseElement = objectValue;
 					}
 				}
 			}
-			finally {
-				if (enumerator is IDisposable) {
+			finally
+			{
+				if (enumerator is IDisposable)
+				{
 					(enumerator as IDisposable).Dispose();
 				}
 			}
@@ -298,19 +344,25 @@ namespace GumpStudio.Elements
 		{
 			IEnumerator enumerator = null;
 			var arrayList = new ArrayList();
-			try {
-				foreach (var mElement in mElements) {
+			try
+			{
+				foreach (var mElement in mElements)
+				{
 					var objectValue = RuntimeHelpers.GetObjectValue(mElement);
-					if (objectValue is GroupElement) {
+					if (objectValue is GroupElement)
+					{
 						arrayList.AddRange(((GroupElement)objectValue).GetElementsRecursive());
 					}
-					else {
+					else
+					{
 						arrayList.Add(RuntimeHelpers.GetObjectValue(objectValue));
 					}
 				}
 			}
-			finally {
-				if (enumerator is IDisposable) {
+			finally
+			{
+				if (enumerator is IDisposable)
+				{
 					(enumerator as IDisposable).Dispose();
 				}
 			}
@@ -329,16 +381,21 @@ namespace GumpStudio.Elements
 		{
 			IEnumerator enumerator = null;
 			var arrayList = new ArrayList();
-			try {
-				foreach (var mElement in mElements) {
+			try
+			{
+				foreach (var mElement in mElements)
+				{
 					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(mElement);
-					if (objectValue.Selected) {
+					if (objectValue.Selected)
+					{
 						arrayList.Add(objectValue);
 					}
 				}
 			}
-			finally {
-				if (enumerator is IDisposable) {
+			finally
+			{
+				if (enumerator is IDisposable)
+				{
 					(enumerator as IDisposable).Dispose();
 				}
 			}
@@ -348,14 +405,17 @@ namespace GumpStudio.Elements
 		public void RecalculateBounds()
 		{
 			var count = mElements.Count;
-			if (count < 1) {
+			if (count < 1)
+			{
 				return;
 			}
 
 			var a = ((BaseElement)mElements[0]).Bounds;
-			if (count >= 2) {
+			if (count >= 2)
+			{
 				var num = count - 1;
-				for (var index = 1; index <= num; ++index) {
+				for (var index = 1; index <= num; ++index)
+				{
 					a = Rectangle.Union(a, ((BaseElement)mElements[index]).Bounds);
 				}
 			}
@@ -366,13 +426,17 @@ namespace GumpStudio.Elements
 		public override void RefreshCache()
 		{
 			IEnumerator enumerator = null;
-			try {
-				foreach (var mElement in mElements) {
+			try
+			{
+				foreach (var mElement in mElements)
+				{
 					((BaseElement)RuntimeHelpers.GetObjectValue(mElement)).RefreshCache();
 				}
 			}
-			finally {
-				if (enumerator is IDisposable) {
+			finally
+			{
+				if (enumerator is IDisposable)
+				{
 					(enumerator as IDisposable).Dispose();
 				}
 			}
@@ -394,13 +458,17 @@ namespace GumpStudio.Elements
 		{
 			IEnumerator enumerator = null;
 			Target.TranslateTransform(X, Y);
-			try {
-				foreach (var mElement in mElements) {
+			try
+			{
+				foreach (var mElement in mElements)
+				{
 					((BaseElement)RuntimeHelpers.GetObjectValue(mElement)).Render(Target);
 				}
 			}
-			finally {
-				if (enumerator is IDisposable) {
+			finally
+			{
+				if (enumerator is IDisposable)
+				{
 					(enumerator as IDisposable).Dispose();
 				}
 			}

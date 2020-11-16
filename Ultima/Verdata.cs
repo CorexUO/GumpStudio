@@ -39,16 +39,21 @@ namespace Ultima
 		{
 			path = Files.GetFilePath("verdata.mul");
 
-			if (path == null) {
+			if (path == null)
+			{
 				Patches = new Entry5D[0];
 				Stream = Stream.Null;
 			}
-			else {
-				using (Stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-					using (var bin = new BinaryReader(Stream)) {
+			else
+			{
+				using (Stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+				{
+					using (var bin = new BinaryReader(Stream))
+					{
 						Patches = new Entry5D[bin.ReadInt32()];
 
-						for (var i = 0; i < Patches.Length; ++i) {
+						for (var i = 0; i < Patches.Length; ++i)
+						{
 							Patches[i].file = bin.ReadInt32();
 							Patches[i].index = bin.ReadInt32();
 							Patches[i].lookup = bin.ReadInt32();
@@ -63,8 +68,10 @@ namespace Ultima
 
 		public static void Seek(int lookup)
 		{
-			if (Stream == null || !Stream.CanRead || !Stream.CanSeek) {
-				if (path != null) {
+			if (Stream == null || !Stream.CanRead || !Stream.CanSeek)
+			{
+				if (path != null)
+				{
 					Stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
 				}
 			}

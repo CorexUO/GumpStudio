@@ -222,20 +222,25 @@ namespace GumpStudio.Forms
 
 		public void BuildGumplingTree(TreeFolder Item, TreeNode Node)
 		{
-			foreach (var child in Item.GetChildren()) {
+			foreach (var child in Item.GetChildren())
+			{
 				var objectValue = (TreeItem)RuntimeHelpers.GetObjectValue(child);
-				var treeNode = new TreeNode {
+				var treeNode = new TreeNode
+				{
 					Text = objectValue.Text,
 					Tag = objectValue
 				};
-				if (Node == null) {
+				if (Node == null)
+				{
 					_treGumplings.Nodes.Add(treeNode);
 				}
-				else {
+				else
+				{
 					Node.Nodes.Add(treeNode);
 				}
 
-				if (objectValue is TreeFolder) {
+				if (objectValue is TreeFolder)
+				{
 					BuildGumplingTree((TreeFolder)objectValue, treeNode);
 				}
 			}
@@ -245,13 +250,16 @@ namespace GumpStudio.Forms
 		{
 			IEnumerator enumerator1 = null;
 			_pnlToolbox.Controls.Clear();
-			try {
+			try
+			{
 				enumerator1 = RegisteredTypes.GetEnumerator();
 				var y = 0;
-				while (enumerator1.MoveNext()) {
+				while (enumerator1.MoveNext())
+				{
 					var objectValue = (Type)RuntimeHelpers.GetObjectValue(enumerator1.Current);
 					var instance = (BaseElement)Activator.CreateInstance(objectValue);
-					var button = new Button {
+					var button = new Button
+					{
 						Text = instance.Type
 					};
 					var point = new Point(0, y);
@@ -263,20 +271,25 @@ namespace GumpStudio.Forms
 					y += button.Height - 1;
 					_pnlToolbox.Controls.Add(button);
 					button.Click += new EventHandler(CreateElementFromToolbox);
-					if (instance.DispayInAbout()) {
+					if (instance.DispayInAbout())
+					{
 						AboutElementAppend = AboutElementAppend + "\r\n\r\n" + instance.Type + ": " + instance.GetAboutText();
 					}
 
-					foreach (var loadedPlugin in LoadedPlugins) {
+					foreach (var loadedPlugin in LoadedPlugins)
+					{
 						((BasePlugin)RuntimeHelpers.GetObjectValue(loadedPlugin)).InitializeElementExtenders(instance);
 					}
 				}
 			}
-			catch (Exception ex) {
+			catch (Exception ex)
+			{
 				MessageBox.Show($"Error\r\n{ex.Message}\n{ex.StackTrace}");
 			}
-			finally {
-				if (enumerator1 is IDisposable disposable) {
+			finally
+			{
+				if (enumerator1 is IDisposable disposable)
+				{
 					disposable.Dispose();
 				}
 			}
@@ -291,7 +304,8 @@ namespace GumpStudio.Forms
 
 		private void cboElements_Click(object sender, EventArgs e)
 		{
-			foreach (var element in ElementStack.GetElements()) {
+			foreach (var element in ElementStack.GetElements())
+			{
 				((BaseElement)RuntimeHelpers.GetObjectValue(element)).Selected = false;
 			}
 
@@ -312,12 +326,14 @@ namespace GumpStudio.Forms
 
 		public void ChangeActiveStack(int StackID)
 		{
-			if (StackID > Stacks.Count - 1) {
+			if (StackID > Stacks.Count - 1)
+			{
 				return;
 			}
 
 			SetActiveElement(null, true);
-			if (ElementStack != null) {
+			if (ElementStack != null)
+			{
 				ElementStack.UpdateParent -= new BaseElement.UpdateParentEventHandler(ChangeActiveElementEventHandler);
 				ElementStack.Repaint -= new BaseElement.RepaintEventHandler(RefreshView);
 			}
@@ -330,7 +346,8 @@ namespace GumpStudio.Forms
 		public void ClearContextMenu(Menu menu)
 		{
 			var num = menu.MenuItems.Count - 1;
-			for (var index = 0; index <= num; ++index) {
+			for (var index = 0; index <= num; ++index)
+			{
 				var menuItem = menu.MenuItems[0];
 				menu.MenuItems.RemoveAt(0);
 			}
@@ -362,7 +379,8 @@ namespace GumpStudio.Forms
 		{
 			var arrayList = new ArrayList();
 
-			foreach (var selectedElement in ElementStack.GetSelectedElements()) {
+			foreach (var selectedElement in ElementStack.GetSelectedElements())
+			{
 				arrayList.Add(((BaseElement)RuntimeHelpers.GetObjectValue(selectedElement)).Clone());
 			}
 
@@ -384,20 +402,24 @@ namespace GumpStudio.Forms
 
 		public void CreateUndoPoint(string Action)
 		{
-			if (SuppressUndoPoints) {
+			if (SuppressUndoPoints)
+			{
 				return;
 			}
 
 			var stopwatch = new Stopwatch();
 			stopwatch.Start();
-			while (CurrentUndoPoint < UndoPoints.Count - 1) {
+			while (CurrentUndoPoint < UndoPoints.Count - 1)
+			{
 				var undoPoint = (UndoPoint)UndoPoints[CurrentUndoPoint + 1];
 				UndoPoints.RemoveAt(CurrentUndoPoint + 1);
 			}
-			var undoPoint1 = new UndoPoint(this) {
+			var undoPoint1 = new UndoPoint(this)
+			{
 				Text = Action
 			};
-			if (UndoPoints.Count > MaxUndoPoints) {
+			if (UndoPoints.Count > MaxUndoPoints)
+			{
 				UndoPoints.RemoveAt(0);
 			}
 
@@ -412,13 +434,16 @@ namespace GumpStudio.Forms
 		{
 			IEnumerator enumerator = null;
 			var arrayList = new ArrayList();
-			try {
-				foreach (var selectedElement in ElementStack.GetSelectedElements()) {
+			try
+			{
+				foreach (var selectedElement in ElementStack.GetSelectedElements())
+				{
 					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(selectedElement);
 					arrayList.Add(objectValue);
 				}
 			}
-			finally {
+			finally
+			{
 				(enumerator as IDisposable)?.Dispose();
 			}
 			Clipboard.SetDataObject(arrayList);
@@ -432,22 +457,27 @@ namespace GumpStudio.Forms
 			var arrayList = new ArrayList();
 			arrayList.AddRange(ElementStack.GetElements());
 			var flag = false;
-			try {
-				foreach (var obj in arrayList) {
+			try
+			{
+				foreach (var obj in arrayList)
+				{
 					var objectValue = RuntimeHelpers.GetObjectValue(obj);
 					flag = true;
 					var e = (BaseElement)objectValue;
-					if (e.Selected) {
+					if (e.Selected)
+					{
 						ElementStack.RemoveElement(e);
 					}
 				}
 			}
-			finally {
+			finally
+			{
 				(enumerator as IDisposable)?.Dispose();
 			}
 			SetActiveElement(GetLastSelectedControl());
 			_picCanvas.Invalidate();
-			if (!flag) {
+			if (!flag)
+			{
 				return;
 			}
 
@@ -464,15 +494,19 @@ namespace GumpStudio.Forms
 		private void DesignerForm_Closing(object sender, CancelEventArgs e)
 		{
 			IEnumerator enumerator = null;
-			try {
-				foreach (var availablePlugin in AvailablePlugins) {
+			try
+			{
+				foreach (var availablePlugin in AvailablePlugins)
+				{
 					var objectValue = (BasePlugin)RuntimeHelpers.GetObjectValue(availablePlugin);
-					if (objectValue.IsLoaded) {
+					if (objectValue.IsLoaded)
+					{
 						objectValue.Unload();
 					}
 				}
 			}
-			finally {
+			finally
+			{
 				(enumerator as IDisposable)?.Dispose();
 			}
 		}
@@ -489,103 +523,128 @@ namespace GumpStudio.Forms
 
 			hookKeyDown?.Invoke(ActiveControl, ref e);
 
-			if (e.Handled || ActiveControl != CanvasFocus) {
+			if (e.Handled || ActiveControl != CanvasFocus)
+			{
 				return;
 			}
 
 			var flag = false;
-			if ((e.KeyCode == Keys.Delete || e.KeyCode == Keys.Back ? 1 : 0) != 0) {
+			if ((e.KeyCode == Keys.Delete || e.KeyCode == Keys.Back ? 1 : 0) != 0)
+			{
 				DeleteSelectedElements();
 				e.Handled = true;
 				flag = true;
 			}
-			else if (e.KeyCode == Keys.Up) {
+			else if (e.KeyCode == Keys.Up)
+			{
 				IEnumerator enumerator = null;
-				try {
-					foreach (var selectedElement in ElementStack.GetSelectedElements()) {
+				try
+				{
+					foreach (var selectedElement in ElementStack.GetSelectedElements())
+					{
 						var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(selectedElement);
 						var location = objectValue.Location;
 						location.Offset(0, -Convert.ToInt32(ArrowKeyDelta));
 						objectValue.Location = location;
 					}
 				}
-				finally {
+				finally
+				{
 					(enumerator as IDisposable)?.Dispose();
 				}
 				ArrowKeyDelta = Decimal.Multiply(ArrowKeyDelta, new decimal(106, 0, 0, false, 2));
 				flag = true;
 			}
-			else if (e.KeyCode == Keys.Down) {
+			else if (e.KeyCode == Keys.Down)
+			{
 				IEnumerator enumerator = null;
-				try {
-					foreach (var selectedElement in ElementStack.GetSelectedElements()) {
+				try
+				{
+					foreach (var selectedElement in ElementStack.GetSelectedElements())
+					{
 						var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(selectedElement);
 						var location = objectValue.Location;
 						location.Offset(0, Convert.ToInt32(ArrowKeyDelta));
 						objectValue.Location = location;
 					}
 				}
-				finally {
+				finally
+				{
 					(enumerator as IDisposable)?.Dispose();
 				}
 				ArrowKeyDelta = Decimal.Multiply(ArrowKeyDelta, new decimal(106, 0, 0, false, 2));
 				flag = true;
 			}
-			else if (e.KeyCode == Keys.Left) {
+			else if (e.KeyCode == Keys.Left)
+			{
 				IEnumerator enumerator = null;
-				try {
-					foreach (var selectedElement in ElementStack.GetSelectedElements()) {
+				try
+				{
+					foreach (var selectedElement in ElementStack.GetSelectedElements())
+					{
 						var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(selectedElement);
 						var location = objectValue.Location;
 						location.Offset(-Convert.ToInt32(ArrowKeyDelta), 0);
 						objectValue.Location = location;
 					}
 				}
-				finally {
+				finally
+				{
 					(enumerator as IDisposable)?.Dispose();
 				}
 				ArrowKeyDelta = Decimal.Multiply(ArrowKeyDelta, new decimal(106, 0, 0, false, 2));
 				flag = true;
 			}
-			else if (e.KeyCode == Keys.Right) {
+			else if (e.KeyCode == Keys.Right)
+			{
 				IEnumerator enumerator = null;
-				try {
-					foreach (var selectedElement in ElementStack.GetSelectedElements()) {
+				try
+				{
+					foreach (var selectedElement in ElementStack.GetSelectedElements())
+					{
 						var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(selectedElement);
 						var location = objectValue.Location;
 						location.Offset(Convert.ToInt32(ArrowKeyDelta), 0);
 						objectValue.Location = location;
 					}
 				}
-				finally {
+				finally
+				{
 					(enumerator as IDisposable)?.Dispose();
 				}
 				ArrowKeyDelta = Decimal.Multiply(ArrowKeyDelta, new decimal(106, 0, 0, false, 2));
 				flag = true;
 			}
-			else if (e.KeyCode == Keys.Next) {
+			else if (e.KeyCode == Keys.Next)
+			{
 				var index = (ActiveElement == null ? ElementStack.GetElements().Count - 1 : ActiveElement.Z) - 1;
-				if (index < 0) {
+				if (index < 0)
+				{
 					index = ElementStack.GetElements().Count - 1;
 				}
 
-				if (index >= 0 & index <= ElementStack.GetElements().Count - 1) {
+				if (index >= 0 & index <= ElementStack.GetElements().Count - 1)
+				{
 					SetActiveElement((BaseElement)ElementStack.GetElements()[index], true);
 				}
 			}
-			else if (e.KeyCode == Keys.Prior) {
+			else if (e.KeyCode == Keys.Prior)
+			{
 				var index = (ActiveElement == null ? ElementStack.GetElements().Count - 1 : ActiveElement.Z) + 1;
-				if (index > ElementStack.GetElements().Count - 1) {
+				if (index > ElementStack.GetElements().Count - 1)
+				{
 					index = 0;
 				}
 
 				SetActiveElement((BaseElement)ElementStack.GetElements()[index], true);
 			}
-			if (Decimal.Compare(ArrowKeyDelta, new decimal(10)) > 0) {
+			if (Decimal.Compare(ArrowKeyDelta, new decimal(10)) > 0)
+			{
 				ArrowKeyDelta = new decimal(10);
 			}
 
-			if (!flag) {
+			if (!flag)
+			{
 				return;
 			}
 
@@ -595,10 +654,12 @@ namespace GumpStudio.Forms
 
 		private void DesignerForm_KeyUp(object sender, KeyEventArgs e)
 		{
-			if (e.KeyCode != Keys.Up && e.KeyCode != Keys.Down) {
+			if (e.KeyCode != Keys.Up && e.KeyCode != Keys.Down)
+			{
 				var keyCode = (int)e.KeyCode;
 			}
-			if ((e.KeyCode == Keys.Right ? 1 : 0) == 0) {
+			if ((e.KeyCode == Keys.Right ? 1 : 0) == 0)
+			{
 				return;
 			}
 
@@ -610,21 +671,26 @@ namespace GumpStudio.Forms
 		{
 			XMLSettings.CurrentOptions = XMLSettings.Load(this);
 
-			if (!File.Exists(Path.Combine(XMLSettings.CurrentOptions.ClientPath, "art.mul")) && !File.Exists(Path.Combine(XMLSettings.CurrentOptions.ClientPath, "artLegacyMUL.uop"))) {
+			if (!File.Exists(Path.Combine(XMLSettings.CurrentOptions.ClientPath, "art.mul")) && !File.Exists(Path.Combine(XMLSettings.CurrentOptions.ClientPath, "artLegacyMUL.uop")))
+			{
 				var folderBrowserDialog = new FolderBrowserDialog { SelectedPath = Environment.SpecialFolder.ProgramFiles.ToString(), Description = @"Select the folder that contains the UO data (.mul) files you want to use." };
 
-				if (folderBrowserDialog.ShowDialog() == DialogResult.OK) {
-					if (File.Exists(Path.Combine(folderBrowserDialog.SelectedPath, "art.mul")) || File.Exists(Path.Combine(folderBrowserDialog.SelectedPath, "artLegacyMUL.uop"))) {
+				if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+				{
+					if (File.Exists(Path.Combine(folderBrowserDialog.SelectedPath, "art.mul")) || File.Exists(Path.Combine(folderBrowserDialog.SelectedPath, "artLegacyMUL.uop")))
+					{
 						XMLSettings.CurrentOptions.ClientPath = folderBrowserDialog.SelectedPath;
 						XMLSettings.Save(this, XMLSettings.CurrentOptions);
 					}
-					else {
+					else
+					{
 						MessageBox.Show(@"This path does not contain a file named ""art.mul"", it is most likely not the correct path. Gump Studio can not run without valid client data files.", "Data Files");
 						Close();
 						return;
 					}
 				}
-				else {
+				else
+				{
 					Close();
 					return;
 				}
@@ -661,7 +727,8 @@ namespace GumpStudio.Forms
 			RegisteredTypes.Add(typeof(HTMLElement));
 			BuildToolbox();
 			SelFG = new Pen(Color.Blue, 2f);
-			SelBG = new LinearGradientBrush(new Rectangle(0, 0, 50, 50), Color.FromArgb(90, Color.Blue), Color.FromArgb(110, Color.Blue), LinearGradientMode.ForwardDiagonal) {
+			SelBG = new LinearGradientBrush(new Rectangle(0, 0, 50, 50), Color.FromArgb(90, Color.Blue), Color.FromArgb(110, Color.Blue), LinearGradientMode.ForwardDiagonal)
+			{
 				WrapMode = WrapMode.TileFlipXY
 			};
 			CreateUndoPoint("Blank");
@@ -678,7 +745,8 @@ namespace GumpStudio.Forms
 
 		private void ElementProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
 		{
-			if (e.ChangedItem.PropertyDescriptor.Name == "Name") {
+			if (e.ChangedItem.PropertyDescriptor.Name == "Name")
+			{
 				m_cboElements.Items.Clear();
 				m_cboElements.Items.AddRange(ElementStack.GetElements().ToArray());
 				m_cboElements.SelectedItem = RuntimeHelpers.GetObjectValue(m_ElementProperties.SelectedObject);
@@ -691,48 +759,61 @@ namespace GumpStudio.Forms
 		{
 			PluginTypesToLoad = GetPluginsToLoad();
 
-			foreach (var file in Directory.GetFiles(Application.StartupPath, "*.dll", SearchOption.AllDirectories)) {
-				if (file.EndsWith("Ultima.dll", StringComparison.OrdinalIgnoreCase) || file.EndsWith("UOFont.dll", StringComparison.OrdinalIgnoreCase)) {
+			foreach (var file in Directory.GetFiles(Application.StartupPath, "*.dll", SearchOption.AllDirectories))
+			{
+				if (file.EndsWith("Ultima.dll", StringComparison.OrdinalIgnoreCase) || file.EndsWith("UOFont.dll", StringComparison.OrdinalIgnoreCase))
+				{
 					continue;
 				}
 
-				foreach (var type in Assembly.LoadFile(file).GetTypes()) {
-					try {
-						if (type.IsSubclassOf(typeof(BasePlugin)) && !type.IsAbstract) {
+				foreach (var type in Assembly.LoadFile(file).GetTypes())
+				{
+					try
+					{
+						if (type.IsSubclassOf(typeof(BasePlugin)) && !type.IsAbstract)
+						{
 							var instance = (BasePlugin)Activator.CreateInstance(type);
 							var pluginInfo = instance.Info;
 							AboutElementAppend = AboutElementAppend + "\r\n" + pluginInfo.Name + ": " + pluginInfo.Description + "\r\nAuthor: " + pluginInfo.AuthorName + "  (" + pluginInfo.AuthorContact + ")\r\nVersion: " + pluginInfo.Version + "\r\n";
 							AvailablePlugins.Add(instance);
 						}
 
-						if (type.IsSubclassOf(typeof(BaseElement)) && !type.IsAbstract) {
+						if (type.IsSubclassOf(typeof(BaseElement)) && !type.IsAbstract)
+						{
 							RegisteredTypes.Add(type);
 						}
 					}
-					catch (Exception ex) {
+					catch (Exception ex)
+					{
 						var exception = ex;
 						MessageBox.Show("Error loading plugin: " + type.Name + "(" + file + ")\r\n\r\n" + exception.Message);
 					}
 				}
 			}
 
-			if (PluginTypesToLoad == null) {
+			if (PluginTypesToLoad == null)
+			{
 				return;
 			}
 
-			foreach (var pluginInfo1 in PluginTypesToLoad) {
+			foreach (var pluginInfo1 in PluginTypesToLoad)
+			{
 				IEnumerator enumerator = null;
-				try {
-					foreach (var availablePlugin in AvailablePlugins) {
+				try
+				{
+					foreach (var availablePlugin in AvailablePlugins)
+					{
 						var objectValue = (BasePlugin)RuntimeHelpers.GetObjectValue(availablePlugin);
 						var pluginInfo2 = objectValue.Info;
-						if (pluginInfo1.Equals(pluginInfo2)) {
+						if (pluginInfo1.Equals(pluginInfo2))
+						{
 							objectValue.Load(this);
 							LoadedPlugins.Add(objectValue);
 						}
 					}
 				}
-				finally {
+				finally
+				{
 					(enumerator as IDisposable)?.Dispose();
 				}
 			}
@@ -756,24 +837,29 @@ namespace GumpStudio.Forms
 			Menu.MenuItems.Add(OrderMenu);
 			Menu.MenuItems.Add(new MenuItem("-"));
 			Menu.MenuItems.Add(MiscMenu);
-			if (ElementStack.GetSelectedElements().Count >= 2) {
+			if (ElementStack.GetSelectedElements().Count >= 2)
+			{
 				GroupMenu.MenuItems.Add(new MenuItem("Create Group", new EventHandler(mnuGroupCreate_Click)));
 			}
 
 			Element?.AddContextMenus(ref GroupMenu, ref PositionMenu, ref OrderMenu, ref MiscMenu);
-			if (GroupMenu.MenuItems.Count == 0) {
+			if (GroupMenu.MenuItems.Count == 0)
+			{
 				GroupMenu.Enabled = false;
 			}
 
-			if (PositionMenu.MenuItems.Count == 0) {
+			if (PositionMenu.MenuItems.Count == 0)
+			{
 				PositionMenu.Enabled = false;
 			}
 
-			if (OrderMenu.MenuItems.Count == 0) {
+			if (OrderMenu.MenuItems.Count == 0)
+			{
 				OrderMenu.Enabled = false;
 			}
 
-			if (MiscMenu.MenuItems.Count != 0) {
+			if (MiscMenu.MenuItems.Count != 0)
+			{
 				return;
 			}
 
@@ -784,12 +870,15 @@ namespace GumpStudio.Forms
 		{
 			BaseElement baseElement = null;
 			IEnumerator enumerator = null;
-			try {
-				foreach (var element in ElementStack.GetElements()) {
+			try
+			{
+				foreach (var element in ElementStack.GetElements())
+				{
 					baseElement = (BaseElement)RuntimeHelpers.GetObjectValue(element);
 				}
 			}
-			finally {
+			finally
+			{
 				(enumerator as IDisposable)?.Dispose();
 			}
 			return baseElement;
@@ -798,7 +887,8 @@ namespace GumpStudio.Forms
 		protected PluginInfo[] GetPluginsToLoad()
 		{
 			PluginInfo[] pluginInfoArray = null;
-			if (File.Exists(Application.StartupPath + "\\LoadInfo.bin")) {
+			if (File.Exists(Application.StartupPath + "\\LoadInfo.bin"))
+			{
 				var fileStream = new FileStream(Application.StartupPath + "\\LoadInfo.bin", FileMode.Open);
 				pluginInfoArray = (PluginInfo[])new BinaryFormatter().Deserialize(fileStream);
 				fileStream.Close();
@@ -808,11 +898,13 @@ namespace GumpStudio.Forms
 
 		protected Rectangle GetPositiveRect(Rectangle Rect)
 		{
-			if (Rect.Height < 0) {
+			if (Rect.Height < 0)
+			{
 				Rect.Height = Math.Abs(Rect.Height);
 				Rect.Y -= Rect.Height;
 			}
-			if (Rect.Width < 0) {
+			if (Rect.Width < 0)
+			{
 				Rect.Width = Math.Abs(Rect.Width);
 				Rect.X -= Rect.Width;
 			}
@@ -821,7 +913,8 @@ namespace GumpStudio.Forms
 
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing) {
+			if (disposing)
+			{
 				components?.Dispose();
 			}
 
@@ -1463,7 +1556,8 @@ namespace GumpStudio.Forms
 			{
 				var asm = Assembly.GetExecutingAssembly();
 
-				if (assemblyName.Contains("GumpStudioCore")) {
+				if (assemblyName.Contains("GumpStudioCore"))
+				{
 					assemblyName = asm.FullName;
 				}
 
@@ -1478,14 +1572,17 @@ namespace GumpStudio.Forms
 			FileStream fileStream = null;
 			Stacks.Clear();
 			_TabPager.TabPages.Clear();
-			try {
+			try
+			{
 				fileStream = new FileStream(Path, FileMode.Open);
 				var binaryFormatter = new BinaryFormatter { Binder = DeserializationBinder.Instance };
 				Stacks = (ArrayList)binaryFormatter.Deserialize(fileStream);
-				try {
+				try
+				{
 					GumpProperties = (GumpProperties)binaryFormatter.Deserialize(fileStream);
 				}
-				catch (Exception ex) {
+				catch (Exception ex)
+				{
 					var exception = ex;
 					GumpProperties = new GumpProperties();
 					MessageBox.Show(exception.InnerException.Message);
@@ -1493,21 +1590,26 @@ namespace GumpStudio.Forms
 				SetActiveElement(null, true);
 				RefreshElementList();
 			}
-			catch (Exception ex) {
+			catch (Exception ex)
+			{
 				MessageBox.Show(ex.Message);
 			}
-			finally {
+			finally
+			{
 				fileStream?.Close();
 			}
 			var num1 = 0;
-			try {
-				foreach (var stack in Stacks) {
+			try
+			{
+				foreach (var stack in Stacks)
+				{
 					RuntimeHelpers.GetObjectValue(stack);
 					_TabPager.TabPages.Add(new TabPage(num1.ToString()));
 					++num1;
 				}
 			}
-			finally {
+			finally
+			{
 				(enumerator as IDisposable)?.Dispose();
 			}
 			ChangeActiveStack(0);
@@ -1519,7 +1621,8 @@ namespace GumpStudio.Forms
 		private void MenuItem2_Click(object sender, EventArgs e)
 		{
 			_OpenDialog.Filter = "Gumpling (*.gumpling)|*.gumpling|Gump (*.gump)|*.gump";
-			if (_OpenDialog.ShowDialog() != DialogResult.OK) {
+			if (_OpenDialog.ShowDialog() != DialogResult.OK)
+			{
 				return;
 			}
 
@@ -1552,20 +1655,24 @@ namespace GumpStudio.Forms
 
 		private void mnuDataFile_Click(object sender, EventArgs e)
 		{
-			var folderBrowserDialog = new FolderBrowserDialog {
+			var folderBrowserDialog = new FolderBrowserDialog
+			{
 				Description = "Select the folder that contains the UO data (.mul) files you want to use."
 			};
-			if (folderBrowserDialog.ShowDialog() != DialogResult.OK) {
+			if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
+			{
 				return;
 			}
 
-			if (File.Exists(Path.Combine(folderBrowserDialog.SelectedPath, "art.mul"))) {
+			if (File.Exists(Path.Combine(folderBrowserDialog.SelectedPath, "art.mul")))
+			{
 				XMLSettings.CurrentOptions.ClientPath = folderBrowserDialog.SelectedPath;
 				XMLSettings.Save(this, XMLSettings.CurrentOptions);
 				//int num = (int) Interaction.MsgBox( (object) "New path set, please restart Gump Studio to activate your changes.", MsgBoxStyle.OkOnly, (object) "Data Files" );
 				MessageBox.Show("New path set, please restart Gump Studio to activate your changes.", "Data Files");
 			}
-			else {
+			else
+			{
 				//int num1 = (int) Interaction.MsgBox( (object) "This path does not contain a file named \"art.mul\", it is most likely not the correct path.", MsgBoxStyle.OkOnly, (object) "Data Files" );
 				MessageBox.Show("This path does not contain a file named \"art.mul\", it is most likely not the correct path.", "Data Files");
 			}
@@ -1598,7 +1705,8 @@ namespace GumpStudio.Forms
 
 			var result = MessageBox.Show("Are you sure you want to start a new gump?", "Question", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
 
-			if (result != DialogResult.OK) {
+			if (result != DialogResult.OK)
+			{
 				return;
 			}
 
@@ -1609,7 +1717,8 @@ namespace GumpStudio.Forms
 		{
 			_OpenDialog.CheckFileExists = true;
 			_OpenDialog.Filter = @"Gump|*.gump";
-			if (_OpenDialog.ShowDialog() == DialogResult.OK) {
+			if (_OpenDialog.ShowDialog() == DialogResult.OK)
+			{
 				LoadFrom(_OpenDialog.FileName);
 				FileName = Path.GetFileName(_OpenDialog.FileName);
 				Text = "Gump Studio (" + FileName + ")";
@@ -1622,7 +1731,8 @@ namespace GumpStudio.Forms
 			_SaveDialog.AddExtension = true;
 			_SaveDialog.DefaultExt = "gump";
 			_SaveDialog.Filter = "Gump|*.gump";
-			if (_SaveDialog.ShowDialog() != DialogResult.OK) {
+			if (_SaveDialog.ShowDialog() != DialogResult.OK)
+			{
 				return;
 			}
 
@@ -1635,29 +1745,37 @@ namespace GumpStudio.Forms
 		{
 			IEnumerator enumerator1 = null;
 			var arrayList = new ArrayList();
-			try {
-				foreach (var element in ElementStack.GetElements()) {
+			try
+			{
+				foreach (var element in ElementStack.GetElements())
+				{
 					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(element);
-					if (objectValue.Selected) {
+					if (objectValue.Selected)
+					{
 						arrayList.Add(objectValue);
 					}
 				}
 			}
-			finally {
+			finally
+			{
 				(enumerator1 as IDisposable)?.Dispose();
 			}
-			if (arrayList.Count >= 2) {
+			if (arrayList.Count >= 2)
+			{
 				IEnumerator enumerator2 = null;
 				var groupElement = new GroupElement(ElementStack, null, "New Group");
-				try {
-					foreach (var obj in arrayList) {
+				try
+				{
+					foreach (var obj in arrayList)
+					{
 						var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(obj);
 						groupElement.AddElement(objectValue);
 						ElementStack.RemoveElement(objectValue);
 						ElementStack.RemoveEvents(objectValue);
 					}
 				}
-				finally {
+				finally
+				{
 					(enumerator2 as IDisposable)?.Dispose();
 				}
 				AddElement(groupElement);
@@ -1676,7 +1794,8 @@ namespace GumpStudio.Forms
 		private void mnuImportGumpling_Click(object sender, EventArgs e)
 		{
 			_OpenDialog.Filter = @"Gumpling (*.gumpling)|*.gumpling|Gump (*.gump)|*.gump";
-			if (_OpenDialog.ShowDialog() != DialogResult.OK) {
+			if (_OpenDialog.ShowDialog() != DialogResult.OK)
+			{
 				return;
 			}
 
@@ -1699,14 +1818,17 @@ namespace GumpStudio.Forms
 
 		private void mnuPageDelete_Click(object sender, EventArgs e)
 		{
-			if (_TabPager.SelectedIndex == 0) {
+			if (_TabPager.SelectedIndex == 0)
+			{
 				MessageBox.Show(@"Page 0 can not be deleted.");
 
 			}
-			else {
+			else
+			{
 				var selectedIndex = _TabPager.SelectedIndex;
 				var num2 = _TabPager.TabCount - 1;
-				for (var index = selectedIndex + 1; index <= num2; ++index) {
+				for (var index = selectedIndex + 1; index <= num2; ++index)
+				{
 					_TabPager.TabPages[index].Text = Convert.ToString(index - 1);
 				}
 
@@ -1719,21 +1841,25 @@ namespace GumpStudio.Forms
 
 		private void mnuPageInsert_Click(object sender, EventArgs e)
 		{
-			if (_TabPager.SelectedIndex == 0) {
+			if (_TabPager.SelectedIndex == 0)
+			{
 				//int num1 = (int) Interaction.MsgBox( (object) "Page 0 may not be moved.", MsgBoxStyle.OkOnly, (object) null );
 				MessageBox.Show(@"Page 0 may not be moved.");
 			}
-			else {
+			else
+			{
 				var tabCount = _TabPager.TabCount;
 				var selectedIndex = _TabPager.SelectedIndex;
 				var num2 = _TabPager.TabCount - 1;
-				for (var index = selectedIndex; index <= num2; ++index) {
+				for (var index = selectedIndex; index <= num2; ++index)
+				{
 					_TabPager.TabPages.RemoveAt(selectedIndex);
 				}
 
 				_TabPager.TabPages.Add(new TabPage(selectedIndex.ToString()));
 				var num3 = tabCount;
-				for (var index = selectedIndex + 1; index <= num3; ++index) {
+				for (var index = selectedIndex + 1; index <= num3; ++index)
+				{
 					_TabPager.TabPages.Add(new TabPage(index.ToString()));
 				}
 
@@ -1753,7 +1879,8 @@ namespace GumpStudio.Forms
 
 		private void mnuPluginManager_Click(object sender, EventArgs e)
 		{
-			var num = (int)new PluginManager() {
+			var num = (int)new PluginManager()
+			{
 				AvailablePlugins = AvailablePlugins,
 				LoadedPlugins = LoadedPlugins,
 				OrderList = PluginTypesToLoad,
@@ -1778,12 +1905,15 @@ namespace GumpStudio.Forms
 			var dataObject = Clipboard.GetDataObject();
 			var arrayList = new ArrayList();
 			var data = (ArrayList)dataObject.GetData(typeof(ArrayList));
-			if (data != null) {
+			if (data != null)
+			{
 				SetActiveElement(null, true);
 
-				foreach (var obj in data) {
+				foreach (var obj in data)
+				{
 					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(obj);
-					if (CopyMode == ClipBoardMode.Copy) {
+					if (CopyMode == ClipBoardMode.Copy)
+					{
 						objectValue.Name = "Copy of " + objectValue.Name;
 					}
 
@@ -1800,49 +1930,63 @@ namespace GumpStudio.Forms
 			var point = new Point(e.X, e.Y);
 			mAnchor = point;
 			var Element = ElementStack.GetElementFromPoint(point);
-			if ((ActiveElement == null || ActiveElement.HitTest(point) == MoveModeType.None ? 0 : 1) != 0) {
+			if ((ActiveElement == null || ActiveElement.HitTest(point) == MoveModeType.None ? 0 : 1) != 0)
+			{
 				Element = ActiveElement;
 			}
 
-			if (Element != null) {
+			if (Element != null)
+			{
 				MoveMode = Element.HitTest(point);
-				if ((ActiveElement == null || ActiveElement.HitTest(point) != MoveModeType.None ? 0 : 1) != 0) {
-					if (Element.Selected) {
-						if ((ModifierKeys & Keys.Control) > Keys.None) {
+				if ((ActiveElement == null || ActiveElement.HitTest(point) != MoveModeType.None ? 0 : 1) != 0)
+				{
+					if (Element.Selected)
+					{
+						if ((ModifierKeys & Keys.Control) > Keys.None)
+						{
 							Element.Selected = false;
 						}
-						else {
+						else
+						{
 							SetActiveElement(Element, false);
 						}
 					}
-					else {
+					else
+					{
 						SetActiveElement(Element, (ModifierKeys & Keys.Control) <= Keys.None);
 					}
 				}
-				else if (ActiveElement == null) {
+				else if (ActiveElement == null)
+				{
 					SetActiveElement(Element, false);
 				}
-				else if (ActiveElement != null && (ModifierKeys & Keys.Control) > Keys.None) {
+				else if (ActiveElement != null && (ModifierKeys & Keys.Control) > Keys.None)
+				{
 					ActiveElement.Selected = false;
 					var selectedElements = ElementStack.GetSelectedElements();
-					if (selectedElements.Count > 0) {
+					if (selectedElements.Count > 0)
+					{
 						SetActiveElement((BaseElement)selectedElements[0], false);
 					}
-					else {
+					else
+					{
 						SetActiveElement(null, true);
 						MoveMode = MoveModeType.None;
 					}
 				}
 			}
-			else {
+			else
+			{
 				MoveMode = MoveModeType.None;
-				if ((e.Button & MouseButtons.Left) > MouseButtons.None) {
+				if ((e.Button & MouseButtons.Left) > MouseButtons.None)
+				{
 					SetActiveElement(null, (ModifierKeys & Keys.Control) <= Keys.None);
 				}
 			}
 			_picCanvas.Invalidate();
 			LastPos = point;
-			if (ActiveElement != null) {
+			if (ActiveElement != null)
+			{
 				mAnchorOffset.Width = ActiveElement.X - point.X;
 				mAnchorOffset.Height = ActiveElement.Y - point.Y;
 			}
@@ -1856,33 +2000,41 @@ namespace GumpStudio.Forms
 			var num1 = point1.X - LastPos.X;
 			var num2 = point1.Y - LastPos.Y;
 			var baseElement = ElementStack.GetElementFromPoint(point1);
-			if ((ActiveElement == null || ActiveElement.HitTest(point1) == MoveModeType.None ? 0 : 1) != 0) {
+			if ((ActiveElement == null || ActiveElement.HitTest(point1) == MoveModeType.None ? 0 : 1) != 0)
+			{
 				baseElement = ActiveElement;
 			}
 
-			if (MoveMode == MoveModeType.Move) {
+			if (MoveMode == MoveModeType.Move)
+			{
 				point1.Offset(mAnchorOffset.Width, mAnchorOffset.Height);
 			}
 
-			var e1 = new MouseMoveHookEventArgs {
+			var e1 = new MouseMoveHookEventArgs
+			{
 				Keys = ModifierKeys,
 				MouseButtons = e.Button,
 				MouseLocation = point1,
 				MoveMode = MoveMode
 			};
 
-			foreach (var loadedPlugin in LoadedPlugins) {
+			foreach (var loadedPlugin in LoadedPlugins)
+			{
 				((BasePlugin)RuntimeHelpers.GetObjectValue(loadedPlugin)).MouseMoveHook(ref e1);
 				point1 = e1.MouseLocation;
 			}
 
-			if ((MoveMode != MoveModeType.None || Math.Abs(num1) <= 0 || Math.Abs(num2) <= 0 ? 0 : 1) != 0) {
+			if ((MoveMode != MoveModeType.None || Math.Abs(num1) <= 0 || Math.Abs(num2) <= 0 ? 0 : 1) != 0)
+			{
 				MoveMode = MoveModeType.SelectionBox;
 			}
 
-			if (e.Button != MouseButtons.Left) {
-				if (baseElement != null) {
-					switch (baseElement.HitTest(point1)) {
+			if (e.Button != MouseButtons.Left)
+			{
+				if (baseElement != null)
+				{
+					switch (baseElement.HitTest(point1))
+					{
 						case MoveModeType.ResizeTopLeft:
 						case MoveModeType.ResizeBottomRight:
 							Cursor = Cursors.SizeNWSE;
@@ -1907,20 +2059,25 @@ namespace GumpStudio.Forms
 							break;
 					}
 				}
-				else {
+				else
+				{
 					Cursor = Cursors.Default;
 				}
 			}
-			else {
+			else
+			{
 				++MoveCount;
-				if (MoveCount > 100) {
+				if (MoveCount > 100)
+				{
 					MoveCount = 2;
 				}
 
 				var rectangle = new Rectangle(0, 0, _picCanvas.Width, _picCanvas.Height);
 				Cursor.Clip = _picCanvas.RectangleToScreen(rectangle);
-				if (MoveMode != MoveModeType.None) {
-					switch (MoveMode) {
+				if (MoveMode != MoveModeType.None)
+				{
+					switch (MoveMode)
+					{
 						case MoveModeType.ResizeTopLeft:
 						case MoveModeType.ResizeBottomRight:
 							Cursor = Cursors.SizeNWSE;
@@ -1944,11 +2101,13 @@ namespace GumpStudio.Forms
 							Cursor = Cursors.Default;
 							break;
 					}
-					if (MoveCount >= 2) {
+					if (MoveCount >= 2)
+					{
 						ElementChanged = true;
 					}
 				}
-				switch (MoveMode) {
+				switch (MoveMode)
+				{
 					case MoveModeType.SelectionBox:
 						rectangle = new Rectangle(mAnchor, new Size(point1.X - mAnchor.X, point1.Y - mAnchor.Y));
 						SelectionRect = GetPositiveRect(rectangle);
@@ -1963,11 +2122,13 @@ namespace GumpStudio.Forms
 						var location1 = ActiveElement.Location;
 						size1.Width = point2.X - point1.X;
 						size1.Height = point2.Y - point1.Y;
-						if (size1.Width < 1) {
+						if (size1.Width < 1)
+						{
 							location1.X = point2.X - 1;
 							size1.Width = 1;
 						}
-						if (size1.Height < 1) {
+						if (size1.Height < 1)
+						{
 							location1.Y = point2.Y - 1;
 							size1.Height = 1;
 						}
@@ -1984,11 +2145,13 @@ namespace GumpStudio.Forms
 						var size2 = ActiveElement.Size;
 						size2.Height = point3.Y - point1.Y;
 						size2.Width = point1.X - ActiveElement.X;
-						if (size2.Height < 1) {
+						if (size2.Height < 1)
+						{
 							location2.Y = point3.Y - 1;
 							size2.Height = 1;
 						}
-						if (size2.Width < 1) {
+						if (size2.Width < 1)
+						{
 							size2.Width = 1;
 						}
 
@@ -1999,7 +2162,8 @@ namespace GumpStudio.Forms
 						break;
 					case MoveModeType.ResizeBottomRight:
 
-						if (ActiveElement == null) {
+						if (ActiveElement == null)
+						{
 							break;
 						}
 
@@ -2007,11 +2171,13 @@ namespace GumpStudio.Forms
 						var size3 = ActiveElement.Size;
 						size3.Width = point1.X - ActiveElement.X;
 						size3.Height = point1.Y - ActiveElement.Y;
-						if (size3.Width < 1) {
+						if (size3.Width < 1)
+						{
 							size3.Width = 1;
 						}
 
-						if (size3.Height < 1) {
+						if (size3.Height < 1)
+						{
 							size3.Height = 1;
 						}
 
@@ -2020,7 +2186,8 @@ namespace GumpStudio.Forms
 						break;
 					case MoveModeType.ResizeBottomLeft:
 
-						if (ActiveElement == null) {
+						if (ActiveElement == null)
+						{
 							break;
 						}
 
@@ -2032,11 +2199,13 @@ namespace GumpStudio.Forms
 						var size4 = ActiveElement.Size;
 						size4.Width = point4.X - point1.X;
 						size4.Height = point1.Y - ActiveElement.Y;
-						if (size4.Width < 1) {
+						if (size4.Width < 1)
+						{
 							location3.X = point4.X - 1;
 							size4.Width = 1;
 						}
-						if (size4.Height < 1) {
+						if (size4.Height < 1)
+						{
 							size4.Height = 1;
 						}
 
@@ -2047,7 +2216,8 @@ namespace GumpStudio.Forms
 						break;
 					case MoveModeType.Move:
 
-						if (ActiveElement == null) {
+						if (ActiveElement == null)
+						{
 							break;
 						}
 
@@ -2056,17 +2226,21 @@ namespace GumpStudio.Forms
 						ActiveElement.Location = point1;
 						var dx = ActiveElement.X - location4.X;
 						var dy = ActiveElement.Y - location4.Y;
-						try {
-							foreach (var selectedElement in ElementStack.GetSelectedElements()) {
+						try
+						{
+							foreach (var selectedElement in ElementStack.GetSelectedElements())
+							{
 								var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(selectedElement);
-								if (objectValue != ActiveElement) {
+								if (objectValue != ActiveElement)
+								{
 									var location5 = objectValue.Location;
 									location5.Offset(dx, dy);
 									objectValue.Location = location5;
 								}
 							}
 						}
-						finally {
+						finally
+						{
 							(enumerator2 as IDisposable)?.Dispose();
 						}
 						_picCanvas.Invalidate();
@@ -2079,7 +2253,8 @@ namespace GumpStudio.Forms
 						var size5 = ActiveElement.Size;
 						var location6 = ActiveElement.Location;
 						size5.Width = point5.X - point1.X;
-						if (size5.Width < 1) {
+						if (size5.Width < 1)
+						{
 							location6.X = point5.X - 1;
 							size5.Width = 1;
 						}
@@ -2096,7 +2271,8 @@ namespace GumpStudio.Forms
 						var size6 = ActiveElement.Size;
 						var location7 = ActiveElement.Location;
 						size6.Height = point6.Y - point1.Y;
-						if (size6.Height < 1) {
+						if (size6.Height < 1)
+						{
 							location7.Y = point6.Y - 1;
 							size6.Height = 1;
 						}
@@ -2109,7 +2285,8 @@ namespace GumpStudio.Forms
 						point1.Offset(-3, 0);
 						var size7 = ActiveElement.Size;
 						size7.Width = point1.X - ActiveElement.X;
-						if (size7.Width < 1) {
+						if (size7.Width < 1)
+						{
 							size7.Width = 1;
 						}
 
@@ -2120,7 +2297,8 @@ namespace GumpStudio.Forms
 						point1.Offset(0, -3);
 						var size8 = ActiveElement.Size;
 						size8.Height = point1.Y - ActiveElement.Y;
-						if (size8.Height < 1) {
+						if (size8.Height < 1)
+						{
 							size8.Height = 1;
 						}
 
@@ -2139,27 +2317,33 @@ namespace GumpStudio.Forms
 			ElementStack.GetElementFromPoint(point);
 			ShowSelectionRect = false;
 			Cursor.Clip = rectangle;
-			if (MoveMode == MoveModeType.SelectionBox) {
+			if (MoveMode == MoveModeType.SelectionBox)
+			{
 				BaseElement Element = null;
 
-				foreach (var element in ElementStack.GetElements()) {
+				foreach (var element in ElementStack.GetElements())
+				{
 					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(element);
-					if (objectValue.ContainsTest(SelectionRect)) {
+					if (objectValue.ContainsTest(SelectionRect))
+					{
 						objectValue.Selected = true;
 						Element = objectValue;
 					}
-					else if ((ModifierKeys & Keys.Control) <= Keys.None) {
+					else if ((ModifierKeys & Keys.Control) <= Keys.None)
+					{
 						objectValue.Selected = false;
 					}
 				}
 
 				SetActiveElement(Element, false);
 			}
-			if ((MoveMode == MoveModeType.None || MoveMode == MoveModeType.SelectionBox || !ElementChanged ? 0 : 1) != 0) {
+			if ((MoveMode == MoveModeType.None || MoveMode == MoveModeType.SelectionBox || !ElementChanged ? 0 : 1) != 0)
+			{
 				CreateUndoPoint("Element Moved");
 				ElementChanged = false;
 			}
-			if ((e.Button & MouseButtons.Right) > MouseButtons.None) {
+			if ((e.Button & MouseButtons.Right) > MouseButtons.None)
+			{
 				var mnuContextMenu = m_mnuContextMenu;
 				GetContextMenu(ref ActiveElement, mnuContextMenu);
 				mnuContextMenu.Show(_picCanvas, point);
@@ -2186,11 +2370,13 @@ namespace GumpStudio.Forms
 			_TabPager.TabPages.Clear();
 			var num = -1;
 
-			foreach (var stack in Stacks) {
+			foreach (var stack in Stacks)
+			{
 				var objectValue = RuntimeHelpers.GetObjectValue(stack);
 				++num;
 				_TabPager.TabPages.Add(new TabPage(Convert.ToString(num)));
-				if (ElementStack == objectValue) {
+				if (ElementStack == objectValue)
+				{
 					_TabPager.SelectedIndex = num;
 				}
 			}
@@ -2198,11 +2384,13 @@ namespace GumpStudio.Forms
 
 		public void Redo()
 		{
-			if (CurrentUndoPoint < UndoPoints.Count) {
+			if (CurrentUndoPoint < UndoPoints.Count)
+			{
 				++CurrentUndoPoint;
 				RevertToUndoPoint(CurrentUndoPoint);
 			}
-			if (CurrentUndoPoint == UndoPoints.Count - 1) {
+			if (CurrentUndoPoint == UndoPoints.Count - 1)
+			{
 				_mnuEditRedo.Enabled = false;
 			}
 
@@ -2219,10 +2407,12 @@ namespace GumpStudio.Forms
 		{
 			RefreshElementList();
 			m_cboElements.SelectedItem = ActiveElement;
-			if (ElementStack.GetSelectedElements().Count > 1) {
+			if (ElementStack.GetSelectedElements().Count > 1)
+			{
 				m_ElementProperties.SelectedObjects = ElementStack.GetSelectedElements().ToArray();
 			}
-			else {
+			else
+			{
 				m_ElementProperties.SelectedObject = ActiveElement;
 			}
 		}
@@ -2230,27 +2420,32 @@ namespace GumpStudio.Forms
 		protected void Render(Graphics Target)
 		{
 			var Target1 = Graphics.FromImage(Canvas);
-			if (!PluginClearsCanvas) {
+			if (!PluginClearsCanvas)
+			{
 				Target1.Clear(Color.Black);
 			}
 
 			var hookPreRender = HookPreRender;
 			hookPreRender?.Invoke(Canvas);
-			if (Stacks.Count > 0 && (!ShowPage0 || ElementStack == Stacks[0] ? 0 : 1) != 0) {
+			if (Stacks.Count > 0 && (!ShowPage0 || ElementStack == Stacks[0] ? 0 : 1) != 0)
+			{
 				((BaseElement)Stacks[0]).Render(Target1);
 			}
 
 			ElementStack.Render(Target1);
 
-			foreach (var element in ElementStack.GetElements()) {
+			foreach (var element in ElementStack.GetElements())
+			{
 				var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(element);
-				if ((!objectValue.Selected || objectValue == ActiveElement ? 0 : 1) != 0) {
+				if ((!objectValue.Selected || objectValue == ActiveElement ? 0 : 1) != 0)
+				{
 					objectValue.DrawBoundingBox(Target1, false);
 				}
 			}
 
 			ActiveElement?.DrawBoundingBox(Target1, true);
-			if (ShowSelectionRect) {
+			if (ShowSelectionRect)
+			{
 				Target1.FillRectangle(SelBG, SelectionRect);
 				Target1.DrawRectangle(SelFG, SelectionRect);
 			}
@@ -2265,11 +2460,13 @@ namespace GumpStudio.Forms
 			var undoPoint = (UndoPoint)UndoPoints[Index];
 			GumpProperties = (GumpProperties)undoPoint.GumpProperties.Clone();
 			Stacks = new ArrayList();
-			foreach (var obj in undoPoint.Stack) {
+			foreach (var obj in undoPoint.Stack)
+			{
 				var objectValue = (GroupElement)RuntimeHelpers.GetObjectValue(obj);
 				var groupElement = (GroupElement)objectValue.Clone();
 				Stacks.Add(groupElement);
-				if (undoPoint.ElementStack == objectValue) {
+				if (undoPoint.ElementStack == objectValue)
+				{
 					ElementStack = groupElement;
 				}
 			}
@@ -2297,7 +2494,8 @@ namespace GumpStudio.Forms
 
 		public void SelectAll()
 		{
-			foreach (var selectedElement in ElementStack.GetSelectedElements()) {
+			foreach (var selectedElement in ElementStack.GetSelectedElements())
+			{
 				((BaseElement)RuntimeHelpers.GetObjectValue(selectedElement)).Selected = true;
 			}
 
@@ -2311,26 +2509,33 @@ namespace GumpStudio.Forms
 
 		public void SetActiveElement(BaseElement Element, bool DeselectOthers)
 		{
-			if (DeselectOthers) {
-				foreach (var element in ElementStack.GetElements()) {
+			if (DeselectOthers)
+			{
+				foreach (var element in ElementStack.GetElements())
+				{
 					((BaseElement)RuntimeHelpers.GetObjectValue(element)).Selected = false;
 				}
 			}
-			if (ActiveElement != Element) {
+			if (ActiveElement != Element)
+			{
 				RefreshElementList();
 				ActiveElement = Element;
 				m_cboElements.SelectedItem = Element;
-				if (Element != null) {
+				if (Element != null)
+				{
 					Element.Selected = true;
 				}
 			}
-			if (ElementStack.GetSelectedElements().Count > 1) {
+			if (ElementStack.GetSelectedElements().Count > 1)
+			{
 				m_ElementProperties.SelectedObjects = ElementStack.GetSelectedElements().ToArray();
 			}
-			else if (Element != null) {
+			else if (Element != null)
+			{
 				m_ElementProperties.SelectedObject = Element;
 			}
-			else {
+			else
+			{
 				m_ElementProperties.SelectedObject = GumpProperties;
 			}
 		}
@@ -2345,7 +2550,8 @@ namespace GumpStudio.Forms
 
 		private void TabPager_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (_TabPager.SelectedIndex != -1) {
+			if (_TabPager.SelectedIndex != -1)
+			{
 				ChangeActiveStack(_TabPager.SelectedIndex);
 			}
 
@@ -2354,7 +2560,8 @@ namespace GumpStudio.Forms
 
 		private void treGumplings_DoubleClick(object sender, EventArgs e)
 		{
-			if (_treGumplings.SelectedNode.Tag == null || !(_treGumplings.SelectedNode.Tag is TreeGumpling)) {
+			if (_treGumplings.SelectedNode.Tag == null || !(_treGumplings.SelectedNode.Tag is TreeGumpling))
+			{
 				return;
 			}
 
@@ -2375,7 +2582,8 @@ namespace GumpStudio.Forms
 		{
 			--CurrentUndoPoint;
 			RevertToUndoPoint(CurrentUndoPoint);
-			if (CurrentUndoPoint == 0) {
+			if (CurrentUndoPoint == 0)
+			{
 				_mnuEditUndo.Enabled = false;
 			}
 
@@ -2384,13 +2592,16 @@ namespace GumpStudio.Forms
 
 		public void WritePluginsToLoad()
 		{
-			if (PluginTypesToLoad != null) {
+			if (PluginTypesToLoad != null)
+			{
 				var fileStream = new FileStream(Application.StartupPath + "\\LoadInfo.bin", FileMode.Create);
 				new BinaryFormatter { Binder = DeserializationBinder.Instance }.Serialize(fileStream, PluginTypesToLoad);
 				fileStream.Close();
 			}
-			else {
-				if (!File.Exists(Application.StartupPath + "\\LoadInfo.bin")) {
+			else
+			{
+				if (!File.Exists(Application.StartupPath + "\\LoadInfo.bin"))
+				{
 					return;
 				}
 

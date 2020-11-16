@@ -20,11 +20,13 @@ namespace GumpStudio
 
 		public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
 		{
-			if (provider != null) {
+			if (provider != null)
+			{
 				edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
 			}
 
-			if (edSvc == null) {
+			if (edSvc == null)
+			{
 				return value;
 			}
 

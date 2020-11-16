@@ -131,7 +131,8 @@ namespace GumpStudio.Elements
 			Cache?.Dispose();
 			Cache = mState != ButtonStateEnum.Normal ? Gumps.GetGump(mPressedID) : Gumps.GetGump(mNormalID);
 
-			if (Cache == null) {
+			if (Cache == null)
+			{
 				return;
 			}
 
@@ -140,7 +141,8 @@ namespace GumpStudio.Elements
 
 		public override void Render(Graphics Target)
 		{
-			if (Cache == null) {
+			if (Cache == null)
+			{
 				RefreshCache();
 			}
 

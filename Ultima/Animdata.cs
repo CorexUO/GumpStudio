@@ -21,10 +21,14 @@ namespace Ultima
 		{
 			AnimData = new Hashtable();
 			var path = Files.GetFilePath("animdata.mul");
-			if (path != null) {
-				using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
-					using (var bin = new BinaryReader(fs)) {
-						unsafe {
+			if (path != null)
+			{
+				using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+				{
+					using (var bin = new BinaryReader(fs))
+					{
+						unsafe
+						{
 							var id = 0;
 							var h = 0;
 							byte unk;
@@ -33,15 +37,19 @@ namespace Ultima
 							byte fstart;
 							sbyte[] fdata;
 							m_Header = new int[bin.BaseStream.Length / (4 + 8 * (64 + 4))];
-							while (h < m_Header.Length/*bin.BaseStream.Length != bin.BaseStream.Position*/) {
+							while (h < m_Header.Length/*bin.BaseStream.Length != bin.BaseStream.Position*/)
+							{
 								m_Header[h++] = bin.ReadInt32(); // chunk header
 																 // Read 8 tiles
 								var buffer = bin.ReadBytes(544);
-								fixed (byte* buf = buffer) {
+								fixed (byte* buf = buffer)
+								{
 									var data = buf;
-									for (var i = 0; i < 8; ++i, ++id) {
+									for (var i = 0; i < 8; ++i, ++id)
+									{
 										fdata = new sbyte[64];
-										for (var j = 0; j < 64; ++j) {
+										for (var j = 0; j < 64; ++j)
+										{
 											fdata[j] = (sbyte)*data++;
 										}
 
@@ -49,14 +57,16 @@ namespace Ultima
 										fcount = *data++;
 										finter = *data++;
 										fstart = *data++;
-										if (fcount > 0) {
+										if (fcount > 0)
+										{
 											AnimData[id] = new Data(fdata, unk, fcount, finter, fstart);
 										}
 									}
 								}
 							}
 							var remaining = (int)(bin.BaseStream.Length - bin.BaseStream.Position);
-							if (remaining > 0) {
+							if (remaining > 0)
+							{
 								m_Unknown = bin.ReadBytes(remaining);
 							}
 						}
@@ -71,10 +81,12 @@ namespace Ultima
 		/// <returns></returns>
 		public static Data GetAnimData(int id)
 		{
-			if (AnimData.Contains(id)) {
+			if (AnimData.Contains(id))
+			{
 				return ((Data)AnimData[id]);
 			}
-			else {
+			else
+			{
 				return null;
 			}
 		}
@@ -82,29 +94,38 @@ namespace Ultima
 		public static void Save(string path)
 		{
 			var FileName = Path.Combine(path, "animdata.mul");
-			using (var fs = new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write)) {
-				using (var bin = new BinaryWriter(fs)) {
+			using (var fs = new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write))
+			{
+				using (var bin = new BinaryWriter(fs))
+				{
 					var id = 0;
 					var h = 0;
-					while (id < m_Header.Length * 8) {
+					while (id < m_Header.Length * 8)
+					{
 						bin.Write(m_Header[h++]);
-						for (var i = 0; i < 8; ++i, ++id) {
+						for (var i = 0; i < 8; ++i, ++id)
+						{
 							var data = GetAnimData(id);
-							for (var j = 0; j < 64; ++j) {
-								if (data != null) {
+							for (var j = 0; j < 64; ++j)
+							{
+								if (data != null)
+								{
 									bin.Write(data.FrameData[j]);
 								}
-								else {
+								else
+								{
 									bin.Write((sbyte)0);
 								}
 							}
-							if (data != null) {
+							if (data != null)
+							{
 								bin.Write(data.Unknown);
 								bin.Write(data.FrameCount);
 								bin.Write(data.FrameInterval);
 								bin.Write(data.FrameStart);
 							}
-							else {
+							else
+							{
 								bin.Write((byte)0);
 								bin.Write((byte)0);
 								bin.Write((byte)0);
@@ -112,7 +133,8 @@ namespace Ultima
 							}
 						}
 					}
-					if (m_Unknown != null) {
+					if (m_Unknown != null)
+					{
 						bin.Write(m_Unknown);
 					}
 				}

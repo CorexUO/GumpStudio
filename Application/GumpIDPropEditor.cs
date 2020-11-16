@@ -32,13 +32,17 @@ namespace GumpStudio
 		public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
 		{
 			edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
-			if (edSvc != null) {
-				var gumpArtBrowser = new GumpArtBrowser {
+			if (edSvc != null)
+			{
+				var gumpArtBrowser = new GumpArtBrowser
+				{
 					GumpID = Conversions.ToInteger(value)
 				};
-				if (edSvc.ShowDialog(gumpArtBrowser) == DialogResult.OK) {
+				if (edSvc.ShowDialog(gumpArtBrowser) == DialogResult.OK)
+				{
 					Image gump = Gumps.GetGump(gumpArtBrowser.GumpID);
-					if (gump != null) {
+					if (gump != null)
+					{
 						gump.Dispose();
 						ReturnValue = gumpArtBrowser.GumpID;
 						gumpArtBrowser.Dispose();

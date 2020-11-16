@@ -49,7 +49,8 @@ namespace GumpStudio.Elements
 			set
 			{
 				mUnicode = value;
-				if (!value && mFontIndex > 12) {
+				if (!value && mFontIndex > 12)
+				{
 					mFontIndex = 12;
 				}
 
@@ -65,11 +66,13 @@ namespace GumpStudio.Elements
 			get => mFontIndex;
 			set
 			{
-				if (value >= 0 & value < (mUnicode ? 13 : 10)) {
+				if (value >= 0 & value < (mUnicode ? 13 : 10))
+				{
 					mFontIndex = value;
 					RefreshCache();
 				}
-				else {
+				else
+				{
 					MessageBox.Show(Resources.Font_Error, Resources.Font_Error, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 				}
 			}
@@ -107,7 +110,8 @@ namespace GumpStudio.Elements
 			get => base.Size;
 			set
 			{
-				if (!mCropped) {
+				if (!mCropped)
+				{
 					throw new ArgumentException("Size may only be changed if the label is cropped.");
 				}
 
@@ -136,10 +140,12 @@ namespace GumpStudio.Elements
 			mUnicode = true;
 			mHue = Hues.GetHue(0);
 			mText = "New Label";
-			try {
+			try
+			{
 				RefreshCache();
 			}
-			catch (Exception) {
+			catch (Exception)
+			{
 			}
 		}
 
@@ -150,24 +156,29 @@ namespace GumpStudio.Elements
 			var int32 = info.GetInt32("LabelElementVersion");
 			mText = info.GetString(nameof(Text));
 			mHue = Hues.GetHue(info.GetInt32("HueIndex"));
-			if (int32 >= 3) {
+			if (int32 >= 3)
+			{
 				mPartialHue = info.GetBoolean(nameof(PartialHue));
 				mUnicode = info.GetBoolean(nameof(Unicode));
 			}
-			else {
+			else
+			{
 				mPartialHue = true;
 				mUnicode = true;
 			}
 			mFontIndex = info.GetInt32("FontIndex");
-			if (int32 <= 2) {
+			if (int32 <= 2)
+			{
 				--mFontIndex;
 			}
 
-			if (int32 >= 2) {
+			if (int32 >= 2)
+			{
 				mCropped = info.GetBoolean(nameof(Cropped));
 				mSize = (Size)info.GetValue(nameof(Size), typeof(Size));
 			}
-			else {
+			else
+			{
 				mCropped = false;
 				var stringImage = UnicodeFonts.GetStringImage(mFontIndex, mText + " ");
 				mSize = stringImage.Size;
@@ -190,16 +201,19 @@ namespace GumpStudio.Elements
 
 		public override void RefreshCache()
 		{
-			if (mCache != null) {
+			if (mCache != null)
+			{
 				mCache.Dispose();
 			}
 
 			mCache = mUnicode ? UnicodeFonts.GetStringImage(mFontIndex, mText + " ") : throw new NotSupportedException("ASCII Font?");//Fonts.GetStringImage( mFontIndex, mText + " " );
-			if ((mHue == null || mHue.Index == 0 ? 0 : 1) != 0) {
+			if ((mHue == null || mHue.Index == 0 ? 0 : 1) != 0)
+			{
 				mHue.ApplyTo(mCache, mPartialHue);
 			}
 
-			if (mCropped) {
+			if (mCropped)
+			{
 				var bitmap = new Bitmap(mSize.Width, mSize.Height, PixelFormat.Format32bppArgb);
 				var graphics = Graphics.FromImage(bitmap);
 				graphics.Clear(Color.Transparent);
@@ -213,7 +227,8 @@ namespace GumpStudio.Elements
 
 		public override void Render(Graphics Target)
 		{
-			if (mCache == null) {
+			if (mCache == null)
+			{
 				RefreshCache();
 			}
 

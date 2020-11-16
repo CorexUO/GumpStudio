@@ -28,29 +28,36 @@ namespace Ultima
 
 			List = new Hue[3000];
 
-			if (path != null) {
-				using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+			if (path != null)
+			{
+				using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+				{
 					var blockCount = (int)fs.Length / 708;
 
-					if (blockCount > 375) {
+					if (blockCount > 375)
+					{
 						blockCount = 375;
 					}
 
 					m_Header = new int[blockCount];
-					unsafe {
+					unsafe
+					{
 						var structsize = Marshal.SizeOf(typeof(HueDataMul));
 						var buffer = new byte[blockCount * (4 + 8 * structsize)];
 						var gc = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-						try {
+						try
+						{
 							fs.Read(buffer, 0, buffer.Length);
 							long currpos = 0;
 
-							for (var i = 0; i < blockCount; ++i) {
+							for (var i = 0; i < blockCount; ++i)
+							{
 								var ptrheader = new IntPtr((long)gc.AddrOfPinnedObject() + currpos);
 								currpos += 4;
 								m_Header[i] = (int)Marshal.PtrToStructure(ptrheader, typeof(int));
 
-								for (var j = 0; j < 8; ++j, ++index) {
+								for (var j = 0; j < 8; ++j, ++index)
+								{
 									var ptr = new IntPtr((long)gc.AddrOfPinnedObject() + currpos);
 									currpos += structsize;
 									var cur = (HueDataMul)Marshal.PtrToStructure(ptr, typeof(HueDataMul));
@@ -63,7 +70,8 @@ namespace Ultima
 				}
 			}
 
-			for (; index < List.Length; ++index) {
+			for (; index < List.Length; ++index)
+			{
 				List[index] = new Hue(index);
 			}
 		}
@@ -71,22 +79,29 @@ namespace Ultima
 		public static void Save(string path)
 		{
 			var mul = Path.Combine(path, "hues.mul");
-			using (var fsmul = new FileStream(mul, FileMode.Create, FileAccess.Write, FileShare.Write)) {
-				using (var binmul = new BinaryWriter(fsmul)) {
+			using (var fsmul = new FileStream(mul, FileMode.Create, FileAccess.Write, FileShare.Write))
+			{
+				using (var binmul = new BinaryWriter(fsmul))
+				{
 					var index = 0;
-					for (var i = 0; i < m_Header.Length; ++i) {
+					for (var i = 0; i < m_Header.Length; ++i)
+					{
 						binmul.Write(m_Header[i]);
-						for (var j = 0; j < 8; ++j, ++index) {
-							for (var c = 0; c < 32; ++c) {
+						for (var j = 0; j < 8; ++j, ++index)
+						{
+							for (var c = 0; c < 32; ++c)
+							{
 								binmul.Write((short)(List[index].Colors[c] ^ 0x8000));
 							}
 
 							binmul.Write((short)(List[index].TableStart ^ 0x8000));
 							binmul.Write((short)(List[index].TableEnd ^ 0x8000));
 							var b = new byte[20];
-							if (List[index].Name != null) {
+							if (List[index].Name != null)
+							{
 								var bb = Encoding.Default.GetBytes(List[index].Name);
-								if (bb.Length > 20) {
+								if (bb.Length > 20)
+								{
 									Array.Resize(ref bb, 20);
 								}
 
@@ -108,7 +123,8 @@ namespace Ultima
 		{
 			index &= 0x3FFF;
 
-			if (index >= 0 && index < 3000) {
+			if (index >= 0 && index < 3000)
+			{
 				return List[index];
 			}
 
@@ -127,17 +143,20 @@ namespace Ultima
 			ushort origblue = c.B;
 			const double scale = 31.0 / 255;
 			var newred = (ushort)(origred * scale);
-			if (newred == 0 && origred != 0) {
+			if (newred == 0 && origred != 0)
+			{
 				newred = 1;
 			}
 
 			var newgreen = (ushort)(origgreen * scale);
-			if (newgreen == 0 && origgreen != 0) {
+			if (newgreen == 0 && origgreen != 0)
+			{
 				newgreen = 1;
 			}
 
 			var newblue = (ushort)(origblue * scale);
-			if (newblue == 0 && origblue != 0) {
+			if (newblue == 0 && origblue != 0)
+			{
 				newblue = 1;
 			}
 
@@ -187,20 +206,25 @@ namespace Ultima
 			var pLineEnd = pBuffer + width;
 			var pImageEnd = pBuffer + (stride * height);
 
-			if (onlyHueGrayPixels) {
+			if (onlyHueGrayPixels)
+			{
 				int c;
 				int r;
 				int g;
 				int b;
 
-				while (pBuffer < pImageEnd) {
-					while (pBuffer < pLineEnd) {
+				while (pBuffer < pImageEnd)
+				{
+					while (pBuffer < pLineEnd)
+					{
 						c = *pBuffer;
-						if (c != 0) {
+						if (c != 0)
+						{
 							r = (c >> 10) & 0x1F;
 							g = (c >> 5) & 0x1F;
 							b = c & 0x1F;
-							if (r == g && r == b) {
+							if (r == g && r == b)
+							{
 								*pBuffer = (ushort)Colors[(c >> 10) & 0x1F];
 							}
 						}
@@ -211,10 +235,14 @@ namespace Ultima
 					pLineEnd += stride;
 				}
 			}
-			else {
-				while (pBuffer < pImageEnd) {
-					while (pBuffer < pLineEnd) {
-						if (*pBuffer != 0) {
+			else
+			{
+				while (pBuffer < pImageEnd)
+				{
+					while (pBuffer < pLineEnd)
+					{
+						if (*pBuffer != 0)
+						{
 							*pBuffer = (ushort)Colors[(*pBuffer >> 10) & 0x1F];
 						}
 
@@ -260,10 +288,13 @@ namespace Ultima
 			Colors = new short[32];
 
 			m_Buffer = bin.ReadBytes(88);
-			unsafe {
-				fixed (byte* buffer = m_Buffer) {
+			unsafe
+			{
+				fixed (byte* buffer = m_Buffer)
+				{
 					var buf = (ushort*)buffer;
-					for (var i = 0; i < 32; ++i) {
+					for (var i = 0; i < 32; ++i)
+					{
 						Colors[i] = (short)(*buf++ | 0x8000);
 					}
 
@@ -271,7 +302,8 @@ namespace Ultima
 					TableEnd = (short)(*buf++ | 0x8000);
 					var sbuf = (byte*)buf;
 					int count;
-					for (count = 0; count < 20 && *sbuf != 0; ++count) {
+					for (count = 0; count < 20 && *sbuf != 0; ++count)
+					{
 						m_StringBuffer[count] = *sbuf++;
 					}
 
@@ -285,8 +317,10 @@ namespace Ultima
 		{
 			Index = index;
 			Colors = new short[32];
-			unsafe {
-				for (var i = 0; i < 32; ++i) {
+			unsafe
+			{
+				for (var i = 0; i < 32; ++i)
+				{
 					Colors[i] = (short)(mulstruct.colors[i] | 0x8000);
 				}
 
@@ -315,20 +349,25 @@ namespace Ultima
 			var pLineEnd = pBuffer + width;
 			var pImageEnd = pBuffer + (stride * height);
 
-			if (onlyHueGrayPixels) {
+			if (onlyHueGrayPixels)
+			{
 				int c;
 				int r;
 				int g;
 				int b;
 
-				while (pBuffer < pImageEnd) {
-					while (pBuffer < pLineEnd) {
+				while (pBuffer < pImageEnd)
+				{
+					while (pBuffer < pLineEnd)
+					{
 						c = *pBuffer;
-						if (c != 0) {
+						if (c != 0)
+						{
 							r = (c >> 10) & 0x1F;
 							g = (c >> 5) & 0x1F;
 							b = c & 0x1F;
-							if (r == g && r == b) {
+							if (r == g && r == b)
+							{
 								*pBuffer = (ushort)Colors[(c >> 10) & 0x1F];
 							}
 						}
@@ -339,10 +378,14 @@ namespace Ultima
 					pLineEnd += stride;
 				}
 			}
-			else {
-				while (pBuffer < pImageEnd) {
-					while (pBuffer < pLineEnd) {
-						if (*pBuffer != 0) {
+			else
+			{
+				while (pBuffer < pImageEnd)
+				{
+					while (pBuffer < pLineEnd)
+					{
+						if (*pBuffer != 0)
+						{
 							*pBuffer = (ushort)Colors[(*pBuffer >> 10) & 0x1F];
 						}
 
@@ -359,11 +402,13 @@ namespace Ultima
 
 		public void Export(string FileName)
 		{
-			using (var Tex = new StreamWriter(new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite), System.Text.Encoding.GetEncoding(1252))) {
+			using (var Tex = new StreamWriter(new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite), System.Text.Encoding.GetEncoding(1252)))
+			{
 				Tex.WriteLine(Name);
 				Tex.WriteLine(((short)(TableStart ^ 0x8000)).ToString());
 				Tex.WriteLine(((short)(TableEnd ^ 0x8000)).ToString());
-				for (var i = 0; i < Colors.Length; ++i) {
+				for (var i = 0; i < Colors.Length; ++i)
+				{
 					Tex.WriteLine(((short)(Colors[i] ^ 0x8000)).ToString());
 				}
 			}
@@ -371,30 +416,39 @@ namespace Ultima
 
 		public void Import(string FileName)
 		{
-			if (!File.Exists(FileName)) {
+			if (!File.Exists(FileName))
+			{
 				return;
 			}
 
-			using (var sr = new StreamReader(FileName)) {
+			using (var sr = new StreamReader(FileName))
+			{
 				string line;
 				var i = -3;
-				while ((line = sr.ReadLine()) != null) {
+				while ((line = sr.ReadLine()) != null)
+				{
 					line = line.Trim();
-					try {
-						if (i >= Colors.Length) {
+					try
+					{
+						if (i >= Colors.Length)
+						{
 							break;
 						}
 
-						if (i == -3) {
+						if (i == -3)
+						{
 							Name = line;
 						}
-						else if (i == -2) {
+						else if (i == -2)
+						{
 							TableStart = (short)(UInt16.Parse(line) | 0x8000);
 						}
-						else if (i == -1) {
+						else if (i == -1)
+						{
 							TableEnd = (short)(UInt16.Parse(line) | 0x8000);
 						}
-						else {
+						else
+						{
 							Colors[i] = (short)(UInt16.Parse(line) | 0x8000);
 						}
 						++i;

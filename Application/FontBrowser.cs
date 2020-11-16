@@ -32,7 +32,8 @@ namespace GumpStudio
 		public FontBrowser()
 		{
 			Load += new EventHandler(FontBrowser_Load);
-			lock (FontBrowser.__ENCList) {
+			lock (FontBrowser.__ENCList)
+			{
 				FontBrowser.__ENCList.Add(new WeakReference(this));
 			}
 
@@ -47,7 +48,8 @@ namespace GumpStudio
 
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing) {
+			if (disposing)
+			{
 				components?.Dispose();
 			}
 
@@ -58,16 +60,21 @@ namespace GumpStudio
 		{
 			fntunicode = true;
 			var arrayList = GlobalObjects.DesignerForm == null || GlobalObjects.DesignerForm.ElementStack == null ? null : GlobalObjects.DesignerForm.ElementStack.GetSelectedElements();
-			if (arrayList != null) {
-				foreach (var obj in arrayList) {
-					if (obj is LabelElement && !((LabelElement)obj).Unicode) {
+			if (arrayList != null)
+			{
+				foreach (var obj in arrayList)
+				{
+					if (obj is LabelElement && !((LabelElement)obj).Unicode)
+					{
 						fntunicode = false;
 						break;
 					}
 				}
 			}
-			for (var index = 0; index < (fntunicode ? 13 : 10); ++index) {
-				if (index >= 0) {
+			for (var index = 0; index < (fntunicode ? 13 : 10); ++index)
+			{
+				if (index >= 0)
+				{
 					_lstFont.Items.Add(index);
 				}
 			}
@@ -112,14 +119,17 @@ namespace GumpStudio
 
 		private void lstFont_DrawItem(object sender, DrawItemEventArgs e)
 		{
-			if ((e.State & DrawItemState.Selected) > DrawItemState.None) {
+			if ((e.State & DrawItemState.Selected) > DrawItemState.None)
+			{
 				e.Graphics.FillRectangle(SystemBrushes.Highlight, e.Bounds);
 			}
-			else {
+			else
+			{
 				e.Graphics.FillRectangle(SystemBrushes.Window, e.Bounds);
 			}
 
-			if (e.Index > (fntunicode ? 12 : 9)) {
+			if (e.Index > (fntunicode ? 12 : 9))
+			{
 				return;
 			}
 
@@ -130,10 +140,12 @@ namespace GumpStudio
 
 		private void lstFont_MeasureItem(object sender, MeasureItemEventArgs e)
 		{
-			if (e.Index > (fntunicode ? 12 : 9)) {
+			if (e.Index > (fntunicode ? 12 : 9))
+			{
 				e.ItemHeight = 0;
 			}
-			else {
+			else
+			{
 				var bitmap = fntunicode ? UnicodeFonts.GetStringImage(e.Index, "ABCabc123!@#$АБВабв") : Fonts.GetStringImage(e.Index, "ABCabc123 */ АБВабв");
 				e.ItemHeight = bitmap.Height;
 				bitmap.Dispose();

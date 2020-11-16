@@ -21,7 +21,8 @@ namespace Ultima
 		{
 			var tiles = new HuedTile[Count];
 
-			if (m_Tiles.Count > 0) {
+			if (m_Tiles.Count > 0)
+			{
 				m_Tiles.CopyTo(tiles);
 			}
 
@@ -54,7 +55,8 @@ namespace Ultima
 		public Tile[] ToArray()
 		{
 			var tiles = new Tile[Count];
-			if (m_Tiles.Count > 0) {
+			if (m_Tiles.Count > 0)
+			{
 				m_Tiles.CopyTo(tiles);
 			}
 
@@ -97,7 +99,8 @@ namespace Ultima
 		{
 			var tiles = new MTile[Count];
 
-			if (m_Tiles.Count > 0) {
+			if (m_Tiles.Count > 0)
+			{
 				m_Tiles.CopyTo(tiles);
 			}
 
@@ -113,27 +116,31 @@ namespace Ultima
 
 		public void Set(int i, ushort id, sbyte z)
 		{
-			if (i < Count) {
+			if (i < Count)
+			{
 				m_Tiles[i].Set(id, z);
 			}
 		}
 
 		public void Set(int i, ushort id, sbyte z, sbyte flag)
 		{
-			if (i < Count) {
+			if (i < Count)
+			{
 				m_Tiles[i].Set(id, z, flag);
 			}
 		}
 
 		public void Set(int i, ushort id, sbyte z, sbyte flag, int unk1)
 		{
-			if (i < Count) {
+			if (i < Count)
+			{
 				m_Tiles[i].Set(id, z, flag, unk1);
 			}
 		}
 		public void Remove(int i)
 		{
-			if (i < Count) {
+			if (i < Count)
+			{
 				m_Tiles.RemoveAt(i);
 			}
 		}

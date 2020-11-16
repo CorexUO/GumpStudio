@@ -42,14 +42,17 @@ namespace GumpStudio
 
 		protected override void Dispose(bool disposing)
 		{
-			try {
-				if ((!disposing || components == null ? 0 : 1) == 0) {
+			try
+			{
+				if ((!disposing || components == null ? 0 : 1) == 0)
+				{
 					return;
 				}
 
 				components.Dispose();
 			}
-			finally {
+			finally
+			{
 				base.Dispose(disposing);
 			}
 		}

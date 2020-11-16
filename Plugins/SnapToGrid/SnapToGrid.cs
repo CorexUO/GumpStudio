@@ -45,20 +45,25 @@ namespace GumpStudio.Plugins
 
 		private void HookKeyDown(object sender, ref KeyEventArgs e)
 		{
-			if (_designer.ActiveElement == null || sender != _designer.CanvasFocus || e.Modifiers.HasFlag(Keys.Shift) || !Config.ShowGrid) {
+			if (_designer.ActiveElement == null || sender != _designer.CanvasFocus || e.Modifiers.HasFlag(Keys.Shift) || !Config.ShowGrid)
+			{
 				return;
 			}
 
 			var modified = false;
 
-			switch (e.KeyCode) {
-				case Keys.Up: {
+			switch (e.KeyCode)
+			{
+				case Keys.Up:
+				{
 					IEnumerator enumerator = default;
 
-					try {
+					try
+					{
 						enumerator = _designer.ElementStack.GetSelectedElements().GetEnumerator();
 
-						while (enumerator.MoveNext()) {
+						while (enumerator.MoveNext())
+						{
 							var objectValue = RuntimeHelpers.GetObjectValue(enumerator.Current);
 							var val = (BaseElement)objectValue;
 							var val2 = val;
@@ -66,7 +71,8 @@ namespace GumpStudio.Plugins
 							val.Y = _extender.SnapYToGrid(val.Y);
 						}
 					}
-					finally {
+					finally
+					{
 						(enumerator as IDisposable)?.Dispose();
 					}
 
@@ -76,13 +82,16 @@ namespace GumpStudio.Plugins
 					break;
 				}
 
-				case Keys.Down: {
+				case Keys.Down:
+				{
 					IEnumerator enumerator2 = default;
 
-					try {
+					try
+					{
 						enumerator2 = _designer.ElementStack.GetSelectedElements().GetEnumerator();
 
-						while (enumerator2.MoveNext()) {
+						while (enumerator2.MoveNext())
+						{
 							var objectValue2 = RuntimeHelpers.GetObjectValue(enumerator2.Current);
 							var val3 = (BaseElement)objectValue2;
 							var val2 = val3;
@@ -90,8 +99,10 @@ namespace GumpStudio.Plugins
 							val3.Y = _extender.SnapYToGrid(val3.Y);
 						}
 					}
-					finally {
-						if (enumerator2 is IDisposable) {
+					finally
+					{
+						if (enumerator2 is IDisposable)
+						{
 							(enumerator2 as IDisposable).Dispose();
 						}
 					}
@@ -102,13 +113,16 @@ namespace GumpStudio.Plugins
 					break;
 				}
 
-				case Keys.Left: {
+				case Keys.Left:
+				{
 					IEnumerator enumerator3 = default;
 
-					try {
+					try
+					{
 						enumerator3 = _designer.ElementStack.GetSelectedElements().GetEnumerator();
 
-						while (enumerator3.MoveNext()) {
+						while (enumerator3.MoveNext())
+						{
 							var objectValue3 = RuntimeHelpers.GetObjectValue(enumerator3.Current);
 							var val4 = (BaseElement)objectValue3;
 							var val2 = val4;
@@ -116,8 +130,10 @@ namespace GumpStudio.Plugins
 							val4.X = _extender.SnapXToGrid(val4.X);
 						}
 					}
-					finally {
-						if (enumerator3 is IDisposable disposable) {
+					finally
+					{
+						if (enumerator3 is IDisposable disposable)
+						{
 							disposable.Dispose();
 						}
 					}
@@ -128,13 +144,16 @@ namespace GumpStudio.Plugins
 					break;
 				}
 
-				case Keys.Right: {
+				case Keys.Right:
+				{
 					IEnumerator enumerator4 = default;
 
-					try {
+					try
+					{
 						enumerator4 = _designer.ElementStack.GetSelectedElements().GetEnumerator();
 
-						while (enumerator4.MoveNext()) {
+						while (enumerator4.MoveNext())
+						{
 							var objectValue4 = RuntimeHelpers.GetObjectValue(enumerator4.Current);
 							var val5 = (BaseElement)objectValue4;
 							var val2 = val5;
@@ -142,8 +161,10 @@ namespace GumpStudio.Plugins
 							val5.X = _extender.SnapXToGrid(val5.X);
 						}
 					}
-					finally {
-						if (enumerator4 is IDisposable) {
+					finally
+					{
+						if (enumerator4 is IDisposable)
+						{
 							(enumerator4 as IDisposable).Dispose();
 						}
 					}
@@ -155,7 +176,8 @@ namespace GumpStudio.Plugins
 				}
 			}
 
-			if (modified) {
+			if (modified)
+			{
 				e.Handled = true;
 				_designer.picCanvas.Invalidate();
 			}
@@ -172,13 +194,15 @@ namespace GumpStudio.Plugins
 
 			LoadConfig();
 
-			if (_extender == null) {
+			if (_extender == null)
+			{
 				_extender = new SnapToGridExtender(_designer);
 			}
 
 			_extender.Config = Config;
 
-			var menuItem = new MenuItem("Snap To Grid", ToggleSnapToGrid) {
+			var menuItem = new MenuItem("Snap To Grid", ToggleSnapToGrid)
+			{
 				Checked = Config.ShowGrid
 			};
 
@@ -189,7 +213,8 @@ namespace GumpStudio.Plugins
 
 		protected void LoadConfig()
 		{
-			if (!File.Exists(_designer.AppPath + "\\Plugins\\SnapToGrid.config")) {
+			if (!File.Exists(_designer.AppPath + "\\Plugins\\SnapToGrid.config"))
+			{
 				return;
 			}
 
@@ -201,11 +226,13 @@ namespace GumpStudio.Plugins
 
 		public override void MouseMoveHook(ref MouseMoveHookEventArgs e)
 		{
-			if (!Config.ShowGrid) {
+			if (!Config.ShowGrid)
+			{
 				return;
 			}
 
-			if (e.MoveMode == MoveModeType.Move && !e.Keys.HasFlag(Keys.Shift)) {
+			if (e.MoveMode == MoveModeType.Move && !e.Keys.HasFlag(Keys.Shift))
+			{
 				e.MouseLocation = _extender.SnapToGrid(e.MouseLocation);
 			}
 		}
@@ -215,18 +242,22 @@ namespace GumpStudio.Plugins
 			var rect = new Rectangle(0, 0, Target.Width, Target.Height);
 			var bitmapData = Target.LockBits(rect, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
 
-			checked {
-				if (Config.ShowGrid) {
+			checked
+			{
+				if (Config.ShowGrid)
+				{
 					var num = Target.Width - 1;
 					var width = _extender.Config.GridSize.Width;
 					var num2 = num;
 					var num3 = 0;
 
-					while (true) {
+					while (true)
+					{
 						var num4 = (width >> 31) ^ num3;
 						var num5 = (width >> 31) ^ num2;
 
-						if (num4 > num5) {
+						if (num4 > num5)
+						{
 							break;
 						}
 
@@ -235,11 +266,13 @@ namespace GumpStudio.Plugins
 						var num7 = num6;
 						var num8 = 0;
 
-						while (true) {
+						while (true)
+						{
 							var num9 = (height >> 31) ^ num8;
 							num5 = (height >> 31) ^ num7;
 
-							if (num9 > num5) {
+							if (num9 > num5)
+							{
 								break;
 							}
 

@@ -27,40 +27,50 @@ namespace Ultima
 		{
 			var line = ip.ReadLine();
 
-			if (line == null) {
+			if (line == null)
+			{
 				return null;
 			}
 
 			var buffer = new byte[(line.Length + 2) / 3];
 			var index = 0;
 
-			for (var i = 0; (i + 1) < line.Length; i += 3) {
+			for (var i = 0; (i + 1) < line.Length; i += 3)
+			{
 				var ch = line[i + 0];
 				var cl = line[i + 1];
 
-				if (ch >= '0' && ch <= '9') {
+				if (ch >= '0' && ch <= '9')
+				{
 					ch -= '0';
 				}
-				else if (ch >= 'a' && ch <= 'f') {
+				else if (ch >= 'a' && ch <= 'f')
+				{
 					ch -= (char)('a' - 10);
 				}
-				else if (ch >= 'A' && ch <= 'F') {
+				else if (ch >= 'A' && ch <= 'F')
+				{
 					ch -= (char)('A' - 10);
 				}
-				else {
+				else
+				{
 					return null;
 				}
 
-				if (cl >= '0' && cl <= '9') {
+				if (cl >= '0' && cl <= '9')
+				{
 					cl -= '0';
 				}
-				else if (cl >= 'a' && cl <= 'f') {
+				else if (cl >= 'a' && cl <= 'f')
+				{
 					cl -= (char)('a' - 10);
 				}
-				else if (cl >= 'A' && cl <= 'F') {
+				else if (cl >= 'A' && cl <= 'F')
+				{
 					cl -= (char)('A' - 10);
 				}
-				else {
+				else
+				{
 					return null;
 				}
 
@@ -125,37 +135,47 @@ namespace Ultima
 			var path = Path.GetDirectoryName(Environment.GetCommandLineArgs()[0]);
 			path = Path.Combine(path, "calibration.cfg");
 
-			if (File.Exists(path)) {
-				using (var ip = new StreamReader(path)) {
+			if (File.Exists(path))
+			{
+				using (var ip = new StreamReader(path))
+				{
 					string line;
 
-					while ((line = ip.ReadLine()) != null) {
+					while ((line = ip.ReadLine()) != null)
+					{
 						line = line.Trim();
 
-						if (line.Equals("Begin", StringComparison.OrdinalIgnoreCase)) {
+						if (line.Equals("Begin", StringComparison.OrdinalIgnoreCase))
+						{
 							byte[] mask, vals, detx, dety, detz, detf;
 
-							if ((mask = ReadBytes(ip)) == null) {
+							if ((mask = ReadBytes(ip)) == null)
+							{
 								continue;
 							}
 
-							if ((vals = ReadBytes(ip)) == null) {
+							if ((vals = ReadBytes(ip)) == null)
+							{
 								continue;
 							}
 
-							if ((detx = ReadBytes(ip)) == null) {
+							if ((detx = ReadBytes(ip)) == null)
+							{
 								continue;
 							}
 
-							if ((dety = ReadBytes(ip)) == null) {
+							if ((dety = ReadBytes(ip)) == null)
+							{
 								continue;
 							}
 
-							if ((detz = ReadBytes(ip)) == null) {
+							if ((detz = ReadBytes(ip)) == null)
+							{
 								continue;
 							}
 
-							if ((detf = ReadBytes(ip)) == null) {
+							if ((detf = ReadBytes(ip)) == null)
+							{
 								continue;
 							}
 

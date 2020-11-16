@@ -59,7 +59,8 @@ namespace Ultima
 		{
 			m_Cache[index] = bmp;
 			m_Removed[index] = false;
-			if (m_patched.Contains(index)) {
+			if (m_patched.Contains(index))
+			{
 				m_patched.Remove(index);
 			}
 		}
@@ -71,16 +72,19 @@ namespace Ultima
 		/// <returns></returns>
 		public static bool TestTexture(int index)
 		{
-			if (m_Removed[index]) {
+			if (m_Removed[index])
+			{
 				return false;
 			}
 
-			if (m_Cache[index] != null) {
+			if (m_Cache[index] != null)
+			{
 				return true;
 			}
 
 			var valid = m_FileIndex.Valid(index, out var length, out var extra, out var patched);
-			if ((!valid) || (length == 0)) {
+			if ((!valid) || (length == 0))
+			{
 				return false;
 			}
 
@@ -104,31 +108,38 @@ namespace Ultima
 		/// <returns></returns>
 		public static unsafe Bitmap GetTexture(int index, out bool patched)
 		{
-			if (m_patched.Contains(index)) {
+			if (m_patched.Contains(index))
+			{
 				patched = (bool)m_patched[index];
 			}
-			else {
+			else
+			{
 				patched = false;
 			}
 
-			if (m_Removed[index]) {
+			if (m_Removed[index])
+			{
 				return null;
 			}
 
-			if (m_Cache[index] != null) {
+			if (m_Cache[index] != null)
+			{
 				return m_Cache[index];
 			}
 
 			var stream = m_FileIndex.Seek(index, out var length, out var extra, out patched);
-			if (stream == null) {
+			if (stream == null)
+			{
 				return null;
 			}
 
-			if (length == 0) {
+			if (length == 0)
+			{
 				return null;
 			}
 
-			if (patched) {
+			if (patched)
+			{
 				m_patched[index] = true;
 			}
 
@@ -142,19 +153,23 @@ namespace Ultima
 
 			var max = size * size * 2;
 
-			if (m_StreamBuffer == null || m_StreamBuffer.Length < max) {
+			if (m_StreamBuffer == null || m_StreamBuffer.Length < max)
+			{
 				m_StreamBuffer = new byte[max];
 			}
 
 			stream.Read(m_StreamBuffer, 0, max);
 
-			fixed (byte* data = m_StreamBuffer) {
+			fixed (byte* data = m_StreamBuffer)
+			{
 				var bindat = (ushort*)data;
-				for (var y = 0; y < size; ++y, line += delta) {
+				for (var y = 0; y < size; ++y, line += delta)
+				{
 					var cur = line;
 					var end = cur + size;
 
-					while (cur < end) {
+					while (cur < end)
+					{
 						*cur++ = (ushort)(*bindat++ ^ 0x8000);
 					}
 				}
@@ -163,10 +178,12 @@ namespace Ultima
 			bmp.UnlockBits(bd);
 
 			stream.Close();
-			if (!Files.CacheData) {
+			if (!Files.CacheData)
+			{
 				return m_Cache[index] = bmp;
 			}
-			else {
+			else
+			{
 				return bmp;
 			}
 		}
@@ -177,29 +194,36 @@ namespace Ultima
 			var mul = Path.Combine(path, "texmaps.mul");
 			checksums = new List<CheckSums>();
 			using (FileStream fsidx = new FileStream(idx, FileMode.Create, FileAccess.Write, FileShare.Write),
-							  fsmul = new FileStream(mul, FileMode.Create, FileAccess.Write, FileShare.Write)) {
+							  fsmul = new FileStream(mul, FileMode.Create, FileAccess.Write, FileShare.Write))
+			{
 				var memidx = new MemoryStream();
 				var memmul = new MemoryStream();
 				using (BinaryWriter binidx = new BinaryWriter(memidx),
-									binmul = new BinaryWriter(memmul)) {
+									binmul = new BinaryWriter(memmul))
+				{
 					var sha = new SHA256Managed();
 					//StreamWriter Tex = new StreamWriter(new FileStream("d:/texlog.txt", FileMode.Create, FileAccess.ReadWrite));
-					for (var index = 0; index < GetIdxLength(); ++index) {
-						if (m_Cache[index] == null) {
+					for (var index = 0; index < GetIdxLength(); ++index)
+					{
+						if (m_Cache[index] == null)
+						{
 							m_Cache[index] = GetTexture(index);
 						}
 
 						var bmp = m_Cache[index];
-						if ((bmp == null) || (m_Removed[index])) {
+						if ((bmp == null) || (m_Removed[index]))
+						{
 							binidx.Write(-1); // lookup
 							binidx.Write(0); // length
 							binidx.Write(-1); // extra
 						}
-						else {
+						else
+						{
 							var ms = new MemoryStream();
 							bmp.Save(ms, ImageFormat.Bmp);
 							var checksum = sha.ComputeHash(ms.ToArray());
-							if (compareSaveImages(checksum, out var sum)) {
+							if (compareSaveImages(checksum, out var sum))
+							{
 								binidx.Write(sum.pos); //lookup
 								binidx.Write(sum.length);
 								binidx.Write(0);
@@ -214,9 +238,11 @@ namespace Ultima
 							binidx.Write((int)binmul.BaseStream.Position); //lookup
 							var length = (int)binmul.BaseStream.Position;
 
-							for (var Y = 0; Y < bmp.Height; ++Y, line += delta) {
+							for (var Y = 0; Y < bmp.Height; ++Y, line += delta)
+							{
 								var cur = line;
-								for (var X = 0; X < bmp.Width; ++X) {
+								for (var X = 0; X < bmp.Width; ++X)
+								{
 									binmul.Write((ushort)(cur[X] ^ 0x8000));
 								}
 							}
@@ -239,20 +265,25 @@ namespace Ultima
 		private static bool compareSaveImages(byte[] newchecksum, out CheckSums sum)
 		{
 			sum = new CheckSums();
-			for (var i = 0; i < checksums.Count; ++i) {
+			for (var i = 0; i < checksums.Count; ++i)
+			{
 				var cmp = checksums[i].checksum;
 				if (((cmp == null) || (newchecksum == null))
-					|| (cmp.Length != newchecksum.Length)) {
+					|| (cmp.Length != newchecksum.Length))
+				{
 					return false;
 				}
 				var valid = true;
-				for (var j = 0; j < cmp.Length; ++j) {
-					if (cmp[j] != newchecksum[j]) {
+				for (var j = 0; j < cmp.Length; ++j)
+				{
+					if (cmp[j] != newchecksum[j])
+					{
 						valid = false;
 						break;
 					}
 				}
-				if (valid) {
+				if (valid)
+				{
 					sum = checksums[i];
 					return true;
 				}

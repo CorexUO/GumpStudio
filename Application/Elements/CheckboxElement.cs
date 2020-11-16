@@ -98,19 +98,22 @@ namespace GumpStudio.Elements
 		{
 			Image1Cache?.Dispose();
 
-			if (Image2Cache != null) {
+			if (Image2Cache != null)
+			{
 				Image1Cache?.Dispose();
 			}
 
 			Image1Cache = Gumps.GetGump(mUncheckedID);
 
-			if (Image1Cache == null) {
+			if (Image1Cache == null)
+			{
 				UnCheckedID = 210;
 			}
 
 			Image2Cache = Gumps.GetGump(mCheckedID);
 
-			if (Image2Cache == null) {
+			if (Image2Cache == null)
+			{
 				CheckedID = 211;
 			}
 
@@ -119,7 +122,8 @@ namespace GumpStudio.Elements
 
 		public override void Render(Graphics Target)
 		{
-			if (Image1Cache == null | Image2Cache == null) {
+			if (Image1Cache == null | Image2Cache == null)
+			{
 				RefreshCache();
 			}
 
@@ -130,7 +134,8 @@ namespace GumpStudio.Elements
 		{
 			var typeText = "AddCheck";
 
-			if (this is RadioElement) {
+			if (this is RadioElement)
+			{
 				typeText = "AddRadio";
 			}
 

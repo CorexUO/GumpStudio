@@ -48,24 +48,31 @@ namespace GumpStudio
 			Application.DoEvents();
 			var index = 0;
 			int maxValue = UInt16.MaxValue;
-			try {
-				do {
+			try
+			{
+				do
+				{
 					_lblWait.Text = $@"Please Wait, Generating Art Cache...  {(int)(100 * index / (double)maxValue)}%";
 					Application.DoEvents();
 					Bitmap gump;
-					try {
+					try
+					{
 						gump = Gumps.GetGump(index);
 					}
-					catch (Exception) {
+					catch (Exception)
+					{
 						++index;
 
 						return;
 					}
-					if (gump != null) {
-						if (Cache != null) {
+					if (gump != null)
+					{
+						if (Cache != null)
+						{
 							Array.Resize(ref Cache, Cache.Length + 1);
 						}
-						else {
+						else
+						{
 							Cache = new GumpCacheEntry[1];
 						}
 
@@ -76,14 +83,17 @@ namespace GumpStudio
 				}
 				while (index <= maxValue);
 
-				using (var fileStream = new FileStream(Application.StartupPath + "/GumpArt.cache", FileMode.Create)) {
+				using (var fileStream = new FileStream(Application.StartupPath + "/GumpArt.cache", FileMode.Create))
+				{
 					new BinaryFormatter().Serialize(fileStream, Cache ?? throw new InvalidOperationException());
 				}
 			}
-			catch (Exception ex) {
+			catch (Exception ex)
+			{
 				MessageBox.Show(@"Error creating cache file:" + ex.Message);
 			}
-			finally {
+			finally
+			{
 				_lblWait.Visible = false;
 				Application.DoEvents();
 			}
@@ -95,7 +105,8 @@ namespace GumpStudio
 
 			var result = MessageBox.Show(@"Rebuilding the cache may take several minutes depending on the speed of your computer.\r\nAre you sure you want to continue?", @"Rebuild Cache", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
 
-			if (result == DialogResult.OK) {
+			if (result == DialogResult.OK)
+			{
 				BuildCache();
 				PopulateListbox();
 			}
@@ -110,7 +121,8 @@ namespace GumpStudio
 
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing) {
+			if (disposing)
+			{
 				components?.Dispose();
 			}
 
@@ -119,20 +131,26 @@ namespace GumpStudio
 
 		private void GumpArtBrowser_Load(object sender, EventArgs e)
 		{
-			if (Cache == null) {
+			if (Cache == null)
+			{
 				FileStream fileStream = null;
-				if (!File.Exists(Application.StartupPath + "/GumpArt.cache")) {
+				if (!File.Exists(Application.StartupPath + "/GumpArt.cache"))
+				{
 					BuildCache();
 				}
-				else {
-					try {
+				else
+				{
+					try
+					{
 						fileStream = new FileStream(Application.StartupPath + "/GumpArt.cache", FileMode.Open);
 						Cache = (GumpCacheEntry[])new BinaryFormatter().Deserialize(fileStream);
 					}
-					catch (Exception ex) {
+					catch (Exception ex)
+					{
 						MessageBox.Show(@"Error Reading cache file:\r\n" + ex.Message);
 					}
-					finally {
+					finally
+					{
 						fileStream?.Close();
 					}
 				}
@@ -267,8 +285,10 @@ namespace GumpStudio
 
 		private void lstGump_DrawItem(object sender, DrawItemEventArgs e)
 		{
-			try {
-				if (e.Index == -1) {
+			try
+			{
+				if (e.Index == -1)
+				{
 					return;
 				}
 
@@ -285,7 +305,8 @@ namespace GumpStudio
 				graphics.DrawImage(gump, rect);
 				gump.Dispose();
 			}
-			catch (Exception ex) {
+			catch (Exception ex)
+			{
 				MessageBox.Show(@"There was an error rendering the gump art, try rebuilding the cache.\r\n\r\n" + ex.Message);
 			}
 		}
@@ -307,7 +328,8 @@ namespace GumpStudio
 		private void PopulateListbox()
 		{
 			_lstGump.Items.Clear();
-			foreach (var gumpCacheEntry in Cache) {
+			foreach (var gumpCacheEntry in Cache)
+			{
 				_lstGump.Items.Add(gumpCacheEntry.ID);
 			}
 

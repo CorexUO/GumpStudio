@@ -23,17 +23,20 @@ namespace GumpStudio
 		{
 			edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
 
-			if (edSvc == null) {
+			if (edSvc == null)
+			{
 				return value;
 			}
 
 			var staticArtBrowser = new StaticArtBrowser { ItemID = Convert.ToInt32(value) };
 
-			if (edSvc.ShowDialog(staticArtBrowser) != DialogResult.OK) {
+			if (edSvc.ShowDialog(staticArtBrowser) != DialogResult.OK)
+			{
 				return value;
 			}
 
-			if (Art.GetStatic(staticArtBrowser.ItemID) != null) {
+			if (Art.GetStatic(staticArtBrowser.ItemID) != null)
+			{
 				ReturnValue = staticArtBrowser.ItemID;
 				staticArtBrowser.Dispose();
 				return ReturnValue;

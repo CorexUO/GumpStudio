@@ -19,7 +19,8 @@ namespace GumpStudio
 		public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
 		{
 			var flag = false;
-			if (sourceType == typeof(string)) {
+			if (sourceType == typeof(string))
+			{
 				flag = true;
 			}
 
@@ -33,7 +34,8 @@ namespace GumpStudio
 
 		public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
 		{
-			if (Versioned.IsNumeric(Conversions.ToString(value))) {
+			if (Versioned.IsNumeric(Conversions.ToString(value)))
+			{
 				return Hues.GetHue(Conversions.ToInteger(value));
 			}
 

@@ -80,7 +80,8 @@ namespace GumpStudio.Elements
 			mInitialText = info.GetString("Text");
 			mHue = Hues.GetHue(info.GetInt32("HueIndex"));
 
-			if (int32 >= 2) {
+			if (int32 >= 2)
+			{
 				mID = info.GetInt32(nameof(ID));
 				mMaxLength = info.GetInt32(nameof(MaxLength));
 			}
@@ -100,17 +101,20 @@ namespace GumpStudio.Elements
 
 		public override void RefreshCache()
 		{
-			if (mHue == null) {
+			if (mHue == null)
+			{
 				mHue = Hues.GetHue(0);
 			}
 
-			if (mCache != null) {
+			if (mCache != null)
+			{
 				mCache.Dispose();
 			}
 
 			mCache = UnicodeFonts.GetStringImage(2, mInitialText + " ");
 
-			if ((mHue == null || mHue.Index == 0 ? 0 : 1) == 0) {
+			if ((mHue == null || mHue.Index == 0 ? 0 : 1) == 0)
+			{
 				return;
 			}
 
@@ -119,7 +123,8 @@ namespace GumpStudio.Elements
 
 		public override void Render(Graphics Target)
 		{
-			if (mCache == null) {
+			if (mCache == null)
+			{
 				RefreshCache();
 			}
 

@@ -28,17 +28,20 @@ namespace GumpStudio
 		[PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
 		public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
 		{
-			if (value == null) {
+			if (value == null)
+			{
 				value = Hues.GetHue(0);
 			}
 
-			if (!(value is Hue hue)) {
+			if (!(value is Hue hue))
+			{
 				return value;
 			}
 
 			edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
 
-			if (edSvc == null) {
+			if (edSvc == null)
+			{
 				return value;
 			}
 
@@ -47,7 +50,8 @@ namespace GumpStudio
 			huePickerControl.ValueChanged += new HuePickerControl.ValueChangedEventHandler(ValueSelected);
 
 			edSvc.DropDownControl(huePickerControl);
-			if (ReturnValue != null) {
+			if (ReturnValue != null)
+			{
 				huePickerControl.Dispose();
 				return ReturnValue;
 			}
@@ -74,12 +78,14 @@ namespace GumpStudio
 			graphics.FillRectangle(Brushes.White, e.Bounds);
 			var num1 = (e.Bounds.Width - 3) / 32f;
 			var hue = (Hue)e.Value;
-			if (hue == null) {
+			if (hue == null)
+			{
 				return;
 			}
 
 			var num2 = 0;
-			foreach (var color in hue.Colors) {
+			foreach (var color in hue.Colors)
+			{
 				var bounds = e.Bounds;
 				var x = (int)Math.Round(bounds.X + num2 * (double)num1);
 				bounds = e.Bounds;

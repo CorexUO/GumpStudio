@@ -28,10 +28,12 @@ namespace GumpStudio
 		[PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
 		public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
 		{
-			if (value.GetType() == typeof(int)) {
+			if (value.GetType() == typeof(int))
+			{
 				ReturnValue = Conversions.ToInteger(value);
 				edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
-				if (edSvc != null) {
+				if (edSvc != null)
+				{
 					var fontBrowser = new FontBrowser(Conversions.ToInteger(value));
 					fontBrowser.ValueChanged += new FontBrowser.ValueChangedEventHandler(ValueSelected);
 					edSvc.DropDownControl(fontBrowser);

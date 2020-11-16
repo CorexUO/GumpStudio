@@ -131,7 +131,8 @@ namespace GumpStudio.Forms
 
 		private void lblHomepage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			Process.Start(new ProcessStartInfo {
+			Process.Start(new ProcessStartInfo
+			{
 				UseShellExecute = true,
 				FileName = "http://www.orbsydia.net"
 			});

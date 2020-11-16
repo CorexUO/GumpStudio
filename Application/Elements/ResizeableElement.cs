@@ -51,11 +51,13 @@ namespace GumpStudio.Elements
 			bounds.Inflate(3, 3);
 			Brush brush;
 			Pen pen;
-			if (Active) {
+			if (Active)
+			{
 				brush = new SolidBrush(Color.LightGray);
 				pen = new Pen(Color.White);
 			}
-			else {
+			else
+			{
 				brush = new SolidBrush(Color.Gray);
 				pen = new Pen(Color.DarkGray);
 			}
@@ -91,11 +93,13 @@ namespace GumpStudio.Elements
 		{
 			var rectangle1 = Rectangle.Inflate(Bounds, 4, 4);
 			var moveModeType = MoveModeType.None;
-			if (rectangle1.Contains(Location)) {
+			if (rectangle1.Contains(Location))
+			{
 				moveModeType = MoveModeType.Move;
 			}
 
-			if (mSelected) {
+			if (mSelected)
+			{
 				var rectangle2 = new Rectangle(rectangle1.X - 2, rectangle1.Y - 2, 5, 5);
 				var rectangle3 = new Rectangle((int)Math.Round(rectangle1.X + rectangle1.Width / 2.0 - 2.0), rectangle1.Y - 2, 5, 5);
 				var rectangle4 = new Rectangle(rectangle1.X + rectangle1.Width - 2, rectangle1.Y - 2, 5, 5);
@@ -104,35 +108,43 @@ namespace GumpStudio.Elements
 				var rectangle7 = new Rectangle((int)Math.Round(rectangle1.X + rectangle1.Width / 2.0 - 2.0), rectangle1.Y + rectangle1.Height - 2, 5, 5);
 				var rectangle8 = new Rectangle(rectangle1.X - 2, rectangle1.Y + rectangle1.Height - 2, 5, 5);
 				var rectangle9 = new Rectangle(rectangle1.X - 2, (int)Math.Round(rectangle1.Y + rectangle1.Height / 2.0 - 2.0), 5, 5);
-				if (rectangle6.Contains(Location)) {
+				if (rectangle6.Contains(Location))
+				{
 					moveModeType = MoveModeType.ResizeBottomRight;
 				}
 
-				if (rectangle2.Contains(Location)) {
+				if (rectangle2.Contains(Location))
+				{
 					moveModeType = MoveModeType.ResizeTopLeft;
 				}
 
-				if (rectangle4.Contains(Location)) {
+				if (rectangle4.Contains(Location))
+				{
 					moveModeType = MoveModeType.ResizeTopRight;
 				}
 
-				if (rectangle8.Contains(Location)) {
+				if (rectangle8.Contains(Location))
+				{
 					moveModeType = MoveModeType.ResizeBottomLeft;
 				}
 
-				if (rectangle9.Contains(Location)) {
+				if (rectangle9.Contains(Location))
+				{
 					moveModeType = MoveModeType.ResizeLeft;
 				}
 
-				if (rectangle3.Contains(Location)) {
+				if (rectangle3.Contains(Location))
+				{
 					moveModeType = MoveModeType.ResizeTop;
 				}
 
-				if (rectangle5.Contains(Location)) {
+				if (rectangle5.Contains(Location))
+				{
 					moveModeType = MoveModeType.ResizeRight;
 				}
 
-				if (rectangle7.Contains(Location)) {
+				if (rectangle7.Contains(Location))
+				{
 					moveModeType = MoveModeType.ResizeBottom;
 				}
 			}

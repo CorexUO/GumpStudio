@@ -56,12 +56,14 @@ namespace Ultima
 		private static byte[] m_StringBuffer;
 		public static unsafe string ReadNameString(byte* buffer, int len)
 		{
-			if ((m_StringBuffer == null) || (m_StringBuffer.Length < len)) {
+			if ((m_StringBuffer == null) || (m_StringBuffer.Length < len))
+			{
 				m_StringBuffer = new byte[20];
 			}
 
 			int count;
-			for (count = 0; count < len && *buffer != 0; ++count) {
+			for (count = 0; count < len && *buffer != 0; ++count)
+			{
 				m_StringBuffer[count] = *buffer++;
 			}
 
@@ -70,7 +72,8 @@ namespace Ultima
 		public static unsafe string ReadNameString(byte[] buffer, int len)
 		{
 			int count;
-			for (count = 0; count < 20 && buffer[count] != 0; ++count) {
+			for (count = 0; count < 20 && buffer[count] != 0; ++count)
+			{
 				;
 			}
 

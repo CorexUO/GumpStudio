@@ -21,11 +21,13 @@ namespace GumpStudio
 		{
 			var fullPath = Path.Combine(designerForm.AppPath, "settings.xml");
 
-			if (!File.Exists(fullPath)) {
+			if (!File.Exists(fullPath))
+			{
 				return new XMLSettings();
 			}
 
-			using (var xml = new XmlTextReader(fullPath)) {
+			using (var xml = new XmlTextReader(fullPath))
+			{
 				var serializer = new XmlSerializer(typeof(XMLSettings));
 
 				return (XMLSettings)serializer.Deserialize(xml);
@@ -36,7 +38,8 @@ namespace GumpStudio
 		{
 			var fullPath = Path.Combine(designerForm.AppPath, "settings.xml");
 
-			using (XmlWriter xml = new XmlTextWriter(fullPath, Encoding.UTF8) { Formatting = Formatting.Indented }) {
+			using (XmlWriter xml = new XmlTextWriter(fullPath, Encoding.UTF8) { Formatting = Formatting.Indented })
+			{
 				var serializer = new XmlSerializer(typeof(XMLSettings));
 
 				serializer.Serialize(xml, options);

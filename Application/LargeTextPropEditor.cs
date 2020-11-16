@@ -24,13 +24,15 @@ namespace GumpStudio
 		public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
 		{
 			edSvc = (IWindowsFormsEditorService)provider.GetService(typeof(IWindowsFormsEditorService));
-			if (edSvc == null) {
+			if (edSvc == null)
+			{
 				return value;
 			}
 
 			var largeTextEditor = new LargeTextEditor();
 			largeTextEditor.txtText.Text = Conversions.ToString(value);
-			if (edSvc.ShowDialog(largeTextEditor) == DialogResult.OK) {
+			if (edSvc.ShowDialog(largeTextEditor) == DialogResult.OK)
+			{
 				return largeTextEditor.txtText.Text;
 			}
 

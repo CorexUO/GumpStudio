@@ -32,9 +32,11 @@ namespace GumpStudio.Elements
 				var flag = true;
 				var num1 = 0;
 				int num2;
-				do {
+				do
+				{
 					var gump = Gumps.GetGump(num1 + value);
-					if (gump == null) {
+					if (gump == null)
+					{
 						flag = false;
 					}
 
@@ -43,11 +45,13 @@ namespace GumpStudio.Elements
 					num2 = 8;
 				}
 				while (num1 <= num2);
-				if (!flag) {
+				if (!flag)
+				{
 					//int num3 = (int) Interaction.MsgBox((object) "Invalid GumpID", MsgBoxStyle.OkOnly, (object) null);
 					MessageBox.Show(Resources.Invalid_GumpID, Resources.Invalid_GumpID);
 				}
-				else {
+				else
+				{
 					mGumpID = value;
 					RefreshCache();
 				}
@@ -76,8 +80,10 @@ namespace GumpStudio.Elements
 		{
 			var index = 0;
 			int num;
-			do {
-				if (mMultImageCache[index] != null) {
+			do
+			{
+				if (mMultImageCache[index] != null)
+				{
 					mMultImageCache[index].Dispose();
 				}
 
@@ -96,14 +102,17 @@ namespace GumpStudio.Elements
 
 		public override void RefreshCache()
 		{
-			if (mMultImageCache == null) {
+			if (mMultImageCache == null)
+			{
 				mMultImageCache = new Image[9];
 			}
 
 			var index = 0;
 			int num;
-			do {
-				if (mMultImageCache[index] != null) {
+			do
+			{
+				if (mMultImageCache[index] != null)
+				{
 					mMultImageCache[index].Dispose();
 				}
 
@@ -116,14 +125,17 @@ namespace GumpStudio.Elements
 
 		public override void Render(Graphics Target)
 		{
-			if (mMultImageCache == null) {
+			if (mMultImageCache == null)
+			{
 				RefreshCache();
 			}
 
 			var index = 0;
 			int num1;
-			do {
-				if (mMultImageCache[index] == null) {
+			do
+			{
+				if (mMultImageCache[index] == null)
+				{
 					RefreshCache();
 				}
 
@@ -144,7 +156,8 @@ namespace GumpStudio.Elements
 			var num2 = Width - mMultImageCache[2].Width;
 			var width2 = mMultImageCache[0].Width;
 			Point point;
-			while ((width1 >> 31 ^ width2) <= (width1 >> 31 ^ num2)) {
+			while ((width1 >> 31 ^ width2) <= (width1 >> 31 ^ num2))
+			{
 				point = new Point(X + width2, Y);
 				Target.DrawImage(mMultImageCache[1], point);
 				width2 += width1;
@@ -162,7 +175,8 @@ namespace GumpStudio.Elements
 			var height1 = mMultImageCache[3].Height;
 			var num3 = Height - mMultImageCache[6].Height;
 			var height2 = mMultImageCache[0].Height;
-			while ((height1 >> 31 ^ height2) <= (height1 >> 31 ^ num3)) {
+			while ((height1 >> 31 ^ height2) <= (height1 >> 31 ^ num3))
+			{
 				point = new Point(X, Y + height2);
 				Target.DrawImage(mMultImageCache[3], point);
 				height2 += height1;
@@ -180,7 +194,8 @@ namespace GumpStudio.Elements
 			var width3 = mMultImageCache[7].Width;
 			var num4 = Width - mMultImageCache[8].Width;
 			var width4 = mMultImageCache[6].Width;
-			while ((width3 >> 31 ^ width4) <= (width3 >> 31 ^ num4)) {
+			while ((width3 >> 31 ^ width4) <= (width3 >> 31 ^ num4))
+			{
 				point = new Point(X + width4, Y + Height - mMultImageCache[7].Height);
 				Target.DrawImage(mMultImageCache[7], point);
 				width4 += width3;
@@ -198,7 +213,8 @@ namespace GumpStudio.Elements
 			var height3 = mMultImageCache[5].Height;
 			var num5 = Height - mMultImageCache[6].Height;
 			var height4 = mMultImageCache[0].Height;
-			while ((height3 >> 31 ^ height4) <= (height3 >> 31 ^ num5)) {
+			while ((height3 >> 31 ^ height4) <= (height3 >> 31 ^ num5))
+			{
 				point = new Point(X + Width - mMultImageCache[5].Width, Y + height4);
 				Target.DrawImage(mMultImageCache[5], point);
 				height4 += height3;
@@ -210,11 +226,13 @@ namespace GumpStudio.Elements
 			var width5 = mMultImageCache[4].Width;
 			var num6 = Width - mMultImageCache[3].Width;
 			var width6 = mMultImageCache[3].Width;
-			while ((width5 >> 31 ^ width6) <= (width5 >> 31 ^ num6)) {
+			while ((width5 >> 31 ^ width6) <= (width5 >> 31 ^ num6))
+			{
 				var height5 = mMultImageCache[4].Height;
 				var num7 = Height - mMultImageCache[7].Height;
 				var height6 = mMultImageCache[1].Height;
-				while ((height5 >> 31 ^ height6) <= (height5 >> 31 ^ num7)) {
+				while ((height5 >> 31 ^ height6) <= (height5 >> 31 ^ num7))
+				{
 					point = new Point(X + width6, Y + height6);
 					Target.DrawImage(mMultImageCache[4], point);
 					height6 += height5;

@@ -42,12 +42,14 @@ namespace GumpStudio.Elements
 			set
 			{
 				ImageCache = Art.GetStatic(value);
-				if (ImageCache == null) {
+				if (ImageCache == null)
+				{
 					ImageCache = Art.GetStatic(mItemID);
 					//int num = (int) Interaction.MsgBox((object) "Invalid ItemID", MsgBoxStyle.OkOnly, (object) null);
 					MessageBox.Show("Invalid ItemID");
 				}
-				else {
+				else
+				{
 					mItemID = value;
 					mSize = ImageCache.Size;
 				}
@@ -82,7 +84,8 @@ namespace GumpStudio.Elements
 
 		public override void RefreshCache()
 		{
-			if (ImageCache != null) {
+			if (ImageCache != null)
+			{
 				return;
 			}
 
@@ -91,34 +94,43 @@ namespace GumpStudio.Elements
 
 		public override void Render(Graphics Target)
 		{
-			try {
-				if (mHue.Index != 0) {
+			try
+			{
+				if (mHue.Index != 0)
+				{
 					var bmp = (Bitmap)ImageCache.Clone();
-					if (bmp != null) {
+					if (bmp != null)
+					{
 						mHue.ApplyTo(bmp, false);
 						Target.DrawImage(bmp, Location);
 						bmp.Dispose();
 					}
-					else {
+					else
+					{
 						Target.DrawLine(Pens.Red, X, Y, X + 30, Y + 30);
 						Target.DrawLine(Pens.Red, X + 30, Y, X, Y + 30);
 					}
 				}
-				else {
-					if (ImageCache == null) {
+				else
+				{
+					if (ImageCache == null)
+					{
 						RefreshCache();
 					}
 
-					if (ImageCache != null) {
+					if (ImageCache != null)
+					{
 						Target.DrawImage(ImageCache, Location);
 					}
-					else {
+					else
+					{
 						Target.DrawLine(Pens.Red, X, Y, X + 30, Y + 30);
 						Target.DrawLine(Pens.Red, X + 30, Y, X, Y + 30);
 					}
 				}
 			}
-			catch (Exception ex) {
+			catch (Exception ex)
+			{
 				ProjectData.SetProjectError(ex);
 				MessageBox.Show(String.Format(Resources.Error_drawing_itemID___, ItemID.ToString()));
 				ItemID = 1;

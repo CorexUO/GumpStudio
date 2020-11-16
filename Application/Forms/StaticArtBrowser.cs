@@ -54,12 +54,15 @@ namespace GumpStudio
 			get => Cache[SelectedIndex].ID;
 			set
 			{
-				if (Cache == null) {
+				if (Cache == null)
+				{
 					return;
 				}
 
-				for (var index = 0; index < Cache.Length; index++) {
-					if (Cache[index].ID != value) {
+				for (var index = 0; index < Cache.Length; index++)
+				{
+					if (Cache[index].ID != value)
+					{
 						continue;
 					}
 
@@ -94,12 +97,14 @@ namespace GumpStudio
 			set
 			{
 				var scrollEventHandler = new ScrollEventHandler(vsbScroller_Scroll);
-				if (_vsbScroller != null) {
+				if (_vsbScroller != null)
+				{
 					_vsbScroller.Scroll -= scrollEventHandler;
 				}
 
 				_vsbScroller = value;
-				if (_vsbScroller == null) {
+				if (_vsbScroller == null)
+				{
 					return;
 				}
 
@@ -120,7 +125,8 @@ namespace GumpStudio
 
 		protected void BuildCache()
 		{
-			if (BuildingCache) {
+			if (BuildingCache)
+			{
 				return;
 			}
 
@@ -132,7 +138,8 @@ namespace GumpStudio
 
 			FileStream fileStream = null;
 
-			try {
+			try
+			{
 				Cache = null;
 
 				_lblWait.Visible = true;
@@ -141,15 +148,18 @@ namespace GumpStudio
 
 				var upperBound = TileData.ItemTable.GetUpperBound(0);
 
-				for (var index = 0; index <= upperBound; ++index) {
-					if (index / 128.0 == Conversion.Int(index / 128.0)) {
+				for (var index = 0; index <= upperBound; ++index)
+				{
+					if (index / 128.0 == Conversion.Int(index / 128.0))
+					{
 						_lblWait.Text = Resources.Generating_static_art_cache + Strings.Format(index / (double)TileData.ItemTable.GetUpperBound(0) * 100.0, "Fixed") + "%";
 						Application.DoEvents();
 					}
 
 					var bitmap = Art.GetStatic(index);
 
-					if (bitmap == null) {
+					if (bitmap == null)
+					{
 						continue;
 					}
 
@@ -160,12 +170,14 @@ namespace GumpStudio
 				fileStream = new FileStream(Application.StartupPath + "/StaticArt.cache", FileMode.Create);
 				new BinaryFormatter().Serialize(fileStream, Cache);
 			}
-			catch (Exception ex) {
+			catch (Exception ex)
+			{
 				ProjectData.SetProjectError(ex);
 				MessageBox.Show(Resources.Error_creating_cache + ex.Message);
 				ProjectData.ClearProjectError();
 			}
-			finally {
+			finally
+			{
 				fileStream?.Close();
 				_lblWait.Visible = false;
 				Application.DoEvents();
@@ -177,7 +189,8 @@ namespace GumpStudio
 		{
 			var result = MessageBox.Show(Resources.Rebuild_longtime, Resources.Question, MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
 
-			if (result != DialogResult.OK) {
+			if (result != DialogResult.OK)
+			{
 				return;
 			}
 
@@ -191,17 +204,21 @@ namespace GumpStudio
 		{
 			var index1 = -1;
 			var index2 = SelectedIndex == -1 ? 0 : SelectedIndex;
-			while (index1 == -1 & index2 < Cache.Length - 1) {
+			while (index1 == -1 & index2 < Cache.Length - 1)
+			{
 				++index2;
-				if (Strings.InStr(Cache[index2].Name, txtSearch.Text, CompareMethod.Text) > 0) {
+				if (Strings.InStr(Cache[index2].Name, txtSearch.Text, CompareMethod.Text) > 0)
+				{
 					index1 = index2;
 				}
 			}
-			if (index1 != -1) {
+			if (index1 != -1)
+			{
 				ItemID = Cache[index1].ID;
 			}
 
-			if (index1 == -1 & index2 > 0 && !SearchSomething) {
+			if (index1 == -1 & index2 > 0 && !SearchSomething)
+			{
 				SelectedIndex = 0;
 				SearchSomething = true;
 				cmdSearch_Click(RuntimeHelpers.GetObjectValue(sender), e);
@@ -213,7 +230,8 @@ namespace GumpStudio
 
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing) {
+			if (disposing)
+			{
 				components?.Dispose();
 			}
 
@@ -223,12 +241,14 @@ namespace GumpStudio
 		protected void DrawGrid(Graphics g)
 		{
 			var numX = NumX;
-			for (var index = 0; index <= numX; ++index) {
+			for (var index = 0; index <= numX; ++index)
+			{
 				g.DrawLine(Pens.Black, index * DisplaySize.Width, 0, index * DisplaySize.Width, (NumY + 1) * DisplaySize.Height);
 			}
 
 			var num = NumY + 1;
-			for (var index = 0; index <= num; ++index) {
+			for (var index = 0; index <= num; ++index)
+			{
 				g.DrawLine(Pens.Black, 0, index * DisplaySize.Height, NumX * DisplaySize.Width, index * DisplaySize.Height);
 			}
 		}
@@ -238,29 +258,35 @@ namespace GumpStudio
 			var x = HoverPos.X;
 			var y = HoverPos.Y;
 			var index = StartIndex + x + y * NumX;
-			if (index >= Cache.Length) {
+			if (index >= Cache.Length)
+			{
 				return;
 			}
 
 			var id = Cache[index].ID;
 			var bitmap = Art.GetStatic(id);
-			var point = new Point {
+			var point = new Point
+			{
 				X = (int)Math.Round(x * DisplaySize.Width + DisplaySize.Width / 2.0) - (int)Math.Round(bitmap.Width / 2.0) - 3
 			};
-			if (point.X < 0) {
+			if (point.X < 0)
+			{
 				point.X = 0;
 			}
 
-			if (point.X + bitmap.Width > _picCanvas.Width) {
+			if (point.X + bitmap.Width > _picCanvas.Width)
+			{
 				point.X = _picCanvas.Width - bitmap.Width - 3;
 			}
 
 			point.Y = (int)Math.Round(y * DisplaySize.Height + DisplaySize.Height / 2.0) - (int)Math.Round(bitmap.Height / 2.0) - 3;
-			if (point.Y < 0) {
+			if (point.Y < 0)
+			{
 				point.Y = 0;
 			}
 
-			if (point.Y + bitmap.Height > _picCanvas.Height) {
+			if (point.Y + bitmap.Height > _picCanvas.Height)
+			{
 				point.Y = _picCanvas.Height - bitmap.Height - 3;
 			}
 
@@ -279,8 +305,10 @@ namespace GumpStudio
 
 		protected Bitmap GetRowImage(int Row)
 		{
-			if (Row >= RowCache.Length) {
-				if (BlankCache != null) {
+			if (Row >= RowCache.Length)
+			{
+				if (BlankCache != null)
+				{
 					return BlankCache;
 				}
 
@@ -291,7 +319,8 @@ namespace GumpStudio
 				BlankCache = bitmap;
 				return bitmap;
 			}
-			if (RowCache[Row] != null) {
+			if (RowCache[Row] != null)
+			{
 				return RowCache[Row];
 			}
 
@@ -303,9 +332,11 @@ namespace GumpStudio
 			var region1 = new Region(rect);
 			graphics1.Clip = region1;
 			var num = NumX - 1;
-			for (var index1 = 0; index1 <= num; ++index1) {
+			for (var index1 = 0; index1 <= num; ++index1)
+			{
 				var index2 = Row * NumX + index1;
-				if (index2 < Cache.Length) {
+				if (index2 < Cache.Length)
+				{
 					var bitmap2 = Art.GetStatic(Cache[index2].ID);
 					rect = new Rectangle(index1 * DisplaySize.Width, 0, DisplaySize.Width, DisplaySize.Height);
 					var region2 = new Region(rect);
@@ -466,23 +497,29 @@ namespace GumpStudio
 
 		private void NewStaticArtBrowser_Load(object sender, EventArgs e)
 		{
-			if (Cache == null) {
+			if (Cache == null)
+			{
 				FileStream fileStream = null;
-				if (!File.Exists(Application.StartupPath + "/StaticArt.cache")) {
+				if (!File.Exists(Application.StartupPath + "/StaticArt.cache"))
+				{
 					BuildCache();
 				}
-				else {
-					try {
+				else
+				{
+					try
+					{
 						fileStream = new FileStream(Application.StartupPath + "/StaticArt.cache", FileMode.Open);
 						Cache = (GumpCacheEntry[])new BinaryFormatter().Deserialize(fileStream);
 					}
-					catch (Exception ex) {
+					catch (Exception ex)
+					{
 						ProjectData.SetProjectError(ex);
 						//int num = (int) Interaction.MsgBox( (object) ( "Error reading cache file:\r\n" + ex.Message ), MsgBoxStyle.OkOnly, (object) null );
 						MessageBox.Show("Error reading cache file:\r\n" + ex.Message);
 						ProjectData.ClearProjectError();
 					}
-					finally {
+					finally
+					{
 						fileStream?.Close();
 					}
 				}
@@ -491,7 +528,8 @@ namespace GumpStudio
 			Show();
 			vsbScroller.Maximum = (int)Math.Round(Cache.Length / (double)NumX) + 1;
 			vsbScroller.LargeChange = NumY - 1;
-			if (RowCache == null) {
+			if (RowCache == null)
+			{
 				RowCache = new Bitmap[(int)Math.Round(Cache.Length / (double)NumX) + 1 + 1];
 			}
 
@@ -505,13 +543,15 @@ namespace GumpStudio
 		{
 			var num1 = 11;
 			var num2 = _picCanvas.Height / DisplaySize.Height;
-			if (!(num1 != NumX | num2 != NumY)) {
+			if (!(num1 != NumX | num2 != NumY))
+			{
 				return;
 			}
 
 			NumX = num1;
 			NumY = num2;
-			if (Cache == null) {
+			if (Cache == null)
+			{
 				return;
 			}
 
@@ -522,7 +562,8 @@ namespace GumpStudio
 
 		private void picCanvas_DoubleClick(object sender, EventArgs e)
 		{
-			if (BuildingCache) {
+			if (BuildingCache)
+			{
 				return;
 			}
 
@@ -541,7 +582,8 @@ namespace GumpStudio
 		private void picCanvas_MouseMove(object sender, MouseEventArgs e)
 		{
 			var point = new Point(e.X / DisplaySize.Width, e.Y / DisplaySize.Height);
-			if (point.X >= 11 || !(point.X != HoverPos.X | point.Y != HoverPos.Y)) {
+			if (point.X >= 11 || !(point.X != HoverPos.X | point.Y != HoverPos.Y))
+			{
 				return;
 			}
 
@@ -552,7 +594,8 @@ namespace GumpStudio
 		private void picCanvas_MouseUp(object sender, MouseEventArgs e)
 		{
 			var index = e.X / DisplaySize.Width + e.Y / DisplaySize.Height * NumX + StartIndex;
-			if (index >= Cache.Length) {
+			if (index >= Cache.Length)
+			{
 				return;
 			}
 
@@ -562,21 +605,25 @@ namespace GumpStudio
 
 		private void picCanvas_Paint(object sender, PaintEventArgs e)
 		{
-			try {
+			try
+			{
 				Render(e.Graphics);
-				if (HoverPos.Equals(new Point(-1, -1))) {
+				if (HoverPos.Equals(new Point(-1, -1)))
+				{
 					return;
 				}
 
 				DrawHover(e.Graphics);
 			}
-			catch (Exception) {
+			catch (Exception)
+			{
 			}
 		}
 
 		public void Render(Graphics g)
 		{
-			if (Cache == null | RowCache == null) {
+			if (Cache == null | RowCache == null)
+			{
 				return;
 			}
 
@@ -587,15 +634,18 @@ namespace GumpStudio
 			var num = StartIndex / NumX;
 			var flag = false;
 			var numY = NumY;
-			for (var index = 0; index <= numY; ++index) {
+			for (var index = 0; index <= numY; ++index)
+			{
 				g.DrawImage(GetRowImage(index + num), 0, index * DisplaySize.Height);
-				if ((flag || index + num != SelectedIndex / NumX ? 0 : 1) != 0) {
+				if ((flag || index + num != SelectedIndex / NumX ? 0 : 1) != 0)
+				{
 					flag = true;
 					rect = new Rectangle(SelectedIndex % NumX * DisplaySize.Width, index * DisplaySize.Height, DisplaySize.Width, DisplaySize.Height);
 				}
 			}
 			DrawGrid(g);
-			if (flag) {
+			if (flag)
+			{
 				var region = new Region(rect);
 				rect.Inflate(5, 5);
 				var solidBrush = new SolidBrush(Color.FromArgb(SByte.MaxValue, Color.Blue));

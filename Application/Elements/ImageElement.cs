@@ -64,10 +64,12 @@ namespace GumpStudio.Elements
 			mHue = Hues.GetHue(0);
 			var int32 = info.GetInt32("ImageElementVersion");
 			mGumpID = info.GetInt32(nameof(GumpID));
-			if (int32 >= 2) {
+			if (int32 >= 2)
+			{
 				mHue = Hues.GetHue(info.GetInt32("HueIndex"));
 			}
-			else {
+			else
+			{
 				mHue = Hues.GetHue(0);
 			}
 		}
@@ -82,16 +84,19 @@ namespace GumpStudio.Elements
 
 		public override void RefreshCache()
 		{
-			if (ImageCache != null) {
+			if (ImageCache != null)
+			{
 				ImageCache.Dispose();
 			}
 
 			ImageCache = Gumps.GetGump(mGumpID);
-			if (ImageCache == null) {
+			if (ImageCache == null)
+			{
 				GumpID = 0;
 			}
 
-			if (mHue.Index != 0) {
+			if (mHue.Index != 0)
+			{
 				mHue.ApplyTo(ImageCache, false);
 			}
 
@@ -100,14 +105,17 @@ namespace GumpStudio.Elements
 
 		public override void Render(Graphics Target)
 		{
-			if (ImageCache == null) {
+			if (ImageCache == null)
+			{
 				RefreshCache();
 			}
 
-			if (ImageCache != null) {
+			if (ImageCache != null)
+			{
 				Target.DrawImage(ImageCache, Location);
 			}
-			else {
+			else
+			{
 				Target.DrawLine(Pens.Red, X, Y, X + 30, Y + 30);
 				Target.DrawLine(Pens.Red, X + 30, Y, X, Y + 30);
 			}

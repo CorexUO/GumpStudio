@@ -24,28 +24,35 @@ namespace Ultima
 		public static void Initialize()
 		{
 			var path = Files.GetFilePath("speech.mul");
-			if (path == null) {
+			if (path == null)
+			{
 				Entries = new List<SpeechEntry>(0);
 				return;
 			}
 			Entries = new List<SpeechEntry>();
-			using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)) {
+			using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
+			{
 				var buffer = new byte[fs.Length];
-				unsafe {
+				unsafe
+				{
 					var order = 0;
 					fs.Read(buffer, 0, buffer.Length);
-					fixed (byte* data = buffer) {
+					fixed (byte* data = buffer)
+					{
 						var bindat = data;
 						var bindatend = bindat + buffer.Length;
 
-						while (bindat != bindatend) {
+						while (bindat != bindatend)
+						{
 							var id = (short)((*bindat++ >> 8) | (*bindat++)); //Swapped Endian
 							var length = (short)((*bindat++ >> 8) | (*bindat++));
-							if (length > 128) {
+							if (length > 128)
+							{
 								length = 128;
 							}
 
-							for (var i = 0; i < length; ++i) {
+							for (var i = 0; i < length; ++i)
+							{
 								m_Buffer[i] = *bindat++;
 							}
 
@@ -65,9 +72,12 @@ namespace Ultima
 		public static void SaveSpeechList(string FileName)
 		{
 			Entries.Sort(new OrderComparer());
-			using (var fs = new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write)) {
-				using (var bin = new BinaryWriter(fs)) {
-					foreach (var entry in Entries) {
+			using (var fs = new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write))
+			{
+				using (var bin = new BinaryWriter(fs))
+				{
+					foreach (var entry in Entries)
+					{
 						bin.Write(NativeMethods.SwapEndian(entry.ID));
 						var utf8String = Encoding.UTF8.GetBytes(entry.KeyWord);
 						var length = (short)utf8String.Length;
@@ -80,9 +90,11 @@ namespace Ultima
 
 		public static void ExportToCSV(string FileName)
 		{
-			using (var Tex = new StreamWriter(new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite), System.Text.Encoding.Unicode)) {
+			using (var Tex = new StreamWriter(new FileStream(FileName, FileMode.Create, FileAccess.ReadWrite), System.Text.Encoding.Unicode))
+			{
 				Tex.WriteLine("Order;ID;KeyWord");
-				foreach (var entry in Entries) {
+				foreach (var entry in Entries)
+				{
 					Tex.WriteLine(String.Format("{0};{1};{2}", entry.Order, entry.ID, entry.KeyWord));
 				}
 			}
@@ -91,24 +103,31 @@ namespace Ultima
 		public static void ImportFromCSV(string FileName)
 		{
 			Entries = new List<SpeechEntry>(0);
-			if (!File.Exists(FileName)) {
+			if (!File.Exists(FileName))
+			{
 				return;
 			}
 
-			using (var sr = new StreamReader(FileName)) {
+			using (var sr = new StreamReader(FileName))
+			{
 				string line;
-				while ((line = sr.ReadLine()) != null) {
-					if ((line = line.Trim()).Length == 0 || line.StartsWith("#")) {
+				while ((line = sr.ReadLine()) != null)
+				{
+					if ((line = line.Trim()).Length == 0 || line.StartsWith("#"))
+					{
 						continue;
 					}
 
-					if ((line.Contains("Order")) && (line.Contains("KeyWord"))) {
+					if ((line.Contains("Order")) && (line.Contains("KeyWord")))
+					{
 						continue;
 					}
 
-					try {
+					try
+					{
 						var split = line.Split(';');
-						if (split.Length < 3) {
+						if (split.Length < 3)
+						{
 							continue;
 						}
 
@@ -126,11 +145,13 @@ namespace Ultima
 		public static int ConvertStringToInt(string text)
 		{
 			int result;
-			if (text.Contains("0x")) {
+			if (text.Contains("0x"))
+			{
 				var convert = text.Replace("0x", "");
 				Int32.TryParse(convert, System.Globalization.NumberStyles.HexNumber, null, out result);
 			}
-			else {
+			else
+			{
 				Int32.TryParse(text, System.Globalization.NumberStyles.Integer, null, out result);
 			}
 
@@ -149,13 +170,16 @@ namespace Ultima
 
 			public int Compare(SpeechEntry objA, SpeechEntry objB)
 			{
-				if (objA.ID == objB.ID) {
+				if (objA.ID == objB.ID)
+				{
 					return 0;
 				}
-				else if (m_desc) {
+				else if (m_desc)
+				{
 					return (objA.ID < objB.ID) ? 1 : -1;
 				}
-				else {
+				else
+				{
 					return (objA.ID < objB.ID) ? -1 : 1;
 				}
 			}
@@ -172,10 +196,12 @@ namespace Ultima
 
 			public int Compare(SpeechEntry objA, SpeechEntry objB)
 			{
-				if (m_desc) {
+				if (m_desc)
+				{
 					return String.Compare(objB.KeyWord, objA.KeyWord);
 				}
-				else {
+				else
+				{
 					return String.Compare(objA.KeyWord, objB.KeyWord);
 				}
 			}
@@ -185,10 +211,12 @@ namespace Ultima
 		{
 			public int Compare(SpeechEntry objA, SpeechEntry objB)
 			{
-				if (objA.Order == objB.Order) {
+				if (objA.Order == objB.Order)
+				{
 					return 0;
 				}
-				else {
+				else
+				{
 					return (objA.Order < objB.Order) ? -1 : 1;
 				}
 			}

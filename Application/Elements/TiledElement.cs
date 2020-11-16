@@ -88,7 +88,8 @@ namespace GumpStudio.Elements
 		{
 			base.AddContextMenus(ref GroupMenu, ref PositionMenu, ref OrderMenu, ref MiscMenu);
 
-			if (PositionMenu.MenuItems.Count > 1) {
+			if (PositionMenu.MenuItems.Count > 1)
+			{
 				PositionMenu.MenuItems.Add(new MenuItem("-"));
 			}
 
@@ -116,22 +117,26 @@ namespace GumpStudio.Elements
 
 			ImageCache = Gumps.GetGump(mGumpID);
 
-			if (ImageCache == null) {
+			if (ImageCache == null)
+			{
 				GumpID = 0;
 			}
 
-			if (mHue.Index != 0) {
+			if (mHue.Index != 0)
+			{
 				mHue.ApplyTo(ImageCache, false);
 			}
 
-			if (ImageCache != null) {
+			if (ImageCache != null)
+			{
 				mTileSize = ImageCache.Size;
 			}
 		}
 
 		public override void Render(Graphics Target)
 		{
-			if (ImageCache != null) {
+			if (ImageCache != null)
+			{
 				var clip = Target.Clip;
 				var region = new Region(Bounds);
 				Target.Clip = region;
@@ -139,12 +144,14 @@ namespace GumpStudio.Elements
 				var width2 = Width;
 				var dx = 0;
 
-				while (((width1 >> 31) ^ dx) <= ((width1 >> 31) ^ width2)) {
+				while (((width1 >> 31) ^ dx) <= ((width1 >> 31) ^ width2))
+				{
 					var height1 = mTileSize.Height;
 					var height2 = Height;
 					var dy = 0;
 
-					while (((height1 >> 31) ^ dy) <= ((height1 >> 31) ^ height2)) {
+					while (((height1 >> 31) ^ dy) <= ((height1 >> 31) ^ height2))
+					{
 						var location = Location;
 						location.Offset(dx, dy);
 						Target.DrawImage(ImageCache, location);
@@ -157,12 +164,14 @@ namespace GumpStudio.Elements
 				Target.Clip = clip;
 				region.Dispose();
 			}
-			else if (!DoingRenderRetry) {
+			else if (!DoingRenderRetry)
+			{
 				DoingRenderRetry = true;
 				GumpID = mGumpID;
 				Render(Target);
 			}
-			else {
+			else
+			{
 				var graphics1 = Target;
 				var red1 = Pens.Red;
 				var x1 = Location.X;

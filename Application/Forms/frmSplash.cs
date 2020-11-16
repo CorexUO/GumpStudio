@@ -67,7 +67,8 @@ namespace GumpStudio
 			frmSplash.f = new frmSplash();
 			frmSplash.f.Show();
 			var now = DateTime.Now;
-			while (DateTime.Now < now + TimeSpan.FromSeconds(2)) {
+			while (DateTime.Now < now + TimeSpan.FromSeconds(2))
+			{
 				Thread.Sleep(100);
 				Application.DoEvents();
 			}

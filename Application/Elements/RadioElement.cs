@@ -22,20 +22,24 @@ namespace GumpStudio.Elements
 			set
 			{
 				mChecked = value;
-				if (!mChecked) {
+				if (!mChecked)
+				{
 					return;
 				}
 
-				foreach (var obj in mParent.GetElementsRecursive()) {
+				foreach (var obj in mParent.GetElementsRecursive())
+				{
 					var objectValue = RuntimeHelpers.GetObjectValue(obj);
 
-					if (!(objectValue is RadioElement)) {
+					if (!(objectValue is RadioElement))
+					{
 						continue;
 					}
 
 					var radioElement = (RadioElement)objectValue;
 
-					if (radioElement != this && radioElement.Checked & radioElement.Group == Group) {
+					if (radioElement != this && radioElement.Checked & radioElement.Group == Group)
+					{
 						radioElement.Checked = false;
 					}
 				}
@@ -68,7 +72,8 @@ namespace GumpStudio.Elements
 		public RadioElement(SerializationInfo info, StreamingContext context)
 		  : base(info, context)
 		{
-			if (info.GetInt32("RadioElementVersion") >= 2) {
+			if (info.GetInt32("RadioElementVersion") >= 2)
+			{
 				mValue = info.GetInt32(nameof(Value));
 			}
 
