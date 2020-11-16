@@ -19,6 +19,15 @@
 		<AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
 		<StartupObject>GumpStudio.GumpDesignerMain</StartupObject>
 	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <PlatformTarget>AnyCPU</PlatformTarget>
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	  <PlatformTarget>AnyCPU</PlatformTarget>
+	  <DefineConstants>DEBUG;TRACE</DefineConstants>
+	</PropertyGroup>
 	<ItemGroup>
 		<Reference Include="Microsoft.VisualBasic" />
 		<Reference Include="UOFont">
