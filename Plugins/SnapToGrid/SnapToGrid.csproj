@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net48</TargetFramework>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<OutputPath>..\Build</OutputPath>
+		<OutputPath>..\..\Build</OutputPath>
 		<AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
 	</PropertyGroup>
 
