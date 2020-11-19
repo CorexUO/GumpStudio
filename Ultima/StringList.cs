@@ -7,6 +7,8 @@ namespace Ultima
 {
 	public sealed class StringList
 	{
+		public static StringList ENU { get; } = new StringList("enu");
+
 		private int m_Header1;
 		private short m_Header2;
 
@@ -16,7 +18,7 @@ namespace Ultima
 		private Dictionary<int, string> m_StringTable;
 		private Dictionary<int, StringEntry> m_EntryTable;
 
-		private static byte[] m_Buffer = new byte[1024];
+		private byte[] m_Buffer = new byte[1024];
 
 		/// <summary>
 		/// Initialize <see cref="StringList"/> of Language

@@ -141,7 +141,10 @@ namespace GumpStudio.Elements
 
 		public string ToCSharpString()
 		{
-			return $"AddTextEntry({X}, {Y}, {Width}, {Height}, {Hue}, {Name.Replace(" ", "")}, {InitialText.Replace("\"", "\\\"")});";
+			if (MaxLength > 0)
+				return $"AddTextEntry({X}, {Y}, {Width}, {Height}, {Hue}, (int)Inputs.{Name.Replace(" ", String.Empty)}, {InitialText.Replace("\"", "\\\"")}, {MaxLength});";
+
+			return $"AddTextEntry({X}, {Y}, {Width}, {Height}, {Hue}, (int)Inputs.{Name.Replace(" ", String.Empty)}, {InitialText.Replace("\"", "\\\"")});";
 		}
 	}
 }

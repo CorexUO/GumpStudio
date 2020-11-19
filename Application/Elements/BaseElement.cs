@@ -72,6 +72,21 @@ namespace GumpStudio.Elements
 		public GroupElement Parent => mParent;
 
 		[Browsable(false)]
+		[Description("The group elements that this element belongs to.")]
+		public GroupElement RootParent
+		{
+			get
+			{
+				var p = Parent;
+				
+				while (p?.Parent != null)
+					p = p.Parent;
+
+				return p;
+			}
+		}
+
+		[Browsable(false)]
 		public bool Selected
 		{
 			get => mSelected;

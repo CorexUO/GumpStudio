@@ -61,7 +61,7 @@ namespace Server.Gumps
 			AddPage(0);
 			~gump_layout~
 		}
-
+		~gump_controls~
 		public override void OnResponse(NetState sender, RelayInfo info)
 		{
 		}
@@ -134,20 +134,12 @@ namespace Server.Gumps
 				location.Y = Math.Min(location.Y, element.Y);
 			}
 
-			if (location.X < Int32.MaxValue)
-			{
-				location.X = Math.Max(0, Math.Min(0x800, location.X));
-			}
-			else
+			if (location.X == Int32.MaxValue)
 			{
 				location.X = 0;
 			}
 
-			if (location.Y < Int32.MaxValue)
-			{
-				location.Y = Math.Max(0, Math.Min(0x400, location.Y));
-			}
-			else
+			if (location.Y == Int32.MaxValue)
 			{
 				location.Y = 0;
 			}
@@ -182,10 +174,94 @@ namespace Server.Gumps
 
 			template = template.Replace("~gump_layout~", layout.ToString().Trim());
 
-			File.WriteAllText(fullPath, template.ToString());
+			layout.Clear();
+			indent.Clear();
+
+			layoutBegin = Template.IndexOf("~gump_controls~");
+
+			while (--layoutBegin >= 0)
+			{
+				if (Template[layoutBegin] == '\r' || Template[layoutBegin] == '\n')
+				{
+					break;
+				}
+
+				if (!Char.IsWhiteSpace(Template, layoutBegin))
+				{
+					break;
+				}
+
+				indent.Insert(0, Template[layoutBegin]);
+			}
+
+			tabs = indent.ToString();
+
+			var buttonCount = 0;
+
+			foreach (var button in stacks.Values.SelectMany(o => o.OfType<ButtonElement>().Where(b => b.ButtonType == ButtonTypeEnum.Reply)))
+			{
+				if (++buttonCount == 1)
+				{
+					layout.AppendLine();
+					layout.AppendLine($"{tabs}public enum Buttons");
+					layout.AppendLine($"{tabs}{{");
+				}
+
+				layout.AppendLine($"{tabs}\t{button.Name.Replace(" ", String.Empty)} = {buttonCount},");
+			}
+
+			if (buttonCount > 0)
+			{
+				layout.AppendLine($"{tabs}}}");
+			}
+
+			var checkCount = 0;
+
+			foreach (var check in stacks.Values.SelectMany(o => o.OfType<CheckboxElement>()))
+			{
+				if (++checkCount == 1)
+				{
+					layout.AppendLine();
+					layout.AppendLine($"{tabs}public enum Switches");
+					layout.AppendLine($"{tabs}{{");
+				}
+
+				layout.AppendLine($"{tabs}\t{check.Name.Replace(" ", String.Empty)} = {checkCount},");
+			}
+
+			if (checkCount > 0)
+			{
+				layout.AppendLine($"{tabs}}}");
+			}
+
+			var inputCount = 0;
+
+			foreach (var input in stacks.Values.SelectMany(o => o.OfType<TextEntryElement>()))
+			{
+				if (++inputCount == 1)
+				{
+					layout.AppendLine();
+					layout.AppendLine($"{tabs}public enum Inputs");
+					layout.AppendLine($"{tabs}{{");
+				}
+
+				layout.AppendLine($"{tabs}\t{input.Name.Replace(" ", String.Empty)} = {inputCount},");
+			}
+
+			if (inputCount > 0)
+			{
+				layout.AppendLine($"{tabs}}}");
+			}
+
+			if (layout.Length > 0)
+				template = template.Replace("~gump_controls~", $"{Environment.NewLine}{tabs}{layout.ToString().Trim()}{Environment.NewLine}");
+			else
+				template = template.Replace("~gump_controls~", String.Empty);
 
 			try
 			{
+				File.WriteAllText(fullPath, template.ToString().Trim());
+
 				Process.Start(new ProcessStartInfo(fullPath)
 				{
 					UseShellExecute = true

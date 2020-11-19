@@ -140,7 +140,25 @@ namespace GumpStudio.Elements
 
 		public string ToCSharpString()
 		{
-			return $"AddItem({X}, {Y}, {ItemID});";
+			if (!Name.StartsWith(Type))
+			{
+				if (Hue?.Index > 0)
+					return $"AddItem({X}, {Y}, {ItemID}, {Hue}); // {Name}";
+
+				return $"AddItem({X}, {Y}, {ItemID}); // {Name}";
+			}
+
+			var label = 0;
+
+			if (ItemID < 0x4000)
+				label = 1020000 + ItemID;
+			else
+				label = 1078872 + ItemID;
+
+			if (Hue?.Index > 0)
+				return $"AddItem({X}, {Y}, {ItemID}, {Hue}); // {StringList.ENU.GetString(label)}";
+
+			return $"AddItem({X}, {Y}, {ItemID}); // {StringList.ENU.GetString(label)}";
 		}
 	}
 }

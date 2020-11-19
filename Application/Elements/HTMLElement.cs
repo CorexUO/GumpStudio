@@ -165,9 +165,10 @@ namespace GumpStudio.Elements
 
 		public string ToCSharpString()
 		{
-			var text = TextType == HTMLElementType.Localized ? $"AddHtmlLocalized({X}, {Y}, {Width}, {Height}, {CliLocID}, {ShowBackground.ToString().ToLower()}, {ShowScrollbar.ToString().ToLower()});" : $"AddHtml({X}, {Y}, {Width}, {Height}, \"{HTML.Replace("\"", "\\\"")}\", {ShowBackground.ToString().ToLower()}, {ShowScrollbar.ToString().ToLower()});";
-
-			return text;
+			if (TextType == HTMLElementType.Localized)
+				return $"AddHtmlLocalized({X}, {Y}, {Width}, {Height}, {CliLocID}, {ShowBackground}, {ShowScrollbar}); // {StringList.ENU.GetString(CliLocID)}";
+			
+			return $"AddHtml({X}, {Y}, {Width}, {Height}, \"{HTML.Replace("\"", "\\\"")}\", {ShowBackground}, {ShowScrollbar});";
 		}
 	}
 }

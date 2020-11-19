@@ -237,7 +237,7 @@ namespace GumpStudio.Elements
 
 		public string ToCSharpString()
 		{
-			return $"AddLabel({X}, {Y}, {Hue} ,\"{Text.Replace("\"", "\\\"")}\");";
+			return $"AddLabel({X}, {Y}, {Hue}, \"{Text.Replace("\"", "\\\"")}\");";
 		}
 	}
 }

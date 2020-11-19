@@ -123,6 +123,17 @@ namespace GumpStudio.Elements
 
 		public string ToCSharpString()
 		{
+			if (!Name.StartsWith(Type))
+			{
+				if (Hue?.Index > 0)
+					return $"AddImage({X}, {Y}, {GumpID}, {Hue}); // {Name}";
+
+				return $"AddImage({X}, {Y}, {GumpID}); // {Name}";
+			}
+
+			if (Hue?.Index > 0)
+				return $"AddImage({X}, {Y}, {GumpID}, {Hue});";
+
 			return $"AddImage({X}, {Y}, {GumpID});";
 		}
 	}

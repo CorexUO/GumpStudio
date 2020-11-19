@@ -6,8 +6,10 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -52,6 +54,8 @@ namespace GumpStudio.Elements
 		public int Items => mElements.Count;
 
 		public override string Type => "Group";
+
+		public IEnumerable<BaseElement> AllElements => GetElementsRecursive().OfType<BaseElement>();
 
 		public GroupElement(GroupElement Parent)
 		  : this(Parent, null, null, false)

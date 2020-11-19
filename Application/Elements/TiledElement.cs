@@ -81,7 +81,7 @@ namespace GumpStudio.Elements
 
 		public string ToCSharpString()
 		{
-			return $"AddImageTiled({X}, {Y}, {Width}, {Height}, {GumpID});";
+			return $"AddImageTiled({X}, {Y}, {Width}, {Height}, {GumpID}); // {Name}";
 		}
 
 		public override void AddContextMenus(ref MenuItem GroupMenu, ref MenuItem PositionMenu, ref MenuItem OrderMenu, ref MenuItem MiscMenu)

@@ -6,16 +6,19 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 using GumpStudio.Elements;
@@ -97,7 +100,7 @@ namespace GumpStudio.Forms
 		protected string AboutElementAppend;
 		public BaseElement ActiveElement;
 		public string AppPath;
-		public decimal ArrowKeyDelta;
+		public readonly decimal ArrowKeyDelta;
 		protected ArrayList AvailablePlugins;
 		protected Bitmap Canvas;
 		private IContainer components;
@@ -140,8 +143,6 @@ namespace GumpStudio.Forms
 			set => m_CanvasFocus = value;
 		}
 
-
-
 		public virtual MenuItem mnuFileExport
 		{
 			get => _mnuFileExport;
@@ -165,6 +166,8 @@ namespace GumpStudio.Forms
 			get => _picCanvas;
 			set => _picCanvas = value;
 		}
+
+		public IEnumerable<BaseElement> AllElements => Stacks.OfType<GroupElement>().SelectMany(s => s.AllElements);
 
 		public event HookKeyDownEventHandler HookKeyDown;
 		public event HookPostRenderEventHandler HookPostRender;
@@ -194,6 +197,48 @@ namespace GumpStudio.Forms
 			LoadedPlugins = new ArrayList();
 			InitializeComponent();
 			GlobalObjects.DesignerForm = this;
+		}
+
+		public void NormalizeNames()
+		{
+			var elements = AllElements.ToArray();
+
+			var nums = String.Join(String.Empty, Enumerable.Range(0, 9)).ToCharArray();
+
+			foreach (var o in elements)
+			{
+				o.Name = Regex.Replace(o.Name, "Copy Of", String.Empty, RegexOptions.IgnoreCase).TrimEnd(nums).Trim();
+			}
+
+			var buttons = 0;
+			var switches = 0;
+
+			foreach (var g in elements.GroupBy(o => o.GetType()))
+			{
+				var index = 0;
+
+				foreach (var group in g.ToLookup(o => o.Name))
+				{
+					var name = group.Key;
+					var count = group.Count();
+
+					if (count == 0)
+						continue;
+
+					foreach (var o in group)
+					{
+						if (o is TextEntryElement te)
+							te.ID = index;
+
+						if (o is ButtonElement)
+							o.Name = $"{name}{++buttons}";
+						else if (o is CheckboxElement)
+							o.Name = $"{name}{++switches}";
+						else
+							o.Name = $"{name}{++index}";
+					}
+				}
+			}
 		}
 
 		public void AddElement(BaseElement Element)
@@ -552,7 +597,7 @@ namespace GumpStudio.Forms
 				{
 					(enumerator as IDisposable)?.Dispose();
 				}
-				ArrowKeyDelta = Decimal.Multiply(ArrowKeyDelta, new decimal(106, 0, 0, false, 2));
+				//ArrowKeyDelta = Decimal.Multiply(ArrowKeyDelta, new decimal(106, 0, 0, false, 2));
 				flag = true;
 			}
 			else if (e.KeyCode == Keys.Down)
@@ -572,7 +617,7 @@ namespace GumpStudio.Forms
 				{
 					(enumerator as IDisposable)?.Dispose();
 				}
-				ArrowKeyDelta = Decimal.Multiply(ArrowKeyDelta, new decimal(106, 0, 0, false, 2));
+				//ArrowKeyDelta = Decimal.Multiply(ArrowKeyDelta, new decimal(106, 0, 0, false, 2));
 				flag = true;
 			}
 			else if (e.KeyCode == Keys.Left)
@@ -592,7 +637,7 @@ namespace GumpStudio.Forms
 				{
 					(enumerator as IDisposable)?.Dispose();
 				}
-				ArrowKeyDelta = Decimal.Multiply(ArrowKeyDelta, new decimal(106, 0, 0, false, 2));
+				//ArrowKeyDelta = Decimal.Multiply(ArrowKeyDelta, new decimal(106, 0, 0, false, 2));
 				flag = true;
 			}
 			else if (e.KeyCode == Keys.Right)
@@ -612,7 +657,7 @@ namespace GumpStudio.Forms
 				{
 					(enumerator as IDisposable)?.Dispose();
 				}
-				ArrowKeyDelta = Decimal.Multiply(ArrowKeyDelta, new decimal(106, 0, 0, false, 2));
+				//ArrowKeyDelta = Decimal.Multiply(ArrowKeyDelta, new decimal(106, 0, 0, false, 2));
 				flag = true;
 			}
 			else if (e.KeyCode == Keys.Next)
@@ -640,7 +685,7 @@ namespace GumpStudio.Forms
 			}
 			if (Decimal.Compare(ArrowKeyDelta, new decimal(10)) > 0)
 			{
-				ArrowKeyDelta = new decimal(10);
+				//ArrowKeyDelta = new decimal(10);
 			}
 
 			if (!flag)
@@ -664,7 +709,7 @@ namespace GumpStudio.Forms
 			}
 
 			CreateUndoPoint("Move element");
-			ArrowKeyDelta = new decimal(1);
+			//ArrowKeyDelta = new decimal(1);
 		}
 
 		private void DesignerForm_Load(object sender, EventArgs e)
@@ -1612,6 +1657,7 @@ namespace GumpStudio.Forms
 			{
 				(enumerator as IDisposable)?.Dispose();
 			}
+			NormalizeNames();
 			ChangeActiveStack(0);
 			ElementStack.UpdateParent += new BaseElement.UpdateParentEventHandler(ChangeActiveElementEventHandler);
 			ElementStack.Repaint += new BaseElement.RepaintEventHandler(RefreshView);
@@ -1633,7 +1679,10 @@ namespace GumpStudio.Forms
 			var point = new Point(0, 0);
 			groupElement.Location = point;
 			fileStream.Close();
+
 			AddElement(groupElement);
+
+			NormalizeNames();
 		}
 
 		private void mnuAddPage_Click(object sender, EventArgs e)
@@ -1903,10 +1952,11 @@ namespace GumpStudio.Forms
 		public void Paste()
 		{
 			var dataObject = Clipboard.GetDataObject();
-			var arrayList = new ArrayList();
 			var data = (ArrayList)dataObject.GetData(typeof(ArrayList));
 			if (data != null)
 			{
+				var elements = ElementStack.GetElementsRecursive().OfType<BaseElement>().ToArray();
+
 				SetActiveElement(null, true);
 
 				foreach (var obj in data)
@@ -1914,7 +1964,7 @@ namespace GumpStudio.Forms
 					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(obj);
 					if (CopyMode == ClipBoardMode.Copy)
 					{
-						objectValue.Name = "Copy of " + objectValue.Name;
+						objectValue.Name += elements.Count(o => o.Name.StartsWith(objectValue.Name));
 					}
 
 					objectValue.Selected = true;
