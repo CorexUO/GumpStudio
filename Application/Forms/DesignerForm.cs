@@ -748,7 +748,7 @@ namespace GumpStudio.Forms
 			_picCanvas.Width = 1600;
 			_picCanvas.Height = 1200;
 			CenterToScreen();
-			frmSplash.DisplaySplash();
+			SplashBox.DisplaySplash();
 			EnumeratePlugins();
 			Canvas = new Bitmap(_picCanvas.Width, _picCanvas.Height, PixelFormat.Format32bppRgb);
 			Activate();
@@ -1835,7 +1835,7 @@ namespace GumpStudio.Forms
 
 		private void mnuHelpAbout_Click(object sender, EventArgs e)
 		{
-			var frmAboutBox = new frmAboutBox();
+			var frmAboutBox = new AboutBox();
 			frmAboutBox.SetText(AboutElementAppend);
 			var num = (int)frmAboutBox.ShowDialog();
 		}

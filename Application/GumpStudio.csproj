@@ -72,10 +72,10 @@
 		<Compile Update="Forms\PluginManager.cs">
 			<SubType>Form</SubType>
 		</Compile>
-		<Compile Update="Forms\frmSplash.cs">
+		<Compile Update="Forms\SplashBox.cs">
 			<SubType>Form</SubType>
 		</Compile>
-		<Compile Update="Forms\frmAboutBox.cs">
+		<Compile Update="Forms\AboutBox.cs">
 			<SubType>Form</SubType>
 		</Compile>
 		<Compile Update="Forms\ClilocBrowser.cs">

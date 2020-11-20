@@ -10,12 +10,12 @@ using System.Windows.Forms;
 
 namespace GumpStudio
 {
-	public class frmSplash : Form
+	public class SplashBox : Form
 	{
-		private static frmSplash f;
+		private static SplashBox f;
 		private static Thread t;
 
-		public frmSplash()
+		public SplashBox()
 		{
 			Load += new EventHandler(frmSplash_Load);
 			Click += new EventHandler(frmSplash_Click);
@@ -24,8 +24,8 @@ namespace GumpStudio
 
 		public static void DisplaySplash()
 		{
-			frmSplash.t = new Thread(new ThreadStart(frmSplash.ThreadStartDisplay));
-			frmSplash.t.Start();
+			SplashBox.t = new Thread(new ThreadStart(SplashBox.ThreadStartDisplay));
+			SplashBox.t.Start();
 		}
 
 		private static void FadeOut(Form f)
@@ -35,7 +35,7 @@ namespace GumpStudio
 
 		private void frmSplash_Click(object sender, EventArgs e)
 		{
-			frmSplash.FadeOut(this);
+			SplashBox.FadeOut(this);
 		}
 
 		private void frmSplash_Load(object sender, EventArgs e)
@@ -64,15 +64,15 @@ namespace GumpStudio
 
 		private static void ThreadStartDisplay()
 		{
-			frmSplash.f = new frmSplash();
-			frmSplash.f.Show();
+			SplashBox.f = new SplashBox();
+			SplashBox.f.Show();
 			var now = DateTime.Now;
 			while (DateTime.Now < now + TimeSpan.FromSeconds(2))
 			{
 				Thread.Sleep(100);
 				Application.DoEvents();
 			}
-			frmSplash.FadeOut(frmSplash.f);
+			SplashBox.FadeOut(SplashBox.f);
 		}
 
 		private void FrmSplash_Load_1(object sender, EventArgs e)
