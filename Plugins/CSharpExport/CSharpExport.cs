@@ -82,10 +82,25 @@ namespace Server.Gumps
 			_Designer = designer;
 
 			_Designer.mnuFileExport.Enabled = true;
-			_Designer.mnuFileExport.MenuItems.Add(new MenuItem("C# Export", ExportClick));
+
+			_Designer.mnuFileExport.MenuItems.Add(new MenuItem(".NET C#", new[]
+			{
+				new MenuItem("All Elements", ExportFileClick),
+				new MenuItem("Selected Elements", ExportSelectionClick)
+			}));
 		}
 
-		private void ExportClick(object sender, EventArgs e)
+		private void ExportFileClick(object sender, EventArgs e)
+		{ 
+			ExportFile(false);
+		}
+
+		private void ExportSelectionClick(object sender, EventArgs e)
+		{
+			ExportFile(true);
+		}
+
+		private void ExportFile(bool selected)
 		{
 			var fullPath = $"{Path.GetTempFileName()}.txt";
 
@@ -116,13 +131,25 @@ namespace Server.Gumps
 
 			var stacks = new Dictionary<GroupElement, ICSharpExportable[]>();
 
-			foreach (var stack in _Designer.Stacks.Cast<GroupElement>())
+			if (selected)
 			{
-				var elements = stack.GetElementsRecursive().OfType<ICSharpExportable>().ToArray();
+				var elements = _Designer.ElementStack.GetSelectedElements().OfType<ICSharpExportable>().ToArray();
 
 				if (elements.Length > 0)
 				{
-					stacks[stack] = elements;
+					stacks[_Designer.ElementStack] = elements;
+				}
+			}
+			else
+			{
+				foreach (var stack in _Designer.Stacks.Cast<GroupElement>())
+				{
+					var elements = stack.GetElementsRecursive().OfType<ICSharpExportable>().ToArray();
+
+					if (elements.Length > 0)
+					{
+						stacks[stack] = elements;
+					}
 				}
 			}
 
