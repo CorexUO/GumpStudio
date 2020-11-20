@@ -1,10 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: GumpStudio.Elements.GroupElement
-// Assembly: GumpStudioCore, Version=1.8.3024.24259, Culture=neutral, PublicKeyToken=null
-// MVID: A77D32E5-7519-4865-AA26-DCCB34429732
-// Assembly location: C:\GumpStudio_1_8_R3_quinted-02\GumpStudioCore.dll
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
@@ -22,254 +16,178 @@ namespace GumpStudio.Elements
 	[Serializable]
 	public class GroupElement : BaseElement
 	{
-		internal ArrayList mElements;
-		internal bool mIsBaseWindow;
+		internal ArrayList _Elements;
+		internal bool _IsBaseWindow;
 
-		public BaseElement[] Elements
-		{
-			get
-			{
-				BaseElement[] baseElementArray = null;
-				IEnumerator enumerator = null;
-				try
-				{
-					foreach (var mElement in mElements)
-					{
-						var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(mElement);
-						baseElementArray = baseElementArray != null ? (BaseElement[])Utils.CopyArray(baseElementArray, new BaseElement[baseElementArray.Length + 1]) : new BaseElement[1];
-						baseElementArray[baseElementArray.Length - 1] = objectValue;
-					}
-				}
-				finally
-				{
-					if (enumerator is IDisposable)
-					{
-						(enumerator as IDisposable).Dispose();
-					}
-				}
-				return baseElementArray;
-			}
-		}
-
-		public int Items => mElements.Count;
+		public int Items => _Elements.Count;
 
 		public override string Type => "Group";
 
+		public IEnumerable<BaseElement> Elements => _Elements.Cast<BaseElement>();
 		public IEnumerable<BaseElement> AllElements => GetElementsRecursive().OfType<BaseElement>();
 
 		public GroupElement(GroupElement Parent)
 		  : this(Parent, null, null, false)
-		{
-		}
+		{ }
 
 		protected GroupElement(SerializationInfo info, StreamingContext context)
 		  : base(info, context)
 		{
-			mIsBaseWindow = false;
 			info.GetInt32("GroupElementVersion");
-			mElements = (ArrayList)info.GetValue(nameof(Elements), typeof(ArrayList));
-			mIsBaseWindow = info.GetBoolean("IsBaseWindow");
+
+			_Elements = (ArrayList)info.GetValue("Elements", typeof(ArrayList));
+			_IsBaseWindow = info.GetBoolean("IsBaseWindow");
 		}
 
 		public GroupElement(GroupElement Parent, ArrayList Elements, string Name)
 		  : this(Parent, Elements, Name, false)
-		{
-		}
+		{ }
 
-		public GroupElement(GroupElement Parent, ArrayList Elements, string Name, bool IsBaseWindow)
+		public GroupElement(GroupElement Parent, ArrayList elements, string Name, bool isBaseWindow)
 		{
-			mIsBaseWindow = false;
-			mIsBaseWindow = IsBaseWindow;
-			mElements = new ArrayList();
+			_IsBaseWindow = isBaseWindow;
+
+			_Elements = new ArrayList();
+
 			if (Name != null)
 			{
-				mName = Name;
+				_Name = Name;
 			}
 
-			if (Elements != null)
+			if (elements != null)
 			{
-				IEnumerator enumerator = null;
-				try
-				{
-					foreach (var element in Elements)
-					{
-						mElements.Add((BaseElement)RuntimeHelpers.GetObjectValue(element));
-					}
-				}
-				finally
-				{
-					if (enumerator is IDisposable)
-					{
-						(enumerator as IDisposable).Dispose();
-					}
-				}
+				_Elements.AddRange(elements);
 			}
+
 			Location = new Point(0, 0);
 		}
 
 		public override void AddContextMenus(ref MenuItem GroupMenu, ref MenuItem PositionMenu, ref MenuItem OrderMenu, ref MenuItem MiscMenu)
 		{
 			base.AddContextMenus(ref GroupMenu, ref PositionMenu, ref OrderMenu, ref MiscMenu);
-			if (mParent.GetSelectedElements().Count > 1)
+
+			if (_Parent.GetSelectedElements().Count() > 1)
 			{
-				GroupMenu.MenuItems.Add(new MenuItem("Add Selection to Group", new EventHandler(DoAddMenu)));
+				GroupMenu.MenuItems.Add(new MenuItem("Add Selection to Group", DoAddMenu));
 			}
 
-			GroupMenu.MenuItems.Add(new MenuItem("Break Group", new EventHandler(DoBreakGroupMenu)));
-			MiscMenu.MenuItems.Add(new MenuItem("Export Gumpling", new EventHandler(DoExportGumplingMenu)));
+			GroupMenu.MenuItems.Add(new MenuItem("Break Group", DoBreakGroupMenu));
+			MiscMenu.MenuItems.Add(new MenuItem("Export Gumpling", DoExportGumplingMenu));
 		}
 
 		public virtual void AddElement(BaseElement e)
 		{
-			if (mElements.Contains(e))
+			if (_Elements.Contains(e))
 			{
 				return;
 			}
 
-			if (!mIsBaseWindow)
+			if (!_IsBaseWindow)
 			{
 				Rectangle rectangle;
-				if (mElements.Count == 0)
+
+				if (_Elements.Count == 0)
 				{
 					rectangle = e.Bounds;
 				}
 				else
 				{
 					rectangle = Rectangle.Union(Bounds, e.Bounds);
+
 					if (X != rectangle.X | Y != rectangle.Y)
 					{
-						IEnumerator enumerator = null;
 						var dx = X - rectangle.X;
 						var dy = Y - rectangle.Y;
-						try
+
+						foreach (var mElement in _Elements)
 						{
-							foreach (var mElement in mElements)
-							{
-								var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(mElement);
-								var location = objectValue.Location;
-								location.Offset(dx, dy);
-								objectValue.Location = location;
-							}
-						}
-						finally
-						{
-							if (enumerator is IDisposable)
-							{
-								(enumerator as IDisposable).Dispose();
-							}
+							var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(mElement);
+							var location = objectValue.Location;
+							location.Offset(dx, dy);
+							objectValue.Location = location;
 						}
 					}
 				}
+
 				Location = rectangle.Location;
-				mSize = rectangle.Size;
+				_Size = rectangle.Size;
+
 				var location1 = e.Location;
+
 				location1.X -= rectangle.Location.X;
 				location1.Y -= rectangle.Location.Y;
+
 				e.Location = location1;
 			}
-			mElements.Add(e);
+
+			_Elements.Add(e);
+
 			e.Reparent(this);
+
 			AttachEvents(e);
 		}
 
 		public void AttachEvents(BaseElement Element)
 		{
-			Element.UpdateParent += new BaseElement.UpdateParentEventHandler(RaiseUpdateEvent);
-			Element.Repaint += new BaseElement.RepaintEventHandler(RaiseRepaintEvent);
+			Element.UpdateParent += RaiseUpdateEvent;
+			Element.Repaint += RaiseRepaintEvent;
 		}
 
 		public void BreakGroup()
 		{
-			IEnumerator enumerator = null;
-			try
+			foreach (BaseElement element in _Elements)
 			{
-				foreach (var mElement in mElements)
-				{
-					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(mElement);
-					mParent.AddElement(objectValue);
-					objectValue.Selected = true;
-					var point = new Point(X + objectValue.X, Y + objectValue.Y);
-					objectValue.Location = point;
-				}
+				_Parent.AddElement(element);
+
+				element.Selected = true;
+				element.Location = new Point(X + element.X, Y + element.Y);
 			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
-				}
-			}
-			mParent.RemoveElement(this);
+
+			_Parent.RemoveElement(this);
 		}
 
 		protected override object CloneMe()
 		{
-			IEnumerator enumerator = null;
-			var Parent = (GroupElement)base.CloneMe();
-			Parent.mElements = new ArrayList();
-			try
+			var parent = (GroupElement)base.CloneMe();
+
+			parent._Elements = new ArrayList();
+
+			foreach (BaseElement element in _Elements)
 			{
-				foreach (var mElement in mElements)
-				{
-					var Element = ((BaseElement)RuntimeHelpers.GetObjectValue(mElement)).Clone();
-					Parent.mElements.Add(Element);
-					Parent.AttachEvents(Element);
-					Element.Reparent(Parent);
-				}
+				var clone = element.Clone();
+
+				parent._Elements.Add(clone);
+				parent.AttachEvents(clone);
+
+				clone.Reparent(parent);
 			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
-				}
-			}
-			return Parent;
+
+			return parent;
 		}
 
 		public override void DebugDump()
 		{
-			IEnumerator enumerator = null;
 			base.DebugDump();
-			try
+
+			foreach (BaseElement element in _Elements)
 			{
-				foreach (var mElement in mElements)
-				{
-					((BaseElement)RuntimeHelpers.GetObjectValue(mElement)).DebugDump();
-				}
-			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
-				}
+				element.DebugDump();
 			}
 		}
 
 		protected void DoAddMenu(object sender, EventArgs e)
 		{
-			IEnumerator enumerator = null;
-			var arrayList = new ArrayList();
-			arrayList.AddRange(mParent.GetElements());
-			try
+			var arrayList = new ArrayList(_Parent._Elements);
+
+			foreach (BaseElement element in arrayList)
 			{
-				foreach (var obj in arrayList)
+				if (element != this && element.Selected)
 				{
-					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(obj);
-					if (objectValue != this & objectValue.Selected)
-					{
-						AddElement(objectValue);
-						mParent.RemoveElement(objectValue);
-						objectValue.Selected = false;
-					}
-				}
-			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
+					AddElement(element);
+
+					_Parent.RemoveElement(element);
+
+					element.Selected = false;
 				}
 			}
 		}
@@ -277,7 +195,9 @@ namespace GumpStudio.Elements
 		protected void DoBreakGroupMenu(object sender, EventArgs e)
 		{
 			BreakGroup();
-			mParent.RaiseUpdateEvent(null, false);
+
+			_Parent.RaiseUpdateEvent(null, false);
+
 			GlobalObjects.DesignerForm.CreateUndoPoint();
 		}
 
@@ -290,192 +210,154 @@ namespace GumpStudio.Elements
 					Filter = "Gumpling|*.gumpling",
 					AddExtension = true
 				};
+
 				if (saveFileDialog.ShowDialog() == DialogResult.OK)
 				{
-					var mParent = this.mParent;
-					this.mParent.RemoveElement(this);
-					this.mParent = null;
-					var fileStream = new FileStream(saveFileDialog.FileName, FileMode.Create);
-					new BinaryFormatter().Serialize(fileStream, this);
-					fileStream.Close();
-					this.mParent = mParent;
-					this.mParent.AddElement(this);
+					var parent = _Parent;
+
+					_Parent.RemoveElement(this);
+					_Parent = null;
+
+					using (var fileStream = new FileStream(saveFileDialog.FileName, FileMode.Create))
+					{
+						new BinaryFormatter().Serialize(fileStream, this);
+					}
+
+					_Parent = parent;
+					_Parent.AddElement(this);
 				}
+
 				saveFileDialog.Dispose();
 			}
 			catch (Exception ex)
 			{
 				ProjectData.SetProjectError(ex);
-				//int num = (int) Interaction.MsgBox((object) ex.Message, MsgBoxStyle.OkOnly, (object) null);
 				MessageBox.Show(ex.Message);
 				ProjectData.ClearProjectError();
 			}
 		}
 
-		public BaseElement GetElementFromPoint(Point p)
-		{
-			BaseElement baseElement = null;
-			IEnumerator enumerator = null;
-			try
-			{
-				foreach (var mElement in mElements)
-				{
-					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(mElement);
-					var bounds = objectValue.Bounds;
-					bounds.Inflate(7, 7);
-					if (bounds.Contains(p))
-					{
-						baseElement = objectValue;
-					}
-				}
-			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
-				}
-			}
-			return baseElement;
-		}
-
-		public ArrayList GetElements()
-		{
-			return mElements;
-		}
-
-		public ArrayList GetElementsRecursive()
-		{
-			IEnumerator enumerator = null;
-			var arrayList = new ArrayList();
-			try
-			{
-				foreach (var mElement in mElements)
-				{
-					var objectValue = RuntimeHelpers.GetObjectValue(mElement);
-					if (objectValue is GroupElement)
-					{
-						arrayList.AddRange(((GroupElement)objectValue).GetElementsRecursive());
-					}
-					else
-					{
-						arrayList.Add(RuntimeHelpers.GetObjectValue(objectValue));
-					}
-				}
-			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
-				}
-			}
-			return arrayList;
-		}
-
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			base.GetObjectData(info, context);
+
 			info.AddValue("GroupElementVersion", 1);
-			info.AddValue("Elements", mElements);
-			info.AddValue("IsBaseWindow", mIsBaseWindow);
+			info.AddValue("Elements", _Elements);
+			info.AddValue("IsBaseWindow", _IsBaseWindow);
 		}
 
-		public ArrayList GetSelectedElements()
+		public BaseElement GetElementFromPoint(Point p)
 		{
-			IEnumerator enumerator = null;
-			var arrayList = new ArrayList();
-			try
+			BaseElement baseElement = null;
+
+			foreach (BaseElement element in _Elements)
 			{
-				foreach (var mElement in mElements)
+				var bounds = element.Bounds;
+
+				bounds.Inflate(7, 7);
+
+				if (bounds.Contains(p))
 				{
-					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(mElement);
-					if (objectValue.Selected)
+					baseElement = element;
+				}
+			}
+
+			return baseElement;
+		}
+
+		public IEnumerable<BaseElement> GetElementsRecursive()
+		{
+			foreach (BaseElement element in _Elements)
+			{
+				yield return element;
+
+				if (element is GroupElement g)
+				{
+					foreach (var e in g.GetElementsRecursive())
 					{
-						arrayList.Add(objectValue);
+						yield return e;
 					}
 				}
 			}
-			finally
+		}
+
+		public IEnumerable<BaseElement> GetSelectedElements()
+		{
+			foreach (BaseElement element in _Elements)
 			{
-				if (enumerator is IDisposable)
+				if (element.Selected)
 				{
-					(enumerator as IDisposable).Dispose();
+					yield return element;
+				}
+
+				if (element is GroupElement g)
+				{
+					foreach (var e in g.GetSelectedElements())
+					{
+						yield return e;
+					}
 				}
 			}
-			return arrayList;
 		}
 
 		public void RecalculateBounds()
 		{
-			var count = mElements.Count;
+			var count = _Elements.Count;
+
 			if (count < 1)
 			{
 				return;
 			}
 
-			var a = ((BaseElement)mElements[0]).Bounds;
-			if (count >= 2)
+			var e = (BaseElement)_Elements[0];
+			var a = e.Bounds;
+
+			if (count > 1)
 			{
 				var num = count - 1;
+
 				for (var index = 1; index <= num; ++index)
 				{
-					a = Rectangle.Union(a, ((BaseElement)mElements[index]).Bounds);
+					e = (BaseElement)_Elements[index];
+					a = Rectangle.Union(a, e.Bounds);
 				}
 			}
-			mSize = a.Size;
+
+			_Size = a.Size;
+
 			RaiseRepaintEvent(this);
 		}
 
 		public override void RefreshCache()
 		{
-			IEnumerator enumerator = null;
-			try
+			foreach (BaseElement element in _Elements)
 			{
-				foreach (var mElement in mElements)
-				{
-					((BaseElement)RuntimeHelpers.GetObjectValue(mElement)).RefreshCache();
-				}
-			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
-				}
+				element.RefreshCache();
 			}
 		}
 
 		public void RemoveElement(BaseElement e)
 		{
-			mElements.Remove(e);
+			_Elements.Remove(e);
+
 			RemoveEvents(e);
 		}
 
 		public void RemoveEvents(BaseElement Element)
 		{
-			Element.UpdateParent -= new BaseElement.UpdateParentEventHandler(RaiseUpdateEvent);
-			Element.Repaint -= new BaseElement.RepaintEventHandler(RaiseRepaintEvent);
+			Element.UpdateParent -= RaiseUpdateEvent;
+			Element.Repaint -= RaiseRepaintEvent;
 		}
 
 		public override void Render(Graphics Target)
 		{
-			IEnumerator enumerator = null;
 			Target.TranslateTransform(X, Y);
-			try
+
+			foreach (BaseElement element in _Elements)
 			{
-				foreach (var mElement in mElements)
-				{
-					((BaseElement)RuntimeHelpers.GetObjectValue(mElement)).Render(Target);
-				}
+				element.Render(Target);
 			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
-				}
-			}
+
 			Target.TranslateTransform(-X, -Y);
 		}
 	}

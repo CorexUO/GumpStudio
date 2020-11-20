@@ -63,7 +63,7 @@ namespace GumpStudio.Elements
 		public BackgroundElement()
 		{
 			mMultImageCache = new Image[9];
-			mSize = new Size(100, 100);
+			_Size = new Size(100, 100);
 			mGumpID = 9200;
 			RefreshCache();
 		}

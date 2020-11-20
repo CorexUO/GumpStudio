@@ -51,7 +51,7 @@ namespace GumpStudio.Elements
 				else
 				{
 					mItemID = value;
-					mSize = ImageCache.Size;
+					_Size = ImageCache.Size;
 				}
 			}
 		}
@@ -60,7 +60,7 @@ namespace GumpStudio.Elements
 
 		public ItemElement()
 		{
-			mSize = new Size(50, 50);
+			_Size = new Size(50, 50);
 			ItemID = 0;
 			mHue = Hues.GetHue(0);
 		}

@@ -17,7 +17,7 @@ namespace GumpStudio.Elements
 
 		public AlphaElement()
 		{
-			mSize = new Size(100, 50);
+			_Size = new Size(100, 50);
 		}
 
 		protected AlphaElement(SerializationInfo info, StreamingContext context)

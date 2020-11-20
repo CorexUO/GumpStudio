@@ -1,10 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: GumpStudio.DesignerForm
-// Assembly: GumpStudioCore, Version=1.8.3024.24259, Culture=neutral, PublicKeyToken=null
-// MVID: A77D32E5-7519-4865-AA26-DCCB34429732
-// Assembly location: C:\GumpStudio_1_8_R3_quinted-02\GumpStudioCore.dll
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,6 +12,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -25,149 +20,137 @@ using GumpStudio.Elements;
 using GumpStudio.Plugins;
 
 using Ultima;
-// ReSharper disable RedundantDelegateCreation
 
 namespace GumpStudio.Forms
 {
-	public class DesignerForm : Form
+	public sealed partial class DesignerForm : Form
 	{
-		private TextBox m_CanvasFocus;
-		private ComboBox m_cboElements;
-		private PropertyGrid m_ElementProperties;
-		private Label m_Label1;
-		private MainMenu m_MainMenu;
-		private MenuItem m_MenuItem1;
-		private MenuItem m_MenuItem10;
-		private MenuItem m_MenuItem3;
-		private MenuItem m_MenuItem4;
-		private MenuItem m_MenuItem5;
-		private MenuItem m_MenuItem9;
-		private ContextMenu m_mnuContextMenu;
-		private MenuItem m_mnuCopy;
-		private MenuItem _mnuCut;
-		private MenuItem _mnuDataFile;
-		private MenuItem _mnuDelete;
-		private MenuItem _mnuEdit;
-		private MenuItem _mnuEditRedo;
-		private MenuItem _mnuEditUndo;
-		private MenuItem _mnuFile;
-		private MenuItem _mnuFileExit;
-		private MenuItem _mnuFileExport;
-		private MenuItem _mnuFileImport;
-		private MenuItem _mnuFileNew;
-		private MenuItem _mnuFileOpen;
-		private MenuItem _mnuFileSave;
-		private MenuItem _mnuGumplingAddFolder;
-		private MenuItem _mnuGumplingAddGumpling;
-		private ContextMenu _mnuGumplingContext;
-		private MenuItem _mnuGumplingDelete;
-		private MenuItem _mnuGumplingMove;
-		private MenuItem _mnuGumplingRename;
-		private MenuItem _mnuHelp;
-		private MenuItem _mnuHelpAbout;
-		private MenuItem _mnuImportGumpling;
-		private MenuItem _mnuMisc;
-		private MenuItem _mnuMiscLoadGumpling;
-		private MenuItem _mnuPage;
-		private MenuItem _mnuPageAdd;
-		private MenuItem _mnuPageClear;
-		private MenuItem _mnuPageDelete;
-		private MenuItem _mnuPageInsert;
-		private MenuItem _mnuPaste;
-		private MenuItem _mnuPluginManager;
-		private MenuItem _mnuPlugins;
-		private MenuItem _mnuSelectAll;
-		private MenuItem _mnuShow0;
+		private ComboBox _ComboElements;
+		private PropertyGrid _ElementProperties;
+		private Label _Label;
+		private MainMenu _Menu;
+		private MenuItem _MenuMain1;
+		private MenuItem _MenuMain2;
+		private MenuItem _MenuMain3;
+		private MenuItem _MenuMain4;
+		private MenuItem _MenuMain5;
+		private MenuItem _MenuMain6;
+		private ContextMenu _MenuContext;
+		private MenuItem _MenuCopy;
+		private MenuItem _MenuCut;
+		private MenuItem _MenuDataFile;
+		private MenuItem _MenuDelete;
+		private MenuItem _MenuEdit;
+		private MenuItem _MenuEditRedo;
+		private MenuItem _MenuEditUndo;
+		private MenuItem _MenuFile;
+		private MenuItem _MenuFileExit;
+		private MenuItem _MenuFileNew;
+		private MenuItem _MenuFileOpen;
+		private MenuItem _MenuFileSave;
+		private MenuItem _MenuGumplingAddFolder;
+		private MenuItem _MenuGumplingAddGumpling;
+		private ContextMenu _MenuGumplingContext;
+		private MenuItem _MenuGumplingDelete;
+		private MenuItem _MenuGumplingMove;
+		private MenuItem _MenuGumplingRename;
+		private MenuItem _MenuHelp;
+		private MenuItem _MenuHelpAbout;
+		private MenuItem _MenuImportGumpling;
+		private MenuItem _MenuMisc;
+		private MenuItem _MenuMiscLoadGumpling;
+		private MenuItem _MenuPage;
+		private MenuItem _MenuPageAdd;
+		private MenuItem _MenuPageClear;
+		private MenuItem _MenuPageDelete;
+		private MenuItem _MenuPageInsert;
+		private MenuItem _MenuPaste;
+		private MenuItem _MenuPluginManager;
+		private MenuItem _MenuSelectAll;
+		private MenuItem _MenuShowPage0;
 		private OpenFileDialog _OpenDialog;
 		private Panel _Panel1;
 		private Panel _Panel2;
 		private Panel _Panel3;
 		private Panel _Panel4;
-		private PictureBox _picCanvas;
-		private Panel _pnlCanvasScroller;
-		private Panel _pnlToolbox;
-		private Panel _pnlToolboxHolder;
+		private Panel _PanelCanvasScroller;
+		private Panel _PanelToolbox;
+		private Panel _Panel7;
 		private SaveFileDialog _SaveDialog;
 		private Splitter _Splitter1;
 		private Splitter _Splitter2;
 		private StatusBar _StatusBar;
-		private TabPage _TabPage1;
-		private TabControl _TabPager;
-		private TabControl _tabToolbox;
-		private TabPage _tpgCustom;
-		private TabPage _tpgStandard;
-		private TreeView _treGumplings;
-		protected string AboutElementAppend;
-		public BaseElement ActiveElement;
-		public string AppPath;
-		public readonly decimal ArrowKeyDelta;
-		protected ArrayList AvailablePlugins;
-		protected Bitmap Canvas;
-		private IContainer components;
-		protected ClipBoardMode CopyMode;
-		protected int CurrentUndoPoint;
-		protected bool ElementChanged;
-		public GroupElement ElementStack;
-		protected string FileName;
-		public TreeFolder GumplingsFolder;
-		public TreeFolder GumplingTree;
-		public GumpProperties GumpProperties;
-		protected Point LastPos;
-		protected ArrayList LoadedPlugins;
-		protected Point mAnchor;
-		protected Size mAnchorOffset;
-		public int MaxUndoPoints;
-		protected int MoveCount;
-		protected MoveModeType MoveMode;
-		public bool PluginClearsCanvas;
-		public PluginInfo[] PluginTypesToLoad;
-		protected ArrayList RegisteredTypes;
-		protected Point ScrollPos;
-		protected LinearGradientBrush SelBG;
-		protected Rectangle SelectionRect;
-		protected Pen SelFG;
-		public bool ShouldClearActiveElement;
-		protected bool ShowGrid;
-		protected bool ShowPage0;
-		protected bool ShowSelectionRect;
-		public ArrayList Stacks;
-		public bool SuppressUndoPoints;
-		public TreeFolder UncategorizedFolder;
-		protected ArrayList UndoPoints;
+		private TabPage _TabPage;
+		private TabControl _TabPages;
+		private TabControl _TabToolbox;
+		private TabPage _PageCustom;
+		private TabPage _PageStandard;
+		private TreeView _Gumplings;
+		private IContainer _Components;
+	}
 
-		public virtual TextBox CanvasFocus
-		{
+	public sealed partial class DesignerForm
+	{
+		private Point _LastPosition;
+		private Point _Anchor;
+		private Size _AnchorOffset;
+		private Rectangle _SelectionRect;
 
-			get => m_CanvasFocus;
-			[DebuggerNonUserCode, MethodImpl(MethodImplOptions.Synchronized)]
-			set => m_CanvasFocus = value;
-		}
+		private LinearGradientBrush _SelectionBG;
+		private Pen _SelectionFG;
 
-		public virtual MenuItem mnuFileExport
-		{
-			get => _mnuFileExport;
-			set => _mnuFileExport = value;
-		}
+		private bool _ElementChanged;
+		private bool _ShowPage0 = true;
+		private bool _ShowSelectionRect;
 
-		public virtual MenuItem mnuFileImport
-		{
-			get => _mnuFileImport;
-			set => _mnuFileImport = value;
-		}
+		private int _MoveCount;
+		private int _CurrentUndoPoint = -1;
 
-		public MenuItem mnuPlugins
-		{
-			get => _mnuPlugins;
-			set => _mnuPlugins = value;
-		}
+		private string _FileName = String.Empty;
+		private string _AboutElementAppend = String.Empty;
 
-		public PictureBox picCanvas
-		{
-			get => _picCanvas;
-			set => _picCanvas = value;
-		}
+		private MoveModeType _MoveMode;
+
+		private Bitmap _Canvas;
+
+		private readonly ArrayList _UndoPoints = new ArrayList();
+		private readonly ArrayList _RegisteredTypes = new ArrayList();
+
+		private readonly HashSet<BasePlugin> _AvailablePlugins = new HashSet<BasePlugin>();
+		private readonly HashSet<BasePlugin> _LoadedPlugins = new HashSet<BasePlugin>();
+
+		public HashSet<PluginInfo> PluginsInfo { get; } = new HashSet<PluginInfo>();
+
+		public List<GroupElement> Stacks { get; } = new List<GroupElement>();
+
+		public decimal ArrowKeyDelta { get; set; } = 1;
+
+		public int MaxUndoPoints { get; set; } = 50;
+
+		public bool PluginClearsCanvas { get; set; }
+		public bool SuppressUndoPoints { get; set; }
+		public bool ShouldClearActiveElement { get; set; }
+
+		public TreeFolder UncategorizedFolder { get; set; }
+		public TreeFolder GumplingsFolder { get; set; }
+		public TreeFolder GumplingTree { get; set; }
+
+		public MenuItem MenuFileExport { get; set; }
+		public MenuItem MenuFileImport { get; set; }
+		public MenuItem MenuPlugins { get; set; }
+		public PictureBox ImageCanvas { get; set; }
+
+		public BaseElement ActiveElement { get; set; }
+
+		public GroupElement ElementStack { get; set; } = new GroupElement(null, null, "CanvasStack", true);
+
+		public GumpProperties GumpProperties { get; set; } = new GumpProperties();
+
+		public TextBox CanvasFocus { get; [DebuggerNonUserCode, MethodImpl(MethodImplOptions.Synchronized)] set; }
 
 		public IEnumerable<BaseElement> AllElements => Stacks.OfType<GroupElement>().SelectMany(s => s.AllElements);
+
+		public string AppPath => Application.StartupPath;
 
 		public event HookKeyDownEventHandler HookKeyDown;
 		public event HookPostRenderEventHandler HookPostRender;
@@ -175,27 +158,11 @@ namespace GumpStudio.Forms
 
 		public DesignerForm()
 		{
-			Closed += new EventHandler(DesignerForm_Closed);
-			Closing += new CancelEventHandler(DesignerForm_Closing);
-			ElementStack = new GroupElement(null, null, "CanvasStack", true);
-			Stacks = new ArrayList();
-			ShouldClearActiveElement = false;
-			PluginClearsCanvas = false;
-			AppPath = Application.StartupPath;
-			ArrowKeyDelta = new decimal(1);
-			ShowSelectionRect = false;
-			MoveMode = MoveModeType.None;
-			ShowGrid = false;
-			ShowPage0 = true;
-			ElementChanged = false;
-			UndoPoints = new ArrayList();
-			CurrentUndoPoint = -1;
-			MaxUndoPoints = 25;
-			SuppressUndoPoints = false;
-			RegisteredTypes = new ArrayList();
-			AvailablePlugins = new ArrayList();
-			LoadedPlugins = new ArrayList();
+			Closed += DesignerForm_Closed;
+			Closing += DesignerForm_Closing;
+
 			InitializeComponent();
+
 			GlobalObjects.DesignerForm = this;
 		}
 
@@ -251,203 +218,221 @@ namespace GumpStudio.Forms
 			}
 		}
 
-		public void AddElement(BaseElement Element)
+		public void AddElement(BaseElement element)
 		{
-			ElementStack.AddElement(Element);
-			Element.Selected = true;
-			SetActiveElement(Element, true);
-			_picCanvas.Invalidate();
-			CreateUndoPoint(Element.Name + " added");
+			ElementStack.AddElement(element);
+
+			element.Selected = true;
+
+			SetActiveElement(element, true);
+
+			ImageCanvas.Invalidate();
+
+			CreateUndoPoint(element.Name + " added");
 		}
 
 		public int AddPage()
 		{
+			var index = Stacks.Count;
+
 			Stacks.Add(new GroupElement(null, null, "CanvasStack", true));
-			_TabPager.TabPages.Add(new TabPage(Convert.ToString(Stacks.Count - 1)));
-			_TabPager.SelectedIndex = Stacks.Count - 1;
-			ChangeActiveStack(Stacks.Count - 1);
-			return Stacks.Count - 1;
+
+			_TabPages.TabPages.Add(new TabPage(index.ToString()));
+
+			_TabPages.SelectedIndex = index;
+
+			ChangeActiveStack(index);
+
+			return index;
 		}
 
 		public void BuildGumplingTree()
 		{
-			_treGumplings.Nodes.Clear();
+			_Gumplings.Nodes.Clear();
+
 			BuildGumplingTree(GumplingTree, null);
 		}
 
 		public void BuildGumplingTree(TreeFolder Item, TreeNode Node)
 		{
-			foreach (var child in Item.GetChildren())
+			foreach (TreeItem item in Item.GetChildren())
 			{
-				var objectValue = (TreeItem)RuntimeHelpers.GetObjectValue(child);
 				var treeNode = new TreeNode
 				{
-					Text = objectValue.Text,
-					Tag = objectValue
+					Text = item.Text,
+					Tag = item
 				};
+
 				if (Node == null)
 				{
-					_treGumplings.Nodes.Add(treeNode);
+					_Gumplings.Nodes.Add(treeNode);
 				}
 				else
 				{
 					Node.Nodes.Add(treeNode);
 				}
 
-				if (objectValue is TreeFolder)
+				if (item is TreeFolder folder)
 				{
-					BuildGumplingTree((TreeFolder)objectValue, treeNode);
+					BuildGumplingTree(folder, treeNode);
 				}
 			}
 		}
 
-		protected void BuildToolbox()
+		private void BuildToolbox()
 		{
-			IEnumerator enumerator1 = null;
-			_pnlToolbox.Controls.Clear();
+			_PanelToolbox.Controls.Clear();
+
 			try
 			{
-				enumerator1 = RegisteredTypes.GetEnumerator();
 				var y = 0;
-				while (enumerator1.MoveNext())
+
+				foreach (Type type in _RegisteredTypes)
 				{
-					var objectValue = (Type)RuntimeHelpers.GetObjectValue(enumerator1.Current);
-					var instance = (BaseElement)Activator.CreateInstance(objectValue);
+					var instance = (BaseElement)Activator.CreateInstance(type);
+
 					var button = new Button
 					{
-						Text = instance.Type
+						Text = instance.Type,
+						Location = new Point(0, y),
+						FlatStyle = FlatStyle.System,
+						Width = _PanelToolbox.Width,
+						Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
+						Tag = type
 					};
-					var point = new Point(0, y);
-					button.Location = point;
-					button.FlatStyle = FlatStyle.System;
-					button.Width = _pnlToolbox.Width;
-					button.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-					button.Tag = objectValue;
+
 					y += button.Height - 1;
-					_pnlToolbox.Controls.Add(button);
-					button.Click += new EventHandler(CreateElementFromToolbox);
+
+					_PanelToolbox.Controls.Add(button);
+
+					button.Click += CreateElementFromToolbox;
+
 					if (instance.DispayInAbout())
 					{
-						AboutElementAppend = AboutElementAppend + "\r\n\r\n" + instance.Type + ": " + instance.GetAboutText();
+						_AboutElementAppend += $"{Environment.NewLine}{instance.Type}: {instance.GetAboutText()}{Environment.NewLine}";
 					}
 
-					foreach (var loadedPlugin in LoadedPlugins)
+					foreach (var plugin in _LoadedPlugins)
 					{
-						((BasePlugin)RuntimeHelpers.GetObjectValue(loadedPlugin)).InitializeElementExtenders(instance);
+						plugin.InitializeElementExtenders(instance);
 					}
 				}
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show($"Error\r\n{ex.Message}\n{ex.StackTrace}");
+				MessageBox.Show($"{ex.Message}{Environment.NewLine}{ex.StackTrace}");
 			}
-			finally
-			{
-				if (enumerator1 is IDisposable disposable)
-				{
-					disposable.Dispose();
-				}
-			}
+
 			BaseElement.ResetID();
+
 			GumplingTree = new TreeFolder("Root");
 			GumplingsFolder = new TreeFolder("My Gumplings");
 			UncategorizedFolder = new TreeFolder("Uncategorized");
+
 			GumplingTree.AddItem(GumplingsFolder);
 			GumplingTree.AddItem(UncategorizedFolder);
+
 			BuildGumplingTree();
 		}
 
-		private void cboElements_Click(object sender, EventArgs e)
+		private void ComboElements_Click(object sender, EventArgs e)
 		{
-			foreach (var element in ElementStack.GetElements())
+			foreach (var element in ElementStack.Elements)
 			{
-				((BaseElement)RuntimeHelpers.GetObjectValue(element)).Selected = false;
+				element.Selected = false;
 			}
 
 			ActiveElement = null;
 		}
 
-		private void cboElements_SelectedIndexChanged(object sender, EventArgs e)
+		private void ComboElements_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			SetActiveElement((BaseElement)m_cboElements.SelectedItem, false);
-			_picCanvas.Invalidate();
+			SetActiveElement(_ComboElements.SelectedItem as BaseElement, false);
+
+			ImageCanvas.Invalidate();
 		}
 
-		protected void ChangeActiveElementEventHandler(BaseElement e, bool DeselectOthers)
+		private void ChangeActiveElementEventHandler(BaseElement e, bool DeselectOthers)
 		{
 			SetActiveElement(e, DeselectOthers);
-			_picCanvas.Invalidate();
+
+			ImageCanvas.Invalidate();
 		}
 
-		public void ChangeActiveStack(int StackID)
+		public void ChangeActiveStack(int stackID)
 		{
-			if (StackID > Stacks.Count - 1)
+			if (stackID >= Stacks.Count)
 			{
 				return;
 			}
 
 			SetActiveElement(null, true);
+
 			if (ElementStack != null)
 			{
-				ElementStack.UpdateParent -= new BaseElement.UpdateParentEventHandler(ChangeActiveElementEventHandler);
-				ElementStack.Repaint -= new BaseElement.RepaintEventHandler(RefreshView);
+				ElementStack.UpdateParent -= ChangeActiveElementEventHandler;
+				ElementStack.Repaint -= RefreshView;
 			}
-			ElementStack = (GroupElement)Stacks[StackID];
-			ElementStack.UpdateParent += new BaseElement.UpdateParentEventHandler(ChangeActiveElementEventHandler);
-			ElementStack.Repaint += new BaseElement.RepaintEventHandler(RefreshView);
-			_picCanvas.Invalidate();
+
+			ElementStack = Stacks[stackID];
+
+			ElementStack.UpdateParent += ChangeActiveElementEventHandler;
+			ElementStack.Repaint += RefreshView;
+
+			ImageCanvas.Invalidate();
 		}
 
 		public void ClearContextMenu(Menu menu)
 		{
-			var num = menu.MenuItems.Count - 1;
-			for (var index = 0; index <= num; ++index)
-			{
-				var menuItem = menu.MenuItems[0];
-				menu.MenuItems.RemoveAt(0);
-			}
+			menu.MenuItems.Clear();
 		}
 
 		public void ClearGump()
 		{
-			_TabPager.TabPages.Clear();
-			_TabPager.TabPages.Add(new TabPage("0"));
-			Stacks.Clear();
 			BaseElement.ResetID();
+
+			_FileName = String.Empty;
+
+			Text = "Gump Studio (-Unsaved Gump-)";
+
+			_TabPages.TabPages.Clear();
+			_TabPages.TabPages.Add(new TabPage("0"));
+
 			ElementStack = new GroupElement(null, null, "Element Stack", true);
+			ElementStack.UpdateParent += ChangeActiveElementEventHandler;
+			ElementStack.Repaint += RefreshView;
+
+			Stacks.Clear();
 			Stacks.Add(ElementStack);
-			GumpProperties = new GumpProperties();
-			ElementStack.UpdateParent += new BaseElement.UpdateParentEventHandler(ChangeActiveElementEventHandler);
-			ElementStack.Repaint += new BaseElement.RepaintEventHandler(RefreshView);
+
 			SetActiveElement(null);
-			_picCanvas.Invalidate();
-			FileName = "";
-			Text = @"Gump Studio (-Unsaved Gump-)";
+
+			ImageCanvas.Invalidate();
+
 			ChangeActiveStack(0);
-			UndoPoints = new ArrayList();
+
+			_UndoPoints.Clear();
+
 			CreateUndoPoint("Blank");
-			_mnuEditUndo.Enabled = false;
-			_mnuEditRedo.Enabled = false;
+
+			_MenuEditUndo.Enabled = false;
+			_MenuEditRedo.Enabled = false;
 		}
 
 		public void Copy()
 		{
-			var arrayList = new ArrayList();
-
-			foreach (var selectedElement in ElementStack.GetSelectedElements())
-			{
-				arrayList.Add(((BaseElement)RuntimeHelpers.GetObjectValue(selectedElement)).Clone());
-			}
-
-			Clipboard.SetDataObject(arrayList);
-			CopyMode = ClipBoardMode.Copy;
+			Clipboard.SetDataObject(ElementStack.GetSelectedElements().Select(e => e.Clone()).ToArray());
 		}
 
 		public void CreateElementFromToolbox(object sender, EventArgs e)
 		{
-			AddElement((BaseElement)Activator.CreateInstance((Type)((Control)sender).Tag));
-			_picCanvas.Invalidate();
-			_picCanvas.Focus();
+			if (sender is Control c && c.Tag is Type t && typeof(BaseElement).IsAssignableFrom(t))
+			{
+				AddElement((BaseElement)Activator.CreateInstance(t));
+			}
+
+			ImageCanvas.Invalidate();
+			ImageCanvas.Focus();
 		}
 
 		public void CreateUndoPoint()
@@ -455,114 +440,81 @@ namespace GumpStudio.Forms
 			CreateUndoPoint("Unknown Action");
 		}
 
-		public void CreateUndoPoint(string Action)
+		public void CreateUndoPoint(string action)
 		{
 			if (SuppressUndoPoints)
 			{
 				return;
 			}
 
-			var stopwatch = new Stopwatch();
-			stopwatch.Start();
-			while (CurrentUndoPoint < UndoPoints.Count - 1)
+			while (_UndoPoints.Count - 1 > _CurrentUndoPoint)
 			{
-				var undoPoint = (UndoPoint)UndoPoints[CurrentUndoPoint + 1];
-				UndoPoints.RemoveAt(CurrentUndoPoint + 1);
-			}
-			var undoPoint1 = new UndoPoint(this)
-			{
-				Text = Action
-			};
-			if (UndoPoints.Count > MaxUndoPoints)
-			{
-				UndoPoints.RemoveAt(0);
+				_UndoPoints.RemoveAt(_CurrentUndoPoint + 1);
 			}
 
-			UndoPoints.Add(undoPoint1);
-			CurrentUndoPoint = UndoPoints.Count - 1;
-			_mnuEditUndo.Enabled = true;
-			_mnuEditRedo.Enabled = false;
-			stopwatch.Stop();
+			while (_UndoPoints.Count >= MaxUndoPoints)
+			{
+				_UndoPoints.RemoveAt(0);
+			}
+
+			_CurrentUndoPoint = _UndoPoints.Add(new UndoPoint(this)
+			{
+				Text = action
+			});
+
+			_MenuEditUndo.Enabled = true;
+			_MenuEditRedo.Enabled = false;
 		}
 
 		public void Cut()
 		{
-			IEnumerator enumerator = null;
-			var arrayList = new ArrayList();
-			try
-			{
-				foreach (var selectedElement in ElementStack.GetSelectedElements())
-				{
-					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(selectedElement);
-					arrayList.Add(objectValue);
-				}
-			}
-			finally
-			{
-				(enumerator as IDisposable)?.Dispose();
-			}
-			Clipboard.SetDataObject(arrayList);
+			Clipboard.SetDataObject(ElementStack.GetSelectedElements().ToArray());
+
 			DeleteSelectedElements();
-			CopyMode = ClipBoardMode.Cut;
 		}
 
-		protected void DeleteSelectedElements()
+		private void DeleteSelectedElements()
 		{
-			IEnumerator enumerator = null;
-			var arrayList = new ArrayList();
-			arrayList.AddRange(ElementStack.GetElements());
 			var flag = false;
-			try
+
+			var elements = ElementStack.Elements.ToArray();
+
+			foreach (var element in elements)
 			{
-				foreach (var obj in arrayList)
+				flag = true;
+
+				if (element.Selected)
 				{
-					var objectValue = RuntimeHelpers.GetObjectValue(obj);
-					flag = true;
-					var e = (BaseElement)objectValue;
-					if (e.Selected)
-					{
-						ElementStack.RemoveElement(e);
-					}
+					ElementStack.RemoveElement(element);
 				}
 			}
-			finally
-			{
-				(enumerator as IDisposable)?.Dispose();
-			}
-			SetActiveElement(GetLastSelectedControl());
-			_picCanvas.Invalidate();
-			if (!flag)
-			{
-				return;
-			}
 
-			CreateUndoPoint("Delete Elements");
+			SetActiveElement(GetLastSelectedControl());
+
+			ImageCanvas.Invalidate();
+
+			if (flag)
+			{
+				CreateUndoPoint("Delete Elements");
+			}
 		}
 
 		private void DesignerForm_Closed(object sender, EventArgs e)
 		{
-			SelFG?.Dispose();
-			SelBG?.Dispose();
+			_SelectionFG?.Dispose();
+			_SelectionBG?.Dispose();
+
 			WritePluginsToLoad();
 		}
 
 		private void DesignerForm_Closing(object sender, CancelEventArgs e)
 		{
-			IEnumerator enumerator = null;
-			try
+			foreach (var plugin in _AvailablePlugins)
 			{
-				foreach (var availablePlugin in AvailablePlugins)
+				if (plugin.IsLoaded)
 				{
-					var objectValue = (BasePlugin)RuntimeHelpers.GetObjectValue(availablePlugin);
-					if (objectValue.IsLoaded)
-					{
-						objectValue.Unload();
-					}
+					plugin.Unload();
 				}
-			}
-			finally
-			{
-				(enumerator as IDisposable)?.Dispose();
 			}
 		}
 
@@ -584,496 +536,493 @@ namespace GumpStudio.Forms
 			}
 
 			var flag = false;
+
 			if ((e.KeyCode == Keys.Delete || e.KeyCode == Keys.Back ? 1 : 0) != 0)
 			{
 				DeleteSelectedElements();
-				e.Handled = true;
+
 				flag = true;
+				e.Handled = true;
 			}
 			else if (e.KeyCode == Keys.Up)
 			{
-				IEnumerator enumerator = null;
-				try
+				foreach (var selectedElement in ElementStack.GetSelectedElements())
 				{
-					foreach (var selectedElement in ElementStack.GetSelectedElements())
-					{
-						var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(selectedElement);
-						var location = objectValue.Location;
-						location.Offset(0, -Convert.ToInt32(ArrowKeyDelta));
-						objectValue.Location = location;
-					}
+					var location = selectedElement.Location;
+
+					location.Offset(0, -Convert.ToInt32(ArrowKeyDelta));
+
+					selectedElement.Location = location;
 				}
-				finally
-				{
-					(enumerator as IDisposable)?.Dispose();
-				}
+
 				//ArrowKeyDelta = Decimal.Multiply(ArrowKeyDelta, new decimal(106, 0, 0, false, 2));
 				flag = true;
+				e.Handled = true;
 			}
 			else if (e.KeyCode == Keys.Down)
 			{
-				IEnumerator enumerator = null;
-				try
+				foreach (var selectedElement in ElementStack.GetSelectedElements())
 				{
-					foreach (var selectedElement in ElementStack.GetSelectedElements())
-					{
-						var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(selectedElement);
-						var location = objectValue.Location;
-						location.Offset(0, Convert.ToInt32(ArrowKeyDelta));
-						objectValue.Location = location;
-					}
+					var location = selectedElement.Location;
+
+					location.Offset(0, Convert.ToInt32(ArrowKeyDelta));
+
+					selectedElement.Location = location;
 				}
-				finally
-				{
-					(enumerator as IDisposable)?.Dispose();
-				}
+
 				//ArrowKeyDelta = Decimal.Multiply(ArrowKeyDelta, new decimal(106, 0, 0, false, 2));
 				flag = true;
+				e.Handled = true;
 			}
 			else if (e.KeyCode == Keys.Left)
 			{
-				IEnumerator enumerator = null;
-				try
+				foreach (var selectedElement in ElementStack.GetSelectedElements())
 				{
-					foreach (var selectedElement in ElementStack.GetSelectedElements())
-					{
-						var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(selectedElement);
-						var location = objectValue.Location;
-						location.Offset(-Convert.ToInt32(ArrowKeyDelta), 0);
-						objectValue.Location = location;
-					}
+					var location = selectedElement.Location;
+
+					location.Offset(-Convert.ToInt32(ArrowKeyDelta), 0);
+
+					selectedElement.Location = location;
 				}
-				finally
-				{
-					(enumerator as IDisposable)?.Dispose();
-				}
+
 				//ArrowKeyDelta = Decimal.Multiply(ArrowKeyDelta, new decimal(106, 0, 0, false, 2));
 				flag = true;
+				e.Handled = true;
 			}
 			else if (e.KeyCode == Keys.Right)
 			{
-				IEnumerator enumerator = null;
-				try
+				foreach (var selectedElement in ElementStack.GetSelectedElements())
 				{
-					foreach (var selectedElement in ElementStack.GetSelectedElements())
-					{
-						var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(selectedElement);
-						var location = objectValue.Location;
-						location.Offset(Convert.ToInt32(ArrowKeyDelta), 0);
-						objectValue.Location = location;
-					}
+					var location = selectedElement.Location;
+
+					location.Offset(Convert.ToInt32(ArrowKeyDelta), 0);
+
+					selectedElement.Location = location;
 				}
-				finally
-				{
-					(enumerator as IDisposable)?.Dispose();
-				}
+
 				//ArrowKeyDelta = Decimal.Multiply(ArrowKeyDelta, new decimal(106, 0, 0, false, 2));
 				flag = true;
+				e.Handled = true;
 			}
 			else if (e.KeyCode == Keys.Next)
 			{
-				var index = (ActiveElement == null ? ElementStack.GetElements().Count - 1 : ActiveElement.Z) - 1;
+				var index = (ActiveElement == null ? ElementStack._Elements.Count - 1 : ActiveElement.Z) - 1;
+
 				if (index < 0)
 				{
-					index = ElementStack.GetElements().Count - 1;
+					index = ElementStack._Elements.Count - 1;
 				}
 
-				if (index >= 0 & index <= ElementStack.GetElements().Count - 1)
+				if (index >= 0 & index <= ElementStack._Elements.Count - 1)
 				{
-					SetActiveElement((BaseElement)ElementStack.GetElements()[index], true);
+					SetActiveElement((BaseElement)ElementStack._Elements[index], true);
 				}
+
+				e.Handled = true;
 			}
 			else if (e.KeyCode == Keys.Prior)
 			{
-				var index = (ActiveElement == null ? ElementStack.GetElements().Count - 1 : ActiveElement.Z) + 1;
-				if (index > ElementStack.GetElements().Count - 1)
+				var index = (ActiveElement == null ? ElementStack._Elements.Count - 1 : ActiveElement.Z) + 1;
+
+				if (index > ElementStack._Elements.Count - 1)
 				{
 					index = 0;
 				}
 
-				SetActiveElement((BaseElement)ElementStack.GetElements()[index], true);
+				SetActiveElement((BaseElement)ElementStack._Elements[index], true);
+
+				e.Handled = true;
 			}
+			/*
 			if (Decimal.Compare(ArrowKeyDelta, new decimal(10)) > 0)
 			{
-				//ArrowKeyDelta = new decimal(10);
+				ArrowKeyDelta = new decimal(10);
 			}
-
-			if (!flag)
+			*/
+			if (flag)
 			{
-				return;
-			}
+				ImageCanvas.Invalidate();
 
-			_picCanvas.Invalidate();
-			m_ElementProperties.SelectedObjects = m_ElementProperties.SelectedObjects;
+				_ElementProperties.SelectedObjects = _ElementProperties.SelectedObjects;
+			}
 		}
 
 		private void DesignerForm_KeyUp(object sender, KeyEventArgs e)
 		{
-			if (e.KeyCode != Keys.Up && e.KeyCode != Keys.Down)
+			if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
 			{
-				var keyCode = (int)e.KeyCode;
+				CreateUndoPoint("Move element");
+				//ArrowKeyDelta = new decimal(1);
 			}
-			if ((e.KeyCode == Keys.Right ? 1 : 0) == 0)
-			{
-				return;
-			}
-
-			CreateUndoPoint("Move element");
-			//ArrowKeyDelta = new decimal(1);
 		}
 
 		private void DesignerForm_Load(object sender, EventArgs e)
 		{
 			XMLSettings.CurrentOptions = XMLSettings.Load(this);
 
-			if (!File.Exists(Path.Combine(XMLSettings.CurrentOptions.ClientPath, "art.mul")) && !File.Exists(Path.Combine(XMLSettings.CurrentOptions.ClientPath, "artLegacyMUL.uop")))
+			if (!File.Exists(Path.Combine(XMLSettings.CurrentOptions.ClientPath, "client.exe")))
 			{
-				var folderBrowserDialog = new FolderBrowserDialog { SelectedPath = Environment.SpecialFolder.ProgramFiles.ToString(), Description = @"Select the folder that contains the UO data (.mul) files you want to use." };
-
-				if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+				var folderBrowserDialog = new FolderBrowserDialog
 				{
-					if (File.Exists(Path.Combine(folderBrowserDialog.SelectedPath, "art.mul")) || File.Exists(Path.Combine(folderBrowserDialog.SelectedPath, "artLegacyMUL.uop")))
+					SelectedPath = Environment.SpecialFolder.ProgramFiles.ToString(),
+					Description = @"Select the folder that contains a copy of Ultima Online."
+				};
+
+				do
+				{
+					if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
 					{
-						XMLSettings.CurrentOptions.ClientPath = folderBrowserDialog.SelectedPath;
-						XMLSettings.Save(this, XMLSettings.CurrentOptions);
-					}
-					else
-					{
-						MessageBox.Show(@"This path does not contain a file named ""art.mul"", it is most likely not the correct path. Gump Studio can not run without valid client data files.", "Data Files");
 						Close();
 						return;
 					}
 				}
-				else
-				{
-					Close();
-					return;
-				}
+				while (!File.Exists(Path.Combine(folderBrowserDialog.SelectedPath, "client.exe")));
+
+				XMLSettings.CurrentOptions.ClientPath = folderBrowserDialog.SelectedPath;
+				XMLSettings.Save(this, XMLSettings.CurrentOptions);
 			}
-			//Client.Directories.Add( XMLSettings.CurrentOptions.ClientPath );
+
 			Files.CacheData = false;
 			Files.SetMulPath(XMLSettings.CurrentOptions.ClientPath);
+
 			Size = XMLSettings.CurrentOptions.DesignerFormSize;
 			MaxUndoPoints = XMLSettings.CurrentOptions.UndoLevels;
-			_picCanvas.Width = 1600;
-			_picCanvas.Height = 1200;
+
+			ImageCanvas.Width = 1600;
+			ImageCanvas.Height = 1200;
+
 			CenterToScreen();
-			SplashBox.DisplaySplash();
+
 			EnumeratePlugins();
-			Canvas = new Bitmap(_picCanvas.Width, _picCanvas.Height, PixelFormat.Format32bppRgb);
+
+			_Canvas = new Bitmap(ImageCanvas.Width, ImageCanvas.Height, PixelFormat.Format32bppRgb);
+
 			Activate();
+
 			GumpProperties = new GumpProperties();
-			ElementStack.UpdateParent += new BaseElement.UpdateParentEventHandler(ChangeActiveElementEventHandler);
-			ElementStack.Repaint += new BaseElement.RepaintEventHandler(RefreshView);
+
+			ElementStack.UpdateParent += ChangeActiveElementEventHandler;
+			ElementStack.Repaint += RefreshView;
+
 			Stacks.Clear();
 			Stacks.Add(ElementStack);
+
 			ChangeActiveStack(0);
-			RegisteredTypes.Clear();
-			RegisteredTypes.Add(typeof(LabelElement));
-			RegisteredTypes.Add(typeof(ImageElement));
-			RegisteredTypes.Add(typeof(TiledElement));
-			RegisteredTypes.Add(typeof(BackgroundElement));
-			RegisteredTypes.Add(typeof(AlphaElement));
-			RegisteredTypes.Add(typeof(CheckboxElement));
-			RegisteredTypes.Add(typeof(RadioElement));
-			RegisteredTypes.Add(typeof(ItemElement));
-			RegisteredTypes.Add(typeof(TextEntryElement));
-			RegisteredTypes.Add(typeof(ButtonElement));
-			RegisteredTypes.Add(typeof(HTMLElement));
+
+			_RegisteredTypes.Clear();
+
+			_RegisteredTypes.Add(typeof(LabelElement));
+			_RegisteredTypes.Add(typeof(ImageElement));
+			_RegisteredTypes.Add(typeof(TiledElement));
+			_RegisteredTypes.Add(typeof(BackgroundElement));
+			_RegisteredTypes.Add(typeof(AlphaElement));
+			_RegisteredTypes.Add(typeof(CheckboxElement));
+			_RegisteredTypes.Add(typeof(RadioElement));
+			_RegisteredTypes.Add(typeof(ItemElement));
+			_RegisteredTypes.Add(typeof(TextEntryElement));
+			_RegisteredTypes.Add(typeof(ButtonElement));
+			_RegisteredTypes.Add(typeof(HTMLElement));
+
 			BuildToolbox();
-			SelFG = new Pen(Color.Blue, 2f);
-			SelBG = new LinearGradientBrush(new Rectangle(0, 0, 50, 50), Color.FromArgb(90, Color.Blue), Color.FromArgb(110, Color.Blue), LinearGradientMode.ForwardDiagonal)
+
+			_SelectionFG = new Pen(Color.Blue, 2f);
+
+			_SelectionBG = new LinearGradientBrush(new Rectangle(0, 0, 50, 50), Color.FromArgb(90, Color.Blue), Color.FromArgb(110, Color.Blue), LinearGradientMode.ForwardDiagonal)
 			{
 				WrapMode = WrapMode.TileFlipXY
 			};
-			CreateUndoPoint("Blank");
-			_mnuEditUndo.Enabled = false;
-		}
 
-		protected void DrawBoundingBox(Graphics Target, BaseElement Element)
-		{
-			var bounds = Element.Bounds;
-			Target.DrawRectangle(Pens.Red, bounds);
-			bounds.Offset(1, 1);
-			Target.DrawRectangle(Pens.Black, bounds);
+			CreateUndoPoint("Blank");
+
+			_MenuEditUndo.Enabled = false;
+
+			SplashBox.DisplaySplash();
 		}
 
 		private void ElementProperties_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
 		{
 			if (e.ChangedItem.PropertyDescriptor.Name == "Name")
 			{
-				m_cboElements.Items.Clear();
-				m_cboElements.Items.AddRange(ElementStack.GetElements().ToArray());
-				m_cboElements.SelectedItem = RuntimeHelpers.GetObjectValue(m_ElementProperties.SelectedObject);
+				_ComboElements.Items.Clear();
+				_ComboElements.Items.AddRange(ElementStack.Elements.ToArray());
+				_ComboElements.SelectedItem = RuntimeHelpers.GetObjectValue(_ElementProperties.SelectedObject);
 			}
-			_picCanvas.Invalidate();
+
+			ImageCanvas.Invalidate();
+
 			CreateUndoPoint("Property Changed");
 		}
 
-		protected void EnumeratePlugins()
+		private void EnumeratePlugins()
 		{
-			PluginTypesToLoad = GetPluginsToLoad();
+			PluginsInfo.Clear();
+			PluginsInfo.UnionWith(GetPluginsToLoad());
+
+			var appendInfo = new StringBuilder();
 
 			foreach (var file in Directory.GetFiles(Application.StartupPath, "*.dll", SearchOption.AllDirectories))
 			{
-				if (file.EndsWith("Ultima.dll", StringComparison.OrdinalIgnoreCase) || file.EndsWith("UOFont.dll", StringComparison.OrdinalIgnoreCase))
+				try
 				{
-					continue;
-				}
-
-				foreach (var type in Assembly.LoadFile(file).GetTypes())
-				{
-					try
+					if (file.EndsWith("Ultima.dll", StringComparison.OrdinalIgnoreCase) || file.EndsWith("UOFont.dll", StringComparison.OrdinalIgnoreCase))
 					{
-						if (type.IsSubclassOf(typeof(BasePlugin)) && !type.IsAbstract)
+						continue;
+					}
+
+					var asm = Assembly.LoadFile(file);
+
+					foreach (var type in asm.GetTypes())
+					{
+						if (type.IsAbstract)
 						{
-							var instance = (BasePlugin)Activator.CreateInstance(type);
-							var pluginInfo = instance.Info;
-							AboutElementAppend = AboutElementAppend + "\r\n" + pluginInfo.Name + ": " + pluginInfo.Description + "\r\nAuthor: " + pluginInfo.AuthorName + "  (" + pluginInfo.AuthorContact + ")\r\nVersion: " + pluginInfo.Version + "\r\n";
-							AvailablePlugins.Add(instance);
+							continue;
 						}
 
-						if (type.IsSubclassOf(typeof(BaseElement)) && !type.IsAbstract)
+						if (type.IsSubclassOf(typeof(BasePlugin)))
 						{
-							RegisteredTypes.Add(type);
+							try
+							{
+								var plugin = (BasePlugin)Activator.CreateInstance(type);
+
+								if (plugin != null)
+								{
+									_AvailablePlugins.Add(plugin);
+
+									appendInfo.AppendLine();
+									appendInfo.AppendLine($"{plugin.Info.Name} {plugin.Info.Version} by {plugin.Info.AuthorName} ({plugin.Info.AuthorContact})");
+									appendInfo.AppendLine();
+								}
+							}
+							catch (Exception ex)
+							{
+								MessageBox.Show($"Error loading '{file}' ({type.FullName}):{Environment.NewLine}{ex.Message}");
+							}
+						}
+
+						if (type.IsSubclassOf(typeof(BaseElement)))
+						{
+							_RegisteredTypes.Add(type);
 						}
 					}
-					catch (Exception ex)
-					{
-						var exception = ex;
-						MessageBox.Show("Error loading plugin: " + type.Name + "(" + file + ")\r\n\r\n" + exception.Message);
-					}
 				}
+				catch
+				{ }
 			}
 
-			if (PluginTypesToLoad == null)
+			if (PluginsInfo == null)
 			{
 				return;
 			}
 
-			foreach (var pluginInfo1 in PluginTypesToLoad)
+			foreach (var plugin in _AvailablePlugins)
 			{
-				IEnumerator enumerator = null;
-				try
+				if (PluginsInfo.Contains(plugin.Info))
 				{
-					foreach (var availablePlugin in AvailablePlugins)
-					{
-						var objectValue = (BasePlugin)RuntimeHelpers.GetObjectValue(availablePlugin);
-						var pluginInfo2 = objectValue.Info;
-						if (pluginInfo1.Equals(pluginInfo2))
-						{
-							objectValue.Load(this);
-							LoadedPlugins.Add(objectValue);
-						}
-					}
-				}
-				finally
-				{
-					(enumerator as IDisposable)?.Dispose();
+					plugin.Load(this);
+
+					_LoadedPlugins.Add(plugin);
 				}
 			}
 		}
 
-		protected void GetContextMenu(ref BaseElement Element, ContextMenu Menu)
+		private void GetContextMenu(ref BaseElement element, ContextMenu menu)
 		{
-			var GroupMenu = new MenuItem("Grouping");
-			var PositionMenu = new MenuItem("Positioning");
-			var OrderMenu = new MenuItem("Order");
-			var MiscMenu = new MenuItem("Misc");
-			var menuItem = new MenuItem("Edit");
-			menuItem.MenuItems.Add(new MenuItem("Cut", new EventHandler(mnuCut_Click)));
-			menuItem.MenuItems.Add(new MenuItem("Copy", new EventHandler(mnuCopy_Click)));
-			menuItem.MenuItems.Add(new MenuItem("Paste", new EventHandler(mnuPaste_Click)));
-			menuItem.MenuItems.Add(new MenuItem("Delete", new EventHandler(mnuDelete_Click)));
-			Menu.MenuItems.Add(menuItem);
-			Menu.MenuItems.Add(new MenuItem("-"));
-			Menu.MenuItems.Add(GroupMenu);
-			Menu.MenuItems.Add(PositionMenu);
-			Menu.MenuItems.Add(OrderMenu);
-			Menu.MenuItems.Add(new MenuItem("-"));
-			Menu.MenuItems.Add(MiscMenu);
-			if (ElementStack.GetSelectedElements().Count >= 2)
+			var groupMenu = new MenuItem("Grouping");
+			var positionMenu = new MenuItem("Positioning");
+			var orderMenu = new MenuItem("Order");
+			var miscMenu = new MenuItem("Misc");
+			var editMenu = new MenuItem("Edit");
+
+			editMenu.MenuItems.Add(new MenuItem("Cut", MenuCut_Click));
+			editMenu.MenuItems.Add(new MenuItem("Copy", MenuCopy_Click));
+			editMenu.MenuItems.Add(new MenuItem("Paste", MenuPaste_Click));
+			editMenu.MenuItems.Add(new MenuItem("Delete", MenuDelete_Click));
+
+			menu.MenuItems.Add(editMenu);
+			menu.MenuItems.Add(new MenuItem("-"));
+			menu.MenuItems.Add(groupMenu);
+			menu.MenuItems.Add(positionMenu);
+			menu.MenuItems.Add(orderMenu);
+			menu.MenuItems.Add(new MenuItem("-"));
+			menu.MenuItems.Add(miscMenu);
+
+			if (ElementStack.GetSelectedElements().Count() > 1)
 			{
-				GroupMenu.MenuItems.Add(new MenuItem("Create Group", new EventHandler(mnuGroupCreate_Click)));
+				groupMenu.MenuItems.Add(new MenuItem("Create Group", MenuGroupCreate_Click));
 			}
 
-			Element?.AddContextMenus(ref GroupMenu, ref PositionMenu, ref OrderMenu, ref MiscMenu);
-			if (GroupMenu.MenuItems.Count == 0)
+			element?.AddContextMenus(ref groupMenu, ref positionMenu, ref orderMenu, ref miscMenu);
+
+			if (groupMenu.MenuItems.Count == 0)
 			{
-				GroupMenu.Enabled = false;
+				groupMenu.Enabled = false;
 			}
 
-			if (PositionMenu.MenuItems.Count == 0)
+			if (positionMenu.MenuItems.Count == 0)
 			{
-				PositionMenu.Enabled = false;
+				positionMenu.Enabled = false;
 			}
 
-			if (OrderMenu.MenuItems.Count == 0)
+			if (orderMenu.MenuItems.Count == 0)
 			{
-				OrderMenu.Enabled = false;
+				orderMenu.Enabled = false;
 			}
 
-			if (MiscMenu.MenuItems.Count != 0)
+			if (miscMenu.MenuItems.Count == 0)
 			{
-				return;
+				miscMenu.Enabled = false;
 			}
-
-			MiscMenu.Enabled = false;
 		}
 
 		public BaseElement GetLastSelectedControl()
 		{
-			BaseElement baseElement = null;
-			IEnumerator enumerator = null;
-			try
+			return ElementStack.Elements.LastOrDefault();
+		}
+
+		private PluginInfo[] GetPluginsToLoad()
+		{
+			var path = Path.Combine(Application.StartupPath, "LoadInfo.bin");
+
+			if (File.Exists(path))
 			{
-				foreach (var element in ElementStack.GetElements())
+				using (var fileStream = new FileStream(path, FileMode.Open))
 				{
-					baseElement = (BaseElement)RuntimeHelpers.GetObjectValue(element);
+					return (PluginInfo[])new BinaryFormatter().Deserialize(fileStream);
 				}
 			}
-			finally
-			{
-				(enumerator as IDisposable)?.Dispose();
-			}
-			return baseElement;
+
+			return Array.Empty<PluginInfo>();
 		}
 
-		protected PluginInfo[] GetPluginsToLoad()
+		private Rectangle GetPositiveRect(Rectangle rect)
 		{
-			PluginInfo[] pluginInfoArray = null;
-			if (File.Exists(Application.StartupPath + "\\LoadInfo.bin"))
+			if (rect.Height < 0)
 			{
-				var fileStream = new FileStream(Application.StartupPath + "\\LoadInfo.bin", FileMode.Open);
-				pluginInfoArray = (PluginInfo[])new BinaryFormatter().Deserialize(fileStream);
-				fileStream.Close();
+				rect.Height = Math.Abs(rect.Height);
+				rect.Y -= rect.Height;
 			}
-			return pluginInfoArray;
-		}
 
-		protected Rectangle GetPositiveRect(Rectangle Rect)
-		{
-			if (Rect.Height < 0)
+			if (rect.Width < 0)
 			{
-				Rect.Height = Math.Abs(Rect.Height);
-				Rect.Y -= Rect.Height;
+				rect.Width = Math.Abs(rect.Width);
+				rect.X -= rect.Width;
 			}
-			if (Rect.Width < 0)
-			{
-				Rect.Width = Math.Abs(Rect.Width);
-				Rect.X -= Rect.Width;
-			}
-			return Rect;
+
+			return rect;
 		}
 
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				components?.Dispose();
+				_Components?.Dispose();
 			}
 
 			base.Dispose(disposing);
 		}
 
-
 		private void InitializeComponent()
 		{
-			components = new System.ComponentModel.Container();
+			_Components = new System.ComponentModel.Container();
+
 			var resources = new System.ComponentModel.ComponentResourceManager(typeof(DesignerForm));
-			_pnlToolboxHolder = new System.Windows.Forms.Panel();
+
+			_Panel7 = new System.Windows.Forms.Panel();
 			_Panel4 = new System.Windows.Forms.Panel();
-			_tabToolbox = new System.Windows.Forms.TabControl();
-			_tpgStandard = new System.Windows.Forms.TabPage();
-			_pnlToolbox = new System.Windows.Forms.Panel();
-			_tpgCustom = new System.Windows.Forms.TabPage();
-			_treGumplings = new System.Windows.Forms.TreeView();
-			m_Label1 = new System.Windows.Forms.Label();
+			_TabToolbox = new System.Windows.Forms.TabControl();
+			_PageStandard = new System.Windows.Forms.TabPage();
+			_PanelToolbox = new System.Windows.Forms.Panel();
+			_PageCustom = new System.Windows.Forms.TabPage();
+			_Gumplings = new System.Windows.Forms.TreeView();
+			_Label = new System.Windows.Forms.Label();
 			_StatusBar = new System.Windows.Forms.StatusBar();
 			_Splitter1 = new System.Windows.Forms.Splitter();
 			_Panel1 = new System.Windows.Forms.Panel();
 			_Panel2 = new System.Windows.Forms.Panel();
-			_pnlCanvasScroller = new System.Windows.Forms.Panel();
-			_picCanvas = new System.Windows.Forms.PictureBox();
-			_TabPager = new System.Windows.Forms.TabControl();
-			_TabPage1 = new System.Windows.Forms.TabPage();
+			_PanelCanvasScroller = new System.Windows.Forms.Panel();
+			ImageCanvas = new System.Windows.Forms.PictureBox();
+			_TabPages = new System.Windows.Forms.TabControl();
+			_TabPage = new System.Windows.Forms.TabPage();
 			_Splitter2 = new System.Windows.Forms.Splitter();
 			_Panel3 = new System.Windows.Forms.Panel();
-			m_cboElements = new System.Windows.Forms.ComboBox();
-			m_ElementProperties = new System.Windows.Forms.PropertyGrid();
-			m_CanvasFocus = new System.Windows.Forms.TextBox();
+			_ComboElements = new System.Windows.Forms.ComboBox();
+			_ElementProperties = new System.Windows.Forms.PropertyGrid();
+			CanvasFocus = new System.Windows.Forms.TextBox();
 			_OpenDialog = new System.Windows.Forms.OpenFileDialog();
 			_SaveDialog = new System.Windows.Forms.SaveFileDialog();
-			m_mnuContextMenu = new System.Windows.Forms.ContextMenu();
-			m_MainMenu = new System.Windows.Forms.MainMenu(components);
-			_mnuFile = new System.Windows.Forms.MenuItem();
-			_mnuFileNew = new System.Windows.Forms.MenuItem();
-			m_MenuItem9 = new System.Windows.Forms.MenuItem();
-			_mnuFileOpen = new System.Windows.Forms.MenuItem();
-			_mnuFileSave = new System.Windows.Forms.MenuItem();
-			_mnuFileImport = new System.Windows.Forms.MenuItem();
-			_mnuFileExport = new System.Windows.Forms.MenuItem();
-			m_MenuItem5 = new System.Windows.Forms.MenuItem();
-			_mnuFileExit = new System.Windows.Forms.MenuItem();
-			_mnuEdit = new System.Windows.Forms.MenuItem();
-			_mnuEditUndo = new System.Windows.Forms.MenuItem();
-			_mnuEditRedo = new System.Windows.Forms.MenuItem();
-			m_MenuItem3 = new System.Windows.Forms.MenuItem();
-			_mnuCut = new System.Windows.Forms.MenuItem();
-			m_mnuCopy = new System.Windows.Forms.MenuItem();
-			_mnuPaste = new System.Windows.Forms.MenuItem();
-			_mnuDelete = new System.Windows.Forms.MenuItem();
-			m_MenuItem4 = new System.Windows.Forms.MenuItem();
-			_mnuSelectAll = new System.Windows.Forms.MenuItem();
-			_mnuMisc = new System.Windows.Forms.MenuItem();
-			_mnuMiscLoadGumpling = new System.Windows.Forms.MenuItem();
-			_mnuImportGumpling = new System.Windows.Forms.MenuItem();
-			_mnuDataFile = new System.Windows.Forms.MenuItem();
-			_mnuPage = new System.Windows.Forms.MenuItem();
-			_mnuPageAdd = new System.Windows.Forms.MenuItem();
-			_mnuPageInsert = new System.Windows.Forms.MenuItem();
-			_mnuPageDelete = new System.Windows.Forms.MenuItem();
-			_mnuPageClear = new System.Windows.Forms.MenuItem();
-			m_MenuItem10 = new System.Windows.Forms.MenuItem();
-			_mnuShow0 = new System.Windows.Forms.MenuItem();
-			_mnuPlugins = new System.Windows.Forms.MenuItem();
-			_mnuPluginManager = new System.Windows.Forms.MenuItem();
-			_mnuHelp = new System.Windows.Forms.MenuItem();
-			_mnuHelpAbout = new System.Windows.Forms.MenuItem();
-			_mnuGumplingContext = new System.Windows.Forms.ContextMenu();
-			_mnuGumplingRename = new System.Windows.Forms.MenuItem();
-			_mnuGumplingMove = new System.Windows.Forms.MenuItem();
-			_mnuGumplingDelete = new System.Windows.Forms.MenuItem();
-			m_MenuItem1 = new System.Windows.Forms.MenuItem();
-			_mnuGumplingAddGumpling = new System.Windows.Forms.MenuItem();
-			_mnuGumplingAddFolder = new System.Windows.Forms.MenuItem();
-			_pnlToolboxHolder.SuspendLayout();
+			_MenuContext = new System.Windows.Forms.ContextMenu();
+			_Menu = new System.Windows.Forms.MainMenu(_Components);
+			_MenuFile = new System.Windows.Forms.MenuItem();
+			_MenuFileNew = new System.Windows.Forms.MenuItem();
+			_MenuMain5 = new System.Windows.Forms.MenuItem();
+			_MenuFileOpen = new System.Windows.Forms.MenuItem();
+			_MenuFileSave = new System.Windows.Forms.MenuItem();
+			MenuFileImport = new System.Windows.Forms.MenuItem();
+			MenuFileExport = new System.Windows.Forms.MenuItem();
+			_MenuMain4 = new System.Windows.Forms.MenuItem();
+			_MenuFileExit = new System.Windows.Forms.MenuItem();
+			_MenuEdit = new System.Windows.Forms.MenuItem();
+			_MenuEditUndo = new System.Windows.Forms.MenuItem();
+			_MenuEditRedo = new System.Windows.Forms.MenuItem();
+			_MenuMain2 = new System.Windows.Forms.MenuItem();
+			_MenuCut = new System.Windows.Forms.MenuItem();
+			_MenuCopy = new System.Windows.Forms.MenuItem();
+			_MenuPaste = new System.Windows.Forms.MenuItem();
+			_MenuDelete = new System.Windows.Forms.MenuItem();
+			_MenuMain3 = new System.Windows.Forms.MenuItem();
+			_MenuSelectAll = new System.Windows.Forms.MenuItem();
+			_MenuMisc = new System.Windows.Forms.MenuItem();
+			_MenuMiscLoadGumpling = new System.Windows.Forms.MenuItem();
+			_MenuImportGumpling = new System.Windows.Forms.MenuItem();
+			_MenuDataFile = new System.Windows.Forms.MenuItem();
+			_MenuPage = new System.Windows.Forms.MenuItem();
+			_MenuPageAdd = new System.Windows.Forms.MenuItem();
+			_MenuPageInsert = new System.Windows.Forms.MenuItem();
+			_MenuPageDelete = new System.Windows.Forms.MenuItem();
+			_MenuPageClear = new System.Windows.Forms.MenuItem();
+			_MenuMain6 = new System.Windows.Forms.MenuItem();
+			_MenuShowPage0 = new System.Windows.Forms.MenuItem();
+			MenuPlugins = new System.Windows.Forms.MenuItem();
+			_MenuPluginManager = new System.Windows.Forms.MenuItem();
+			_MenuHelp = new System.Windows.Forms.MenuItem();
+			_MenuHelpAbout = new System.Windows.Forms.MenuItem();
+			_MenuGumplingContext = new System.Windows.Forms.ContextMenu();
+			_MenuGumplingRename = new System.Windows.Forms.MenuItem();
+			_MenuGumplingMove = new System.Windows.Forms.MenuItem();
+			_MenuGumplingDelete = new System.Windows.Forms.MenuItem();
+			_MenuMain1 = new System.Windows.Forms.MenuItem();
+			_MenuGumplingAddGumpling = new System.Windows.Forms.MenuItem();
+			_MenuGumplingAddFolder = new System.Windows.Forms.MenuItem();
+
+			((System.ComponentModel.ISupportInitialize)(ImageCanvas)).BeginInit();
+
+			_Panel7.SuspendLayout();
 			_Panel4.SuspendLayout();
-			_tabToolbox.SuspendLayout();
-			_tpgStandard.SuspendLayout();
-			_tpgCustom.SuspendLayout();
+			_TabToolbox.SuspendLayout();
+			_PageStandard.SuspendLayout();
+			_PageCustom.SuspendLayout();
 			_Panel1.SuspendLayout();
 			_Panel2.SuspendLayout();
-			_pnlCanvasScroller.SuspendLayout();
-			((System.ComponentModel.ISupportInitialize)(_picCanvas)).BeginInit();
-			_TabPager.SuspendLayout();
+			_PanelCanvasScroller.SuspendLayout();
+			_TabPages.SuspendLayout();
 			_Panel3.SuspendLayout();
+
 			SuspendLayout();
 			// 
 			// _pnlToolboxHolder
 			// 
-			_pnlToolboxHolder.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-			_pnlToolboxHolder.Controls.Add(_Panel4);
-			_pnlToolboxHolder.Controls.Add(m_Label1);
-			_pnlToolboxHolder.Dock = System.Windows.Forms.DockStyle.Left;
-			_pnlToolboxHolder.Location = new System.Drawing.Point(0, 0);
-			_pnlToolboxHolder.Name = "_pnlToolboxHolder";
-			_pnlToolboxHolder.Size = new System.Drawing.Size(128, 685);
-			_pnlToolboxHolder.TabIndex = 0;
+			_Panel7.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+			_Panel7.Controls.Add(_Panel4);
+			_Panel7.Controls.Add(_Label);
+			_Panel7.Dock = System.Windows.Forms.DockStyle.Left;
+			_Panel7.Location = new System.Drawing.Point(0, 0);
+			_Panel7.Name = "_pnlToolboxHolder";
+			_Panel7.Size = new System.Drawing.Size(128, 685);
+			_Panel7.TabIndex = 0;
 			// 
 			// _Panel4
 			// 
-			_Panel4.Controls.Add(_tabToolbox);
+			_Panel4.Controls.Add(_TabToolbox);
 			_Panel4.Dock = System.Windows.Forms.DockStyle.Fill;
 			_Panel4.Location = new System.Drawing.Point(0, 16);
 			_Panel4.Name = "_Panel4";
@@ -1082,64 +1031,64 @@ namespace GumpStudio.Forms
 			// 
 			// _tabToolbox
 			// 
-			_tabToolbox.Controls.Add(_tpgStandard);
-			_tabToolbox.Controls.Add(_tpgCustom);
-			_tabToolbox.Dock = System.Windows.Forms.DockStyle.Fill;
-			_tabToolbox.Location = new System.Drawing.Point(0, 0);
-			_tabToolbox.Multiline = true;
-			_tabToolbox.Name = "_tabToolbox";
-			_tabToolbox.SelectedIndex = 0;
-			_tabToolbox.Size = new System.Drawing.Size(124, 665);
-			_tabToolbox.TabIndex = 1;
+			_TabToolbox.Controls.Add(_PageStandard);
+			_TabToolbox.Controls.Add(_PageCustom);
+			_TabToolbox.Dock = System.Windows.Forms.DockStyle.Fill;
+			_TabToolbox.Location = new System.Drawing.Point(0, 0);
+			_TabToolbox.Multiline = true;
+			_TabToolbox.Name = "_tabToolbox";
+			_TabToolbox.SelectedIndex = 0;
+			_TabToolbox.Size = new System.Drawing.Size(124, 665);
+			_TabToolbox.TabIndex = 1;
 			// 
 			// _tpgStandard
 			// 
-			_tpgStandard.Controls.Add(_pnlToolbox);
-			_tpgStandard.Location = new System.Drawing.Point(4, 22);
-			_tpgStandard.Name = "_tpgStandard";
-			_tpgStandard.Size = new System.Drawing.Size(116, 639);
-			_tpgStandard.TabIndex = 0;
-			_tpgStandard.Text = "Standard";
+			_PageStandard.Controls.Add(_PanelToolbox);
+			_PageStandard.Location = new System.Drawing.Point(4, 22);
+			_PageStandard.Name = "_tpgStandard";
+			_PageStandard.Size = new System.Drawing.Size(116, 639);
+			_PageStandard.TabIndex = 0;
+			_PageStandard.Text = "Standard";
 			// 
 			// _pnlToolbox
 			// 
-			_pnlToolbox.AutoScroll = true;
-			_pnlToolbox.Dock = System.Windows.Forms.DockStyle.Fill;
-			_pnlToolbox.Location = new System.Drawing.Point(0, 0);
-			_pnlToolbox.Name = "_pnlToolbox";
-			_pnlToolbox.Size = new System.Drawing.Size(116, 639);
-			_pnlToolbox.TabIndex = 1;
+			_PanelToolbox.AutoScroll = true;
+			_PanelToolbox.Dock = System.Windows.Forms.DockStyle.Fill;
+			_PanelToolbox.Location = new System.Drawing.Point(0, 0);
+			_PanelToolbox.Name = "_pnlToolbox";
+			_PanelToolbox.Size = new System.Drawing.Size(116, 639);
+			_PanelToolbox.TabIndex = 1;
 			// 
 			// _tpgCustom
 			// 
-			_tpgCustom.Controls.Add(_treGumplings);
-			_tpgCustom.Location = new System.Drawing.Point(4, 22);
-			_tpgCustom.Name = "_tpgCustom";
-			_tpgCustom.Size = new System.Drawing.Size(116, 639);
-			_tpgCustom.TabIndex = 1;
-			_tpgCustom.Text = "Gumplings";
+			_PageCustom.Controls.Add(_Gumplings);
+			_PageCustom.Location = new System.Drawing.Point(4, 22);
+			_PageCustom.Name = "_tpgCustom";
+			_PageCustom.Size = new System.Drawing.Size(116, 639);
+			_PageCustom.TabIndex = 1;
+			_PageCustom.Text = "Gumplings";
 			// 
 			// _treGumplings
 			// 
-			_treGumplings.Dock = System.Windows.Forms.DockStyle.Fill;
-			_treGumplings.Location = new System.Drawing.Point(0, 0);
-			_treGumplings.Name = "_treGumplings";
-			_treGumplings.Size = new System.Drawing.Size(116, 639);
-			_treGumplings.TabIndex = 1;
-			_treGumplings.DoubleClick += new System.EventHandler(treGumplings_DoubleClick);
-			_treGumplings.MouseUp += new System.Windows.Forms.MouseEventHandler(treGumplings_MouseUp);
+			_Gumplings.Dock = System.Windows.Forms.DockStyle.Fill;
+			_Gumplings.Location = new System.Drawing.Point(0, 0);
+			_Gumplings.Name = "_treGumplings";
+			_Gumplings.Size = new System.Drawing.Size(116, 639);
+			_Gumplings.TabIndex = 1;
+			_Gumplings.DoubleClick += new System.EventHandler(Gumplings_DoubleClick);
+			_Gumplings.MouseUp += new System.Windows.Forms.MouseEventHandler(Gumplings_MouseUp);
 			// 
 			// m_Label1
 			// 
-			m_Label1.BackColor = System.Drawing.SystemColors.ControlDark;
-			m_Label1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-			m_Label1.Dock = System.Windows.Forms.DockStyle.Top;
-			m_Label1.Location = new System.Drawing.Point(0, 0);
-			m_Label1.Name = "m_Label1";
-			m_Label1.Size = new System.Drawing.Size(124, 16);
-			m_Label1.TabIndex = 0;
-			m_Label1.Text = "Toolbox";
-			m_Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			_Label.BackColor = System.Drawing.SystemColors.ControlDark;
+			_Label.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+			_Label.Dock = System.Windows.Forms.DockStyle.Top;
+			_Label.Location = new System.Drawing.Point(0, 0);
+			_Label.Name = "m_Label1";
+			_Label.Size = new System.Drawing.Size(124, 16);
+			_Label.TabIndex = 0;
+			_Label.Text = "Toolbox";
+			_Label.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			// 
 			// _StatusBar
 			// 
@@ -1169,8 +1118,8 @@ namespace GumpStudio.Forms
 			// 
 			// _Panel2
 			// 
-			_Panel2.Controls.Add(_pnlCanvasScroller);
-			_Panel2.Controls.Add(_TabPager);
+			_Panel2.Controls.Add(_PanelCanvasScroller);
+			_Panel2.Controls.Add(_TabPages);
 			_Panel2.Controls.Add(_Splitter2);
 			_Panel2.Controls.Add(_Panel3);
 			_Panel2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1181,51 +1130,51 @@ namespace GumpStudio.Forms
 			// 
 			// _pnlCanvasScroller
 			// 
-			_pnlCanvasScroller.AutoScroll = true;
-			_pnlCanvasScroller.AutoScrollMargin = new System.Drawing.Size(1, 1);
-			_pnlCanvasScroller.AutoScrollMinSize = new System.Drawing.Size(1, 1);
-			_pnlCanvasScroller.BackColor = System.Drawing.Color.Silver;
-			_pnlCanvasScroller.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-			_pnlCanvasScroller.Controls.Add(_picCanvas);
-			_pnlCanvasScroller.Dock = System.Windows.Forms.DockStyle.Fill;
-			_pnlCanvasScroller.Location = new System.Drawing.Point(0, 24);
-			_pnlCanvasScroller.Name = "_pnlCanvasScroller";
-			_pnlCanvasScroller.Size = new System.Drawing.Size(949, 661);
-			_pnlCanvasScroller.TabIndex = 2;
-			_pnlCanvasScroller.MouseLeave += new System.EventHandler(pnlCanvasScroller_MouseLeave);
+			_PanelCanvasScroller.AutoScroll = true;
+			_PanelCanvasScroller.AutoScrollMargin = new System.Drawing.Size(1, 1);
+			_PanelCanvasScroller.AutoScrollMinSize = new System.Drawing.Size(1, 1);
+			_PanelCanvasScroller.BackColor = System.Drawing.Color.Silver;
+			_PanelCanvasScroller.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+			_PanelCanvasScroller.Controls.Add(ImageCanvas);
+			_PanelCanvasScroller.Dock = System.Windows.Forms.DockStyle.Fill;
+			_PanelCanvasScroller.Location = new System.Drawing.Point(0, 24);
+			_PanelCanvasScroller.Name = "_pnlCanvasScroller";
+			_PanelCanvasScroller.Size = new System.Drawing.Size(949, 661);
+			_PanelCanvasScroller.TabIndex = 2;
+			_PanelCanvasScroller.MouseLeave += new System.EventHandler(CanvasScroller_MouseLeave);
 			// 
 			// _picCanvas
 			// 
-			_picCanvas.BackColor = System.Drawing.Color.Black;
-			_picCanvas.Location = new System.Drawing.Point(0, 0);
-			_picCanvas.Name = "_picCanvas";
-			_picCanvas.Size = new System.Drawing.Size(1600, 1200);
-			_picCanvas.TabIndex = 0;
-			_picCanvas.TabStop = false;
-			_picCanvas.Paint += new System.Windows.Forms.PaintEventHandler(picCanvas_Paint);
-			_picCanvas.MouseDown += new System.Windows.Forms.MouseEventHandler(picCanvas_MouseDown);
-			_picCanvas.MouseMove += new System.Windows.Forms.MouseEventHandler(picCanvas_MouseMove);
-			_picCanvas.MouseUp += new System.Windows.Forms.MouseEventHandler(picCanvas_MouseUp);
+			ImageCanvas.BackColor = System.Drawing.Color.Black;
+			ImageCanvas.Location = new System.Drawing.Point(0, 0);
+			ImageCanvas.Name = "_picCanvas";
+			ImageCanvas.Size = new System.Drawing.Size(1600, 1200);
+			ImageCanvas.TabIndex = 0;
+			ImageCanvas.TabStop = false;
+			ImageCanvas.Paint += new System.Windows.Forms.PaintEventHandler(ImageCanvas_Paint);
+			ImageCanvas.MouseDown += new System.Windows.Forms.MouseEventHandler(ImageCanvas_MouseDown);
+			ImageCanvas.MouseMove += new System.Windows.Forms.MouseEventHandler(ImageCanvas_MouseMove);
+			ImageCanvas.MouseUp += new System.Windows.Forms.MouseEventHandler(ImageCanvas_MouseUp);
 			// 
 			// _TabPager
 			// 
-			_TabPager.Controls.Add(_TabPage1);
-			_TabPager.Dock = System.Windows.Forms.DockStyle.Top;
-			_TabPager.HotTrack = true;
-			_TabPager.Location = new System.Drawing.Point(0, 0);
-			_TabPager.Name = "_TabPager";
-			_TabPager.SelectedIndex = 0;
-			_TabPager.Size = new System.Drawing.Size(949, 24);
-			_TabPager.TabIndex = 3;
-			_TabPager.SelectedIndexChanged += new System.EventHandler(TabPager_SelectedIndexChanged);
+			_TabPages.Controls.Add(_TabPage);
+			_TabPages.Dock = System.Windows.Forms.DockStyle.Top;
+			_TabPages.HotTrack = true;
+			_TabPages.Location = new System.Drawing.Point(0, 0);
+			_TabPages.Name = "_TabPager";
+			_TabPages.SelectedIndex = 0;
+			_TabPages.Size = new System.Drawing.Size(949, 24);
+			_TabPages.TabIndex = 3;
+			_TabPages.SelectedIndexChanged += new System.EventHandler(TabPages_SelectedIndexChanged);
 			// 
 			// _TabPage1
 			// 
-			_TabPage1.Location = new System.Drawing.Point(4, 22);
-			_TabPage1.Name = "_TabPage1";
-			_TabPage1.Size = new System.Drawing.Size(941, 0);
-			_TabPage1.TabIndex = 0;
-			_TabPage1.Text = "0";
+			_TabPage.Location = new System.Drawing.Point(4, 22);
+			_TabPage.Name = "_TabPage1";
+			_TabPage.Size = new System.Drawing.Size(941, 0);
+			_TabPage.TabIndex = 0;
+			_TabPage.Text = "0";
 			// 
 			// _Splitter2
 			// 
@@ -1238,9 +1187,9 @@ namespace GumpStudio.Forms
 			// 
 			// _Panel3
 			// 
-			_Panel3.Controls.Add(m_cboElements);
-			_Panel3.Controls.Add(m_ElementProperties);
-			_Panel3.Controls.Add(m_CanvasFocus);
+			_Panel3.Controls.Add(_ComboElements);
+			_Panel3.Controls.Add(_ElementProperties);
+			_Panel3.Controls.Add(CanvasFocus);
 			_Panel3.Dock = System.Windows.Forms.DockStyle.Right;
 			_Panel3.Location = new System.Drawing.Point(971, 0);
 			_Panel3.Name = "_Panel3";
@@ -1249,355 +1198,359 @@ namespace GumpStudio.Forms
 			// 
 			// m_cboElements
 			// 
-			m_cboElements.Anchor = ((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-			| System.Windows.Forms.AnchorStyles.Right);
-			m_cboElements.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			m_cboElements.Location = new System.Drawing.Point(0, 8);
-			m_cboElements.Name = "m_cboElements";
-			m_cboElements.Size = new System.Drawing.Size(240, 21);
-			m_cboElements.TabIndex = 1;
-			m_cboElements.SelectedIndexChanged += new System.EventHandler(cboElements_SelectedIndexChanged);
-			m_cboElements.Click += new System.EventHandler(cboElements_Click);
+			_ComboElements.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+			_ComboElements.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			_ComboElements.Location = new System.Drawing.Point(0, 8);
+			_ComboElements.Name = "m_cboElements";
+			_ComboElements.Size = new System.Drawing.Size(240, 21);
+			_ComboElements.TabIndex = 1;
+			_ComboElements.SelectedIndexChanged += new System.EventHandler(ComboElements_SelectedIndexChanged);
+			_ComboElements.Click += new System.EventHandler(ComboElements_Click);
 			// 
 			// m_ElementProperties
 			// 
-			m_ElementProperties.Anchor = (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-			| System.Windows.Forms.AnchorStyles.Left)
-			| System.Windows.Forms.AnchorStyles.Right);
-			m_ElementProperties.Cursor = System.Windows.Forms.Cursors.HSplit;
-			m_ElementProperties.LineColor = System.Drawing.SystemColors.ScrollBar;
-			m_ElementProperties.Location = new System.Drawing.Point(0, 32);
-			m_ElementProperties.Name = "m_ElementProperties";
-			m_ElementProperties.Size = new System.Drawing.Size(240, 651);
-			m_ElementProperties.TabIndex = 0;
-			m_ElementProperties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(ElementProperties_PropertyValueChanged);
+			_ElementProperties.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
+			_ElementProperties.Cursor = System.Windows.Forms.Cursors.HSplit;
+			_ElementProperties.LineColor = System.Drawing.SystemColors.ScrollBar;
+			_ElementProperties.Location = new System.Drawing.Point(0, 32);
+			_ElementProperties.Name = "m_ElementProperties";
+			_ElementProperties.Size = new System.Drawing.Size(240, 651);
+			_ElementProperties.TabIndex = 0;
+			_ElementProperties.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(ElementProperties_PropertyValueChanged);
 			// 
 			// m_CanvasFocus
 			// 
-			m_CanvasFocus.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right);
-			m_CanvasFocus.Location = new System.Drawing.Point(16, 635);
-			m_CanvasFocus.Name = "m_CanvasFocus";
-			m_CanvasFocus.Size = new System.Drawing.Size(100, 20);
-			m_CanvasFocus.TabIndex = 1;
-			m_CanvasFocus.Text = "TextBox1";
+			CanvasFocus.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right);
+			CanvasFocus.Location = new System.Drawing.Point(16, 635);
+			CanvasFocus.Name = "m_CanvasFocus";
+			CanvasFocus.Size = new System.Drawing.Size(100, 20);
+			CanvasFocus.TabIndex = 1;
+			CanvasFocus.Text = "TextBox1";
 			// 
 			// m_MainMenu
 			// 
-			m_MainMenu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-			_mnuFile,
-			_mnuEdit,
-			_mnuMisc,
-			_mnuPage,
-			_mnuPlugins,
-			_mnuHelp});
+			_Menu.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+			_MenuFile,
+			_MenuEdit,
+			_MenuMisc,
+			_MenuPage,
+			MenuPlugins,
+			_MenuHelp});
 			// 
 			// _mnuFile
 			// 
-			_mnuFile.Index = 0;
-			_mnuFile.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-			_mnuFileNew,
-			m_MenuItem9,
-			_mnuFileOpen,
-			_mnuFileSave,
-			_mnuFileImport,
-			_mnuFileExport,
-			m_MenuItem5,
-			_mnuFileExit});
-			_mnuFile.Text = "File";
+			_MenuFile.Index = 0;
+			_MenuFile.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+			_MenuFileNew,
+			_MenuMain5,
+			_MenuFileOpen,
+			_MenuFileSave,
+			MenuFileImport,
+			MenuFileExport,
+			_MenuMain4,
+			_MenuFileExit});
+			_MenuFile.Text = "File";
 			// 
 			// _mnuFileNew
 			// 
-			_mnuFileNew.Index = 0;
-			_mnuFileNew.Text = "New";
-			_mnuFileNew.Click += new System.EventHandler(mnuFileNew_Click);
+			_MenuFileNew.Index = 0;
+			_MenuFileNew.Text = "New";
+			_MenuFileNew.Click += new System.EventHandler(MenuFileNew_Click);
 			// 
 			// m_MenuItem9
 			// 
-			m_MenuItem9.Index = 1;
-			m_MenuItem9.Text = "-";
+			_MenuMain5.Index = 1;
+			_MenuMain5.Text = "-";
 			// 
 			// _mnuFileOpen
 			// 
-			_mnuFileOpen.Index = 2;
-			_mnuFileOpen.Text = "Open";
-			_mnuFileOpen.Click += new System.EventHandler(mnuFileOpen_Click);
+			_MenuFileOpen.Index = 2;
+			_MenuFileOpen.Text = "Open";
+			_MenuFileOpen.Click += new System.EventHandler(MenuFileOpen_Click);
 			// 
 			// _mnuFileSave
 			// 
-			_mnuFileSave.Index = 3;
-			_mnuFileSave.Text = "Save";
-			_mnuFileSave.Click += new System.EventHandler(mnuFileSave_Click);
+			_MenuFileSave.Index = 3;
+			_MenuFileSave.Text = "Save";
+			_MenuFileSave.Click += new System.EventHandler(MenuFileSave_Click);
 			// 
 			// _mnuFileImport
 			// 
-			_mnuFileImport.Enabled = false;
-			_mnuFileImport.Index = 4;
-			_mnuFileImport.Text = "Import";
+			MenuFileImport.Enabled = false;
+			MenuFileImport.Index = 4;
+			MenuFileImport.Text = "Import";
 			// 
 			// _mnuFileExport
 			// 
-			_mnuFileExport.Enabled = false;
-			_mnuFileExport.Index = 5;
-			_mnuFileExport.Text = "Export";
+			MenuFileExport.Enabled = false;
+			MenuFileExport.Index = 5;
+			MenuFileExport.Text = "Export";
 			// 
 			// m_MenuItem5
 			// 
-			m_MenuItem5.Index = 6;
-			m_MenuItem5.Text = "-";
+			_MenuMain4.Index = 6;
+			_MenuMain4.Text = "-";
 			// 
 			// _mnuFileExit
 			// 
-			_mnuFileExit.Index = 7;
-			_mnuFileExit.Text = "Exit";
-			_mnuFileExit.Click += new System.EventHandler(mnuFileExit_Click);
+			_MenuFileExit.Index = 7;
+			_MenuFileExit.Text = "Exit";
+			_MenuFileExit.Click += new System.EventHandler(MenuFileExit_Click);
 			// 
 			// _mnuEdit
 			// 
-			_mnuEdit.Index = 1;
-			_mnuEdit.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-			_mnuEditUndo,
-			_mnuEditRedo,
-			m_MenuItem3,
-			_mnuCut,
-			m_mnuCopy,
-			_mnuPaste,
-			_mnuDelete,
-			m_MenuItem4,
-			_mnuSelectAll});
-			_mnuEdit.Text = "Edit";
+			_MenuEdit.Index = 1;
+			_MenuEdit.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+			_MenuEditUndo,
+			_MenuEditRedo,
+			_MenuMain2,
+			_MenuCut,
+			_MenuCopy,
+			_MenuPaste,
+			_MenuDelete,
+			_MenuMain3,
+			_MenuSelectAll});
+			_MenuEdit.Text = "Edit";
 			// 
 			// _mnuEditUndo
 			// 
-			_mnuEditUndo.Enabled = false;
-			_mnuEditUndo.Index = 0;
-			_mnuEditUndo.Shortcut = System.Windows.Forms.Shortcut.CtrlZ;
-			_mnuEditUndo.Text = "Undo";
-			_mnuEditUndo.Click += new System.EventHandler(mnuEditUndo_Click);
+			_MenuEditUndo.Enabled = false;
+			_MenuEditUndo.Index = 0;
+			_MenuEditUndo.Shortcut = System.Windows.Forms.Shortcut.CtrlZ;
+			_MenuEditUndo.Text = "Undo";
+			_MenuEditUndo.Click += new System.EventHandler(MenuEditUndo_Click);
 			// 
 			// _mnuEditRedo
 			// 
-			_mnuEditRedo.Enabled = false;
-			_mnuEditRedo.Index = 1;
-			_mnuEditRedo.Shortcut = System.Windows.Forms.Shortcut.CtrlY;
-			_mnuEditRedo.Text = "Redo";
-			_mnuEditRedo.Click += new System.EventHandler(mnuEditRedo_Click);
+			_MenuEditRedo.Enabled = false;
+			_MenuEditRedo.Index = 1;
+			_MenuEditRedo.Shortcut = System.Windows.Forms.Shortcut.CtrlY;
+			_MenuEditRedo.Text = "Redo";
+			_MenuEditRedo.Click += new System.EventHandler(MenuEditRedo_Click);
 			// 
 			// m_MenuItem3
 			// 
-			m_MenuItem3.Index = 2;
-			m_MenuItem3.Text = "-";
+			_MenuMain2.Index = 2;
+			_MenuMain2.Text = "-";
 			// 
 			// _mnuCut
 			// 
-			_mnuCut.Index = 3;
-			_mnuCut.Shortcut = System.Windows.Forms.Shortcut.CtrlX;
-			_mnuCut.Text = "Cu&t";
-			_mnuCut.Click += new System.EventHandler(mnuCut_Click);
+			_MenuCut.Index = 3;
+			_MenuCut.Shortcut = System.Windows.Forms.Shortcut.CtrlX;
+			_MenuCut.Text = "Cu&t";
+			_MenuCut.Click += new System.EventHandler(MenuCut_Click);
 			// 
 			// m_mnuCopy
 			// 
-			m_mnuCopy.Index = 4;
-			m_mnuCopy.Shortcut = System.Windows.Forms.Shortcut.CtrlC;
-			m_mnuCopy.Text = "&Copy";
-			m_mnuCopy.Click += new System.EventHandler(mnuCopy_Click);
+			_MenuCopy.Index = 4;
+			_MenuCopy.Shortcut = System.Windows.Forms.Shortcut.CtrlC;
+			_MenuCopy.Text = "&Copy";
+			_MenuCopy.Click += new System.EventHandler(MenuCopy_Click);
 			// 
 			// _mnuPaste
 			// 
-			_mnuPaste.Index = 5;
-			_mnuPaste.Shortcut = System.Windows.Forms.Shortcut.CtrlV;
-			_mnuPaste.Text = "&Paste";
-			_mnuPaste.Click += new System.EventHandler(mnuPaste_Click);
+			_MenuPaste.Index = 5;
+			_MenuPaste.Shortcut = System.Windows.Forms.Shortcut.CtrlV;
+			_MenuPaste.Text = "&Paste";
+			_MenuPaste.Click += new System.EventHandler(MenuPaste_Click);
 			// 
 			// _mnuDelete
 			// 
-			_mnuDelete.Index = 6;
-			_mnuDelete.Text = "Delete";
-			_mnuDelete.Click += new System.EventHandler(mnuDelete_Click);
+			_MenuDelete.Index = 6;
+			_MenuDelete.Text = "Delete";
+			_MenuDelete.Click += new System.EventHandler(MenuDelete_Click);
 			// 
 			// m_MenuItem4
 			// 
-			m_MenuItem4.Index = 7;
-			m_MenuItem4.Text = "-";
+			_MenuMain3.Index = 7;
+			_MenuMain3.Text = "-";
 			// 
 			// _mnuSelectAll
 			// 
-			_mnuSelectAll.Index = 8;
-			_mnuSelectAll.Shortcut = System.Windows.Forms.Shortcut.CtrlA;
-			_mnuSelectAll.Text = "Select &All";
-			_mnuSelectAll.Click += new System.EventHandler(mnuSelectAll_Click);
+			_MenuSelectAll.Index = 8;
+			_MenuSelectAll.Shortcut = System.Windows.Forms.Shortcut.CtrlA;
+			_MenuSelectAll.Text = "Select &All";
+			_MenuSelectAll.Click += new System.EventHandler(MenuSelectAll_Click);
 			// 
 			// _mnuMisc
 			// 
-			_mnuMisc.Index = 2;
-			_mnuMisc.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-			_mnuMiscLoadGumpling,
-			_mnuImportGumpling,
-			_mnuDataFile});
-			_mnuMisc.Text = "Misc";
+			_MenuMisc.Index = 2;
+			_MenuMisc.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+			_MenuMiscLoadGumpling,
+			_MenuImportGumpling,
+			_MenuDataFile});
+			_MenuMisc.Text = "Misc";
 			// 
 			// _mnuMiscLoadGumpling
 			// 
-			_mnuMiscLoadGumpling.Index = 0;
-			_mnuMiscLoadGumpling.Text = "Load gumpling";
-			_mnuMiscLoadGumpling.Click += new System.EventHandler(MenuItem2_Click);
+			_MenuMiscLoadGumpling.Index = 0;
+			_MenuMiscLoadGumpling.Text = "Load gumpling";
+			_MenuMiscLoadGumpling.Click += new System.EventHandler(MenuMiscLoadGumpling_Click);
 			// 
 			// _mnuImportGumpling
 			// 
-			_mnuImportGumpling.Index = 1;
-			_mnuImportGumpling.Text = "Import Gumpling";
-			_mnuImportGumpling.Click += new System.EventHandler(mnuImportGumpling_Click);
+			_MenuImportGumpling.Index = 1;
+			_MenuImportGumpling.Text = "Import Gumpling";
+			_MenuImportGumpling.Click += new System.EventHandler(MenuImportGumpling_Click);
 			// 
 			// _mnuDataFile
 			// 
-			_mnuDataFile.Index = 2;
-			_mnuDataFile.Text = "Data File Path";
-			_mnuDataFile.Click += new System.EventHandler(mnuDataFile_Click);
+			_MenuDataFile.Index = 2;
+			_MenuDataFile.Text = "Data File Path";
+			_MenuDataFile.Click += new System.EventHandler(MenuDataFile_Click);
 			// 
 			// _mnuPage
 			// 
-			_mnuPage.Index = 3;
-			_mnuPage.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-			_mnuPageAdd,
-			_mnuPageInsert,
-			_mnuPageDelete,
-			_mnuPageClear,
-			m_MenuItem10,
-			_mnuShow0});
-			_mnuPage.Text = "Page";
+			_MenuPage.Index = 3;
+			_MenuPage.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+			_MenuPageAdd,
+			_MenuPageInsert,
+			_MenuPageDelete,
+			_MenuPageClear,
+			_MenuMain6,
+			_MenuShowPage0});
+			_MenuPage.Text = "Page";
 			// 
 			// _mnuPageAdd
 			// 
-			_mnuPageAdd.Index = 0;
-			_mnuPageAdd.Text = "Add Page";
-			_mnuPageAdd.Click += new System.EventHandler(mnuAddPage_Click);
+			_MenuPageAdd.Index = 0;
+			_MenuPageAdd.Text = "Add Page";
+			_MenuPageAdd.Click += new System.EventHandler(MenuAddPage_Click);
 			// 
 			// _mnuPageInsert
 			// 
-			_mnuPageInsert.Index = 1;
-			_mnuPageInsert.Text = "Insert Page";
-			_mnuPageInsert.Click += new System.EventHandler(mnuPageInsert_Click);
+			_MenuPageInsert.Index = 1;
+			_MenuPageInsert.Text = "Insert Page";
+			_MenuPageInsert.Click += new System.EventHandler(MenuPageInsert_Click);
 			// 
 			// _mnuPageDelete
 			// 
-			_mnuPageDelete.Index = 2;
-			_mnuPageDelete.Text = "Delete Page";
-			_mnuPageDelete.Click += new System.EventHandler(mnuPageDelete_Click);
+			_MenuPageDelete.Index = 2;
+			_MenuPageDelete.Text = "Delete Page";
+			_MenuPageDelete.Click += new System.EventHandler(MenuPageDelete_Click);
 			// 
 			// _mnuPageClear
 			// 
-			_mnuPageClear.Index = 3;
-			_mnuPageClear.Text = "Clear Page";
-			_mnuPageClear.Click += new System.EventHandler(mnuPageClear_Click);
+			_MenuPageClear.Index = 3;
+			_MenuPageClear.Text = "Clear Page";
+			_MenuPageClear.Click += new System.EventHandler(MenuPageClear_Click);
 			// 
 			// m_MenuItem10
 			// 
-			m_MenuItem10.Index = 4;
-			m_MenuItem10.Text = "-";
+			_MenuMain6.Index = 4;
+			_MenuMain6.Text = "-";
 			// 
 			// _mnuShow0
 			// 
-			_mnuShow0.Checked = true;
-			_mnuShow0.Index = 5;
-			_mnuShow0.Text = "Always Show Page 0";
-			_mnuShow0.Click += new System.EventHandler(mnuShow0_Click);
+			_MenuShowPage0.Checked = true;
+			_MenuShowPage0.Index = 5;
+			_MenuShowPage0.Text = "Always Show Page 0";
+			_MenuShowPage0.Click += new System.EventHandler(MenuShowPage0_Click);
 			// 
 			// _mnuPlugins
 			// 
-			_mnuPlugins.Index = 4;
-			_mnuPlugins.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-			_mnuPluginManager});
-			_mnuPlugins.Text = "Plug-Ins";
+			MenuPlugins.Index = 4;
+			MenuPlugins.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+			_MenuPluginManager});
+			MenuPlugins.Text = "Plug-Ins";
 			// 
 			// _mnuPluginManager
 			// 
-			_mnuPluginManager.Index = 0;
-			_mnuPluginManager.Text = "Manager";
-			_mnuPluginManager.Click += new System.EventHandler(mnuPluginManager_Click);
+			_MenuPluginManager.Index = 0;
+			_MenuPluginManager.Text = "Manager";
+			_MenuPluginManager.Click += new System.EventHandler(MenuPluginManager_Click);
 			// 
 			// _mnuHelp
 			// 
-			_mnuHelp.Index = 5;
-			_mnuHelp.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-			_mnuHelpAbout});
-			_mnuHelp.Text = "Help";
+			_MenuHelp.Index = 5;
+			_MenuHelp.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+			_MenuHelpAbout});
+			_MenuHelp.Text = "Help";
 			// 
 			// _mnuHelpAbout
 			// 
-			_mnuHelpAbout.Index = 0;
-			_mnuHelpAbout.Text = "About...";
-			_mnuHelpAbout.Click += new System.EventHandler(mnuHelpAbout_Click);
+			_MenuHelpAbout.Index = 0;
+			_MenuHelpAbout.Text = "About...";
+			_MenuHelpAbout.Click += new System.EventHandler(MenuHelpAbout_Click);
 			// 
 			// _mnuGumplingContext
 			// 
-			_mnuGumplingContext.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-			_mnuGumplingRename,
-			_mnuGumplingMove,
-			_mnuGumplingDelete,
-			m_MenuItem1,
-			_mnuGumplingAddGumpling,
-			_mnuGumplingAddFolder});
+			_MenuGumplingContext.MenuItems.AddRange(new System.Windows.Forms.MenuItem[]
+			{
+				_MenuGumplingRename,
+				_MenuGumplingMove,
+				_MenuGumplingDelete,
+				_MenuMain1,
+				_MenuGumplingAddGumpling,
+				_MenuGumplingAddFolder
+			});
 			// 
 			// _mnuGumplingRename
 			// 
-			_mnuGumplingRename.Index = 0;
-			_mnuGumplingRename.Text = "Rename";
+			_MenuGumplingRename.Index = 0;
+			_MenuGumplingRename.Text = "Rename";
 			// 
 			// _mnuGumplingMove
 			// 
-			_mnuGumplingMove.Index = 1;
-			_mnuGumplingMove.Text = "Move";
+			_MenuGumplingMove.Index = 1;
+			_MenuGumplingMove.Text = "Move";
 			// 
 			// _mnuGumplingDelete
 			// 
-			_mnuGumplingDelete.Index = 2;
-			_mnuGumplingDelete.Text = "Delete";
+			_MenuGumplingDelete.Index = 2;
+			_MenuGumplingDelete.Text = "Delete";
 			// 
 			// m_MenuItem1
 			// 
-			m_MenuItem1.Index = 3;
-			m_MenuItem1.Text = "-";
+			_MenuMain1.Index = 3;
+			_MenuMain1.Text = "-";
 			// 
 			// _mnuGumplingAddGumpling
 			// 
-			_mnuGumplingAddGumpling.Index = 4;
-			_mnuGumplingAddGumpling.Text = "Add Gumpling";
+			_MenuGumplingAddGumpling.Index = 4;
+			_MenuGumplingAddGumpling.Text = "Add Gumpling";
 			// 
 			// _mnuGumplingAddFolder
 			// 
-			_mnuGumplingAddFolder.Index = 5;
-			_mnuGumplingAddFolder.Text = "Add Folder";
+			_MenuGumplingAddFolder.Index = 5;
+			_MenuGumplingAddFolder.Text = "Add Folder";
 			// 
 			// DesignerForm
 			// 
 			AutoScaleBaseSize = new System.Drawing.Size(5, 13);
 			ClientSize = new System.Drawing.Size(1350, 708);
+
 			Controls.Add(_Panel1);
 			Controls.Add(_Splitter1);
-			Controls.Add(_pnlToolboxHolder);
+			Controls.Add(_Panel7);
 			Controls.Add(_StatusBar);
+
 			Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			KeyPreview = true;
-			Menu = m_MainMenu;
+			Menu = _Menu;
 			Name = "DesignerForm";
 			Text = "Gump Studio (-Unsaved Gump-)";
-			FormClosing += new System.Windows.Forms.FormClosingEventHandler(DesignerForm_FormClosing);
+
 			Load += new System.EventHandler(DesignerForm_Load);
 			KeyDown += new System.Windows.Forms.KeyEventHandler(DesignerForm_KeyDown);
-			KeyUp += new System.Windows.Forms.KeyEventHandler(DesignerForm_KeyUp);
-			_pnlToolboxHolder.ResumeLayout(false);
+			KeyUp += new KeyEventHandler(DesignerForm_KeyUp);
+			FormClosing += new FormClosingEventHandler(DesignerForm_FormClosing);
+
+			((ISupportInitialize)ImageCanvas).EndInit();
+
+			_Panel7.ResumeLayout(false);
 			_Panel4.ResumeLayout(false);
-			_tabToolbox.ResumeLayout(false);
-			_tpgStandard.ResumeLayout(false);
-			_tpgCustom.ResumeLayout(false);
+			_TabToolbox.ResumeLayout(false);
+			_PageStandard.ResumeLayout(false);
+			_PageCustom.ResumeLayout(false);
 			_Panel1.ResumeLayout(false);
 			_Panel2.ResumeLayout(false);
-			_pnlCanvasScroller.ResumeLayout(false);
-			((System.ComponentModel.ISupportInitialize)(_picCanvas)).EndInit();
-			_TabPager.ResumeLayout(false);
+			_PanelCanvasScroller.ResumeLayout(false);
+			_TabPages.ResumeLayout(false);
 			_Panel3.ResumeLayout(false);
 			_Panel3.PerformLayout();
-			ResumeLayout(false);
 
+			ResumeLayout(false);
 		}
 
 		private sealed class DeserializationBinder : SerializationBinder
@@ -1622,501 +1575,517 @@ namespace GumpStudio.Forms
 
 		public void LoadFrom(string Path)
 		{
-			IEnumerator enumerator = null;
 			_StatusBar.Text = "Loading gump...";
-			FileStream fileStream = null;
+
 			Stacks.Clear();
-			_TabPager.TabPages.Clear();
+
+			_TabPages.TabPages.Clear();
+
 			try
 			{
-				fileStream = new FileStream(Path, FileMode.Open);
-				var binaryFormatter = new BinaryFormatter { Binder = DeserializationBinder.Instance };
-				Stacks = (ArrayList)binaryFormatter.Deserialize(fileStream);
-				try
+				using (var fileStream = new FileStream(Path, FileMode.Open))
 				{
-					GumpProperties = (GumpProperties)binaryFormatter.Deserialize(fileStream);
+					var binaryFormatter = new BinaryFormatter { Binder = DeserializationBinder.Instance };
+
+					var list = (ICollection)binaryFormatter.Deserialize(fileStream);
+
+					Stacks.Clear();
+					Stacks.AddRange(list.Cast<GroupElement>());
+
+					try
+					{
+						GumpProperties = (GumpProperties)binaryFormatter.Deserialize(fileStream);
+					}
+					catch (Exception ex)
+					{
+						GumpProperties = new GumpProperties();
+
+						MessageBox.Show(ex.InnerException.Message);
+					}
 				}
-				catch (Exception ex)
-				{
-					var exception = ex;
-					GumpProperties = new GumpProperties();
-					MessageBox.Show(exception.InnerException.Message);
-				}
-				SetActiveElement(null, true);
-				RefreshElementList();
 			}
 			catch (Exception ex)
 			{
 				MessageBox.Show(ex.Message);
 			}
-			finally
+
+			SetActiveElement(null, true);
+			RefreshElementList();
+
+			var page = -1;
+
+			foreach (var stack in Stacks)
 			{
-				fileStream?.Close();
+				_TabPages.TabPages.Add(new TabPage((++page).ToString()));
 			}
-			var num1 = 0;
-			try
-			{
-				foreach (var stack in Stacks)
-				{
-					RuntimeHelpers.GetObjectValue(stack);
-					_TabPager.TabPages.Add(new TabPage(num1.ToString()));
-					++num1;
-				}
-			}
-			finally
-			{
-				(enumerator as IDisposable)?.Dispose();
-			}
+
 			NormalizeNames();
+
+			foreach (var o in AllElements)
+			{
+				o.Selected = false;
+			}
+
 			ChangeActiveStack(0);
-			ElementStack.UpdateParent += new BaseElement.UpdateParentEventHandler(ChangeActiveElementEventHandler);
-			ElementStack.Repaint += new BaseElement.RepaintEventHandler(RefreshView);
-			_StatusBar.Text = "";
+
+			ElementStack.UpdateParent += ChangeActiveElementEventHandler;
+			ElementStack.Repaint += RefreshView;
+
+			_StatusBar.Text = String.Empty;
 		}
 
-		private void MenuItem2_Click(object sender, EventArgs e)
+		private void MenuMiscLoadGumpling_Click(object sender, EventArgs e)
 		{
 			_OpenDialog.Filter = "Gumpling (*.gumpling)|*.gumpling|Gump (*.gump)|*.gump";
+
 			if (_OpenDialog.ShowDialog() != DialogResult.OK)
 			{
 				return;
 			}
 
-			var fileStream = new FileStream(_OpenDialog.FileName, FileMode.Open);
-			var groupElement = (GroupElement)new BinaryFormatter { Binder = DeserializationBinder.Instance }.Deserialize(fileStream);
-			groupElement.mIsBaseWindow = false;
-			groupElement.RecalculateBounds();
-			var point = new Point(0, 0);
-			groupElement.Location = point;
-			fileStream.Close();
+			try
+			{
+				using (var fileStream = new FileStream(_OpenDialog.FileName, FileMode.Open))
+				{
+					var bin = new BinaryFormatter
+					{
+						Binder = DeserializationBinder.Instance
+					};
 
-			AddElement(groupElement);
+					var groupElement = (GroupElement)bin.Deserialize(fileStream);
+
+					groupElement._IsBaseWindow = false;
+					groupElement.Selected = false;
+
+					groupElement.RecalculateBounds();
+
+					groupElement.Location = Point.Empty;
+
+					AddElement(groupElement);
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
 
 			NormalizeNames();
 		}
 
-		private void mnuAddPage_Click(object sender, EventArgs e)
+		private void MenuAddPage_Click(object sender, EventArgs e)
 		{
 			AddPage();
 			CreateUndoPoint("Add page");
 		}
 
-		private void mnuCopy_Click(object sender, EventArgs e)
+		private void MenuCopy_Click(object sender, EventArgs e)
 		{
 			Copy();
 		}
 
-		private void mnuCut_Click(object sender, EventArgs e)
+		private void MenuCut_Click(object sender, EventArgs e)
 		{
 			Cut();
 			CreateUndoPoint();
 		}
 
-		private void mnuDataFile_Click(object sender, EventArgs e)
+		private void MenuDataFile_Click(object sender, EventArgs e)
 		{
 			var folderBrowserDialog = new FolderBrowserDialog
 			{
-				Description = "Select the folder that contains the UO data (.mul) files you want to use."
+				SelectedPath = Environment.SpecialFolder.ProgramFiles.ToString(),
+				Description = @"Select the folder that contains a copy of Ultima Online."
 			};
-			if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
-			{
-				return;
-			}
 
-			if (File.Exists(Path.Combine(folderBrowserDialog.SelectedPath, "art.mul")))
+			do
 			{
-				XMLSettings.CurrentOptions.ClientPath = folderBrowserDialog.SelectedPath;
-				XMLSettings.Save(this, XMLSettings.CurrentOptions);
-				//int num = (int) Interaction.MsgBox( (object) "New path set, please restart Gump Studio to activate your changes.", MsgBoxStyle.OkOnly, (object) "Data Files" );
-				MessageBox.Show("New path set, please restart Gump Studio to activate your changes.", "Data Files");
+				if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
+				{
+					return;
+				}
 			}
-			else
-			{
-				//int num1 = (int) Interaction.MsgBox( (object) "This path does not contain a file named \"art.mul\", it is most likely not the correct path.", MsgBoxStyle.OkOnly, (object) "Data Files" );
-				MessageBox.Show("This path does not contain a file named \"art.mul\", it is most likely not the correct path.", "Data Files");
-			}
+			while (!File.Exists(Path.Combine(folderBrowserDialog.SelectedPath, "client.exe")));
+
+			XMLSettings.CurrentOptions.ClientPath = folderBrowserDialog.SelectedPath;
+			XMLSettings.Save(this, XMLSettings.CurrentOptions);
+
+			MessageBox.Show("Changes will be applied after restarting Gump Studio.", "Data Files");
 		}
 
-		private void mnuDelete_Click(object sender, EventArgs e)
+		private void MenuDelete_Click(object sender, EventArgs e)
 		{
 			DeleteSelectedElements();
 		}
 
-		private void mnuEditRedo_Click(object sender, EventArgs e)
+		private void MenuEditRedo_Click(object sender, EventArgs e)
 		{
 			Redo();
 		}
 
-		private void mnuEditUndo_Click(object sender, EventArgs e)
+		private void MenuEditUndo_Click(object sender, EventArgs e)
 		{
 			Undo();
 		}
 
-		private void mnuFileExit_Click(object sender, EventArgs e)
+		private void MenuFileExit_Click(object sender, EventArgs e)
 		{
 			Close();
 		}
 
-		private void mnuFileNew_Click(object sender, EventArgs e)
+		private void MenuFileNew_Click(object sender, EventArgs e)
 		{
-			//if ( Interaction.MsgBox( (object) "Are you sure you want to start a new gump?", MsgBoxStyle.YesNo | MsgBoxStyle.Question, (object) null ) != MsgBoxResult.Yes )
-			//    return;
-
 			var result = MessageBox.Show("Are you sure you want to start a new gump?", "Question", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
 
-			if (result != DialogResult.OK)
+			if (result == DialogResult.OK)
 			{
-				return;
+				ClearGump();
 			}
-
-			ClearGump();
 		}
 
-		private void mnuFileOpen_Click(object sender, EventArgs e)
+		private void MenuFileOpen_Click(object sender, EventArgs e)
 		{
 			_OpenDialog.CheckFileExists = true;
 			_OpenDialog.Filter = @"Gump|*.gump";
+
 			if (_OpenDialog.ShowDialog() == DialogResult.OK)
 			{
 				LoadFrom(_OpenDialog.FileName);
-				FileName = Path.GetFileName(_OpenDialog.FileName);
-				Text = "Gump Studio (" + FileName + ")";
+
+				_FileName = Path.GetFileName(_OpenDialog.FileName);
+				Text = $"Gump Studio ({_FileName})";
 			}
-			_picCanvas.Invalidate();
+
+			ImageCanvas.Invalidate();
 		}
 
-		private void mnuFileSave_Click(object sender, EventArgs e)
+		private void MenuFileSave_Click(object sender, EventArgs e)
 		{
 			_SaveDialog.AddExtension = true;
 			_SaveDialog.DefaultExt = "gump";
 			_SaveDialog.Filter = "Gump|*.gump";
-			if (_SaveDialog.ShowDialog() != DialogResult.OK)
-			{
-				return;
-			}
 
-			SaveTo(_SaveDialog.FileName);
-			FileName = Path.GetFileName(_SaveDialog.FileName);
-			Text = "Gump Studio (" + FileName + ")";
+			if (_SaveDialog.ShowDialog() == DialogResult.OK)
+			{
+				SaveTo(_SaveDialog.FileName);
+
+				_FileName = Path.GetFileName(_SaveDialog.FileName);
+				Text = $"Gump Studio ({_FileName})";
+			}
 		}
 
-		private void mnuGroupCreate_Click(object sender, EventArgs e)
+		private void MenuGroupCreate_Click(object sender, EventArgs e)
 		{
-			IEnumerator enumerator1 = null;
-			var arrayList = new ArrayList();
-			try
+			var elements = new List<BaseElement>(ElementStack.GetSelectedElements());
+
+			if (elements.Count >= 2)
 			{
-				foreach (var element in ElementStack.GetElements())
-				{
-					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(element);
-					if (objectValue.Selected)
-					{
-						arrayList.Add(objectValue);
-					}
-				}
-			}
-			finally
-			{
-				(enumerator1 as IDisposable)?.Dispose();
-			}
-			if (arrayList.Count >= 2)
-			{
-				IEnumerator enumerator2 = null;
 				var groupElement = new GroupElement(ElementStack, null, "New Group");
-				try
+
+				foreach (var element in elements)
 				{
-					foreach (var obj in arrayList)
-					{
-						var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(obj);
-						groupElement.AddElement(objectValue);
-						ElementStack.RemoveElement(objectValue);
-						ElementStack.RemoveEvents(objectValue);
-					}
+					groupElement.AddElement(element);
+
+					ElementStack.RemoveElement(element);
+					ElementStack.RemoveEvents(element);
 				}
-				finally
-				{
-					(enumerator2 as IDisposable)?.Dispose();
-				}
+
 				AddElement(groupElement);
-				_picCanvas.Invalidate();
+
+				ImageCanvas.Invalidate();
 			}
+
 			CreateUndoPoint();
 		}
 
-		private void mnuHelpAbout_Click(object sender, EventArgs e)
+		private void MenuHelpAbout_Click(object sender, EventArgs e)
 		{
-			var frmAboutBox = new AboutBox();
-			frmAboutBox.SetText(AboutElementAppend);
-			var num = (int)frmAboutBox.ShowDialog();
+			var aboutBox = new AboutBox();
+
+			aboutBox.SetText(_AboutElementAppend);
+			aboutBox.ShowDialog();
 		}
 
-		private void mnuImportGumpling_Click(object sender, EventArgs e)
+		private void MenuImportGumpling_Click(object sender, EventArgs e)
 		{
 			_OpenDialog.Filter = @"Gumpling (*.gumpling)|*.gumpling|Gump (*.gump)|*.gump";
+
 			if (_OpenDialog.ShowDialog() != DialogResult.OK)
 			{
 				return;
 			}
 
-			var fileStream = new FileStream(_OpenDialog.FileName, FileMode.Open);
-			var Gumpling = (GroupElement)new BinaryFormatter { Binder = DeserializationBinder.Instance }.Deserialize(fileStream);
-			Gumpling.mIsBaseWindow = false;
-			Gumpling.RecalculateBounds();
-			var point = new Point(0, 0);
-			Gumpling.Location = point;
-			fileStream.Close();
-			UncategorizedFolder.AddItem(new TreeGumpling(Path.GetFileName(_OpenDialog.FileName), Gumpling));
+			using (var fileStream = new FileStream(_OpenDialog.FileName, FileMode.Open))
+			{
+				var bin = new BinaryFormatter
+				{
+					Binder = DeserializationBinder.Instance
+				};
+
+				var gumpling = (GroupElement)bin.Deserialize(fileStream);
+
+				gumpling._IsBaseWindow = false;
+				gumpling.Selected = false;
+
+				gumpling.RecalculateBounds();
+
+				gumpling.Location = Point.Empty;
+
+				UncategorizedFolder.AddItem(new TreeGumpling(Path.GetFileName(_OpenDialog.FileName), gumpling));
+			}
+
 			BuildGumplingTree();
 		}
 
-		private void mnuPageClear_Click(object sender, EventArgs e)
+		private void MenuPageClear_Click(object sender, EventArgs e)
 		{
 			ElementStack = new GroupElement(null, null, "Element Stack", true);
+
 			CreateUndoPoint("Clear Page");
 		}
 
-		private void mnuPageDelete_Click(object sender, EventArgs e)
+		private void MenuPageDelete_Click(object sender, EventArgs e)
 		{
-			if (_TabPager.SelectedIndex == 0)
+			if (_TabPages.SelectedIndex == 0)
 			{
-				MessageBox.Show(@"Page 0 can not be deleted.");
-
+				MessageBox.Show("First page cannot be deleted.");
 			}
 			else
 			{
-				var selectedIndex = _TabPager.SelectedIndex;
-				var num2 = _TabPager.TabCount - 1;
-				for (var index = selectedIndex + 1; index <= num2; ++index)
+				var selected = _TabPages.SelectedIndex;
+
+				Stacks.RemoveAt(selected);
+
+				_TabPages.TabPages.RemoveAt(selected);
+
+				var index = -1;
+
+				foreach (TabPage page in _TabPages.TabPages)
 				{
-					_TabPager.TabPages[index].Text = Convert.ToString(index - 1);
+					page.Text = (++index).ToString();
 				}
 
-				Stacks.RemoveAt(selectedIndex);
-				_TabPager.TabPages.RemoveAt(selectedIndex);
-				ChangeActiveStack(selectedIndex - 1);
-				CreateUndoPoint("Delete page");
+				ChangeActiveStack(Math.Min(selected, _TabPages.TabCount - 1));
+
+				CreateUndoPoint("Delete Page");
 			}
 		}
 
-		private void mnuPageInsert_Click(object sender, EventArgs e)
+		private void MenuPageInsert_Click(object sender, EventArgs e)
 		{
-			if (_TabPager.SelectedIndex == 0)
+			if (_TabPages.SelectedIndex == 0)
 			{
-				//int num1 = (int) Interaction.MsgBox( (object) "Page 0 may not be moved.", MsgBoxStyle.OkOnly, (object) null );
-				MessageBox.Show(@"Page 0 may not be moved.");
+				MessageBox.Show("First page cannot be moved.");
 			}
 			else
 			{
-				var tabCount = _TabPager.TabCount;
-				var selectedIndex = _TabPager.SelectedIndex;
-				var num2 = _TabPager.TabCount - 1;
-				for (var index = selectedIndex; index <= num2; ++index)
+				Stacks.Insert(_TabPages.SelectedIndex, new GroupElement(null, null, "Element Stack", true));
+
+				_TabPages.TabPages.Insert(_TabPages.SelectedIndex, new TabPage());
+
+				var index = -1;
+
+				foreach (TabPage page in _TabPages.TabPages)
 				{
-					_TabPager.TabPages.RemoveAt(selectedIndex);
+					page.Text = (++index).ToString();
 				}
 
-				_TabPager.TabPages.Add(new TabPage(selectedIndex.ToString()));
-				var num3 = tabCount;
-				for (var index = selectedIndex + 1; index <= num3; ++index)
-				{
-					_TabPager.TabPages.Add(new TabPage(index.ToString()));
-				}
+				ChangeActiveStack(_TabPages.SelectedIndex);
 
-				var groupElement = new GroupElement(null, null, "Element Stack", true);
-				Stacks.Insert(selectedIndex, groupElement);
-				ChangeActiveStack(selectedIndex);
-				_TabPager.SelectedIndex = selectedIndex;
-				CreateUndoPoint("Insert page");
+				CreateUndoPoint("Insert Page");
 			}
 		}
 
-		private void mnuPaste_Click(object sender, EventArgs e)
+		private void MenuPaste_Click(object sender, EventArgs e)
 		{
 			Paste();
 			CreateUndoPoint();
 		}
 
-		private void mnuPluginManager_Click(object sender, EventArgs e)
+		private void MenuPluginManager_Click(object sender, EventArgs e)
 		{
-			var num = (int)new PluginManager()
+			new PluginManager()
 			{
-				AvailablePlugins = AvailablePlugins,
-				LoadedPlugins = LoadedPlugins,
-				OrderList = PluginTypesToLoad,
+				AvailablePlugins = _AvailablePlugins,
+				LoadedPlugins = _LoadedPlugins,
+				OrderList = PluginsInfo,
 				MainForm = this
 			}.ShowDialog();
 		}
 
-		private void mnuSelectAll_Click(object sender, EventArgs e)
+		private void MenuSelectAll_Click(object sender, EventArgs e)
 		{
 			SelectAll();
 		}
 
-		private void mnuShow0_Click(object sender, EventArgs e)
+		private void MenuShowPage0_Click(object sender, EventArgs e)
 		{
-			ShowPage0 = !ShowPage0;
-			_mnuShow0.Checked = ShowPage0;
-			_picCanvas.Refresh();
+			_MenuShowPage0.Checked = _ShowPage0 = !_ShowPage0;
+
+			ImageCanvas.Refresh();
 		}
 
 		public void Paste()
 		{
-			var dataObject = Clipboard.GetDataObject();
-			var data = (ArrayList)dataObject.GetData(typeof(ArrayList));
-			if (data != null)
+			try
 			{
-				var elements = ElementStack.GetElementsRecursive().OfType<BaseElement>().ToArray();
+				var obj = Clipboard.GetDataObject();
+				var data = (ICollection)(obj.GetData(typeof(ArrayList)) ?? obj.GetData(typeof(BaseElement[])));
 
-				SetActiveElement(null, true);
-
-				foreach (var obj in data)
+				if (data != null)
 				{
-					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(obj);
-					if (CopyMode == ClipBoardMode.Copy)
+					SetActiveElement(null, true);
+
+					foreach (var element in data.OfType<BaseElement>())
 					{
-						objectValue.Name += elements.Count(o => o.Name.StartsWith(objectValue.Name));
+						element.Selected = true;
+
+						ElementStack.AddElement(element);
 					}
 
-					objectValue.Selected = true;
-					ElementStack.AddElement(objectValue);
+					NormalizeNames();
 				}
 			}
-			_picCanvas.Invalidate();
-		}
-
-		private void picCanvas_MouseDown(object sender, MouseEventArgs e)
-		{
-			CanvasFocus.Focus();
-			var point = new Point(e.X, e.Y);
-			mAnchor = point;
-			var Element = ElementStack.GetElementFromPoint(point);
-			if ((ActiveElement == null || ActiveElement.HitTest(point) == MoveModeType.None ? 0 : 1) != 0)
+			catch (Exception ex)
 			{
-				Element = ActiveElement;
+				MessageBox.Show(ex.Message);
 			}
 
-			if (Element != null)
+			ImageCanvas.Invalidate();
+		}
+
+		private void ImageCanvas_MouseDown(object sender, MouseEventArgs e)
+		{
+			CanvasFocus.Focus();
+
+			var point = _Anchor = new Point(e.X, e.Y);
+
+			var element = ElementStack.GetElementFromPoint(point);
+
+			if (ActiveElement != null && ActiveElement.HitTest(point) != MoveModeType.None)
 			{
-				MoveMode = Element.HitTest(point);
-				if ((ActiveElement == null || ActiveElement.HitTest(point) != MoveModeType.None ? 0 : 1) != 0)
+				element = ActiveElement;
+			}
+
+			if (element != null)
+			{
+				_MoveMode = element.HitTest(point);
+
+				if (ActiveElement != null && ActiveElement.HitTest(point) == MoveModeType.None)
 				{
-					if (Element.Selected)
+					if (element.Selected)
 					{
 						if ((ModifierKeys & Keys.Control) > Keys.None)
 						{
-							Element.Selected = false;
+							element.Selected = false;
 						}
 						else
 						{
-							SetActiveElement(Element, false);
+							SetActiveElement(element, false);
 						}
 					}
 					else
 					{
-						SetActiveElement(Element, (ModifierKeys & Keys.Control) <= Keys.None);
+						SetActiveElement(element, !ModifierKeys.HasFlag(Keys.Control));
 					}
 				}
 				else if (ActiveElement == null)
 				{
-					SetActiveElement(Element, false);
+					SetActiveElement(element, false);
 				}
-				else if (ActiveElement != null && (ModifierKeys & Keys.Control) > Keys.None)
+				else if (ActiveElement != null && ModifierKeys.HasFlag(Keys.Control))
 				{
 					ActiveElement.Selected = false;
-					var selectedElements = ElementStack.GetSelectedElements();
-					if (selectedElements.Count > 0)
+
+					var first = ElementStack.GetSelectedElements().FirstOrDefault();
+
+					if (first != null)
 					{
-						SetActiveElement((BaseElement)selectedElements[0], false);
+						SetActiveElement(first, false);
 					}
 					else
 					{
 						SetActiveElement(null, true);
-						MoveMode = MoveModeType.None;
+
+						_MoveMode = MoveModeType.None;
 					}
 				}
 			}
 			else
 			{
-				MoveMode = MoveModeType.None;
-				if ((e.Button & MouseButtons.Left) > MouseButtons.None)
+				_MoveMode = MoveModeType.None;
+
+				if (e.Button.HasFlag(MouseButtons.Left))
 				{
-					SetActiveElement(null, (ModifierKeys & Keys.Control) <= Keys.None);
+					SetActiveElement(null, !ModifierKeys.HasFlag(Keys.Control));
 				}
 			}
-			_picCanvas.Invalidate();
-			LastPos = point;
+
+			ImageCanvas.Invalidate();
+
+			_LastPosition = point;
+
 			if (ActiveElement != null)
 			{
-				mAnchorOffset.Width = ActiveElement.X - point.X;
-				mAnchorOffset.Height = ActiveElement.Y - point.Y;
+				_AnchorOffset.Width = ActiveElement.X - point.X;
+				_AnchorOffset.Height = ActiveElement.Y - point.Y;
 			}
-			ElementChanged = false;
-			MoveCount = 0;
+
+			_ElementChanged = false;
+			_MoveCount = 0;
 		}
 
-		private void picCanvas_MouseMove(object sender, MouseEventArgs e)
+		private void ImageCanvas_MouseMove(object sender, MouseEventArgs e)
 		{
-			var point1 = new Point(e.X, e.Y);
-			var num1 = point1.X - LastPos.X;
-			var num2 = point1.Y - LastPos.Y;
-			var baseElement = ElementStack.GetElementFromPoint(point1);
-			if ((ActiveElement == null || ActiveElement.HitTest(point1) == MoveModeType.None ? 0 : 1) != 0)
+			var point = new Point(e.X, e.Y);
+
+			var element = ElementStack.GetElementFromPoint(point);
+
+			if (ActiveElement != null && ActiveElement.HitTest(point) != MoveModeType.None)
 			{
-				baseElement = ActiveElement;
+				element = ActiveElement;
 			}
 
-			if (MoveMode == MoveModeType.Move)
+			if (_MoveMode == MoveModeType.Move)
 			{
-				point1.Offset(mAnchorOffset.Width, mAnchorOffset.Height);
+				point.Offset(_AnchorOffset.Width, _AnchorOffset.Height);
 			}
 
-			var e1 = new MouseMoveHookEventArgs
+			var args = new MouseMoveHookEventArgs
 			{
 				Keys = ModifierKeys,
 				MouseButtons = e.Button,
-				MouseLocation = point1,
-				MoveMode = MoveMode
+				MouseLocation = point,
+				MoveMode = _MoveMode
 			};
 
-			foreach (var loadedPlugin in LoadedPlugins)
+			foreach (var plugin in _LoadedPlugins)
 			{
-				((BasePlugin)RuntimeHelpers.GetObjectValue(loadedPlugin)).MouseMoveHook(ref e1);
-				point1 = e1.MouseLocation;
+				plugin.MouseMoveHook(ref args);
 			}
 
-			if ((MoveMode != MoveModeType.None || Math.Abs(num1) <= 0 || Math.Abs(num2) <= 0 ? 0 : 1) != 0)
+			point = args.MouseLocation;
+
+			if (_MoveMode == MoveModeType.None && Math.Abs(point.X - _LastPosition.X) > 0 && Math.Abs(point.Y - _LastPosition.Y) > 0)
 			{
-				MoveMode = MoveModeType.SelectionBox;
+				_MoveMode = MoveModeType.SelectionBox;
 			}
 
 			if (e.Button != MouseButtons.Left)
 			{
-				if (baseElement != null)
+				if (element != null)
 				{
-					switch (baseElement.HitTest(point1))
+					switch (element.HitTest(point))
 					{
-						case MoveModeType.ResizeTopLeft:
-						case MoveModeType.ResizeBottomRight:
-							Cursor = Cursors.SizeNWSE;
-							break;
-						case MoveModeType.ResizeTopRight:
-						case MoveModeType.ResizeBottomLeft:
-							Cursor = Cursors.SizeNESW;
-							break;
-						case MoveModeType.Move:
-							Cursor = Cursors.SizeAll;
-							break;
-						case MoveModeType.ResizeLeft:
-						case MoveModeType.ResizeRight:
-							Cursor = Cursors.SizeWE;
-							break;
-						case MoveModeType.ResizeTop:
-						case MoveModeType.ResizeBottom:
-							Cursor = Cursors.SizeNS;
-							break;
-						default:
-							Cursor = Cursors.Default;
-							break;
+						case MoveModeType.ResizeTopLeft: Cursor = Cursors.SizeNWSE; break;
+						case MoveModeType.ResizeBottomRight: Cursor = Cursors.SizeNWSE; break;
+						case MoveModeType.ResizeTopRight: Cursor = Cursors.SizeNESW; break;
+						case MoveModeType.ResizeBottomLeft: Cursor = Cursors.SizeNESW; break;
+						case MoveModeType.ResizeLeft: Cursor = Cursors.SizeWE; break;
+						case MoveModeType.ResizeRight: Cursor = Cursors.SizeWE; break;
+						case MoveModeType.ResizeTop: Cursor = Cursors.SizeNS; break;
+						case MoveModeType.ResizeBottom: Cursor = Cursors.SizeNS; break;
+						case MoveModeType.Move: Cursor = Cursors.SizeAll; break;
+						default: Cursor = Cursors.Default; break;
 					}
 				}
 				else
@@ -2126,440 +2095,528 @@ namespace GumpStudio.Forms
 			}
 			else
 			{
-				++MoveCount;
-				if (MoveCount > 100)
+				++_MoveCount;
+
+				if (_MoveCount > 100)
 				{
-					MoveCount = 2;
+					_MoveCount = 2;
 				}
 
-				var rectangle = new Rectangle(0, 0, _picCanvas.Width, _picCanvas.Height);
-				Cursor.Clip = _picCanvas.RectangleToScreen(rectangle);
-				if (MoveMode != MoveModeType.None)
+				var rectangle = new Rectangle(0, 0, ImageCanvas.Width, ImageCanvas.Height);
+
+				Cursor.Clip = ImageCanvas.RectangleToScreen(rectangle);
+
+				if (_MoveMode != MoveModeType.None)
 				{
-					switch (MoveMode)
+					switch (_MoveMode)
 					{
-						case MoveModeType.ResizeTopLeft:
-						case MoveModeType.ResizeBottomRight:
-							Cursor = Cursors.SizeNWSE;
-							break;
-						case MoveModeType.ResizeTopRight:
-						case MoveModeType.ResizeBottomLeft:
-							Cursor = Cursors.SizeNESW;
-							break;
-						case MoveModeType.Move:
-							Cursor = Cursors.SizeAll;
-							break;
-						case MoveModeType.ResizeLeft:
-						case MoveModeType.ResizeRight:
-							Cursor = Cursors.SizeWE;
-							break;
-						case MoveModeType.ResizeTop:
-						case MoveModeType.ResizeBottom:
-							Cursor = Cursors.SizeNS;
-							break;
-						default:
-							Cursor = Cursors.Default;
-							break;
+						case MoveModeType.ResizeTopLeft: Cursor = Cursors.SizeNWSE; break;
+						case MoveModeType.ResizeBottomRight: Cursor = Cursors.SizeNWSE; break;
+						case MoveModeType.ResizeTopRight: Cursor = Cursors.SizeNESW; break;
+						case MoveModeType.ResizeBottomLeft: Cursor = Cursors.SizeNESW; break;
+						case MoveModeType.ResizeLeft: Cursor = Cursors.SizeWE; break;
+						case MoveModeType.ResizeRight: Cursor = Cursors.SizeWE; break;
+						case MoveModeType.ResizeTop: Cursor = Cursors.SizeNS; break;
+						case MoveModeType.ResizeBottom: Cursor = Cursors.SizeNS; break;
+						case MoveModeType.Move: Cursor = Cursors.SizeAll; break;
+						default: Cursor = Cursors.Default; break;
 					}
-					if (MoveCount >= 2)
+
+					if (_MoveCount > 1)
 					{
-						ElementChanged = true;
+						_ElementChanged = true;
 					}
 				}
-				switch (MoveMode)
+
+				switch (_MoveMode)
 				{
 					case MoveModeType.SelectionBox:
-						rectangle = new Rectangle(mAnchor, new Size(point1.X - mAnchor.X, point1.Y - mAnchor.Y));
-						SelectionRect = GetPositiveRect(rectangle);
-						ShowSelectionRect = true;
-						_picCanvas.Invalidate();
-						break;
+					{
+						rectangle = new Rectangle(_Anchor, new Size(point.X - _Anchor.X, point.Y - _Anchor.Y));
+
+						_SelectionRect = GetPositiveRect(rectangle);
+
+						_ShowSelectionRect = true;
+
+						ImageCanvas.Invalidate();
+					}
+					break;
+
 					case MoveModeType.ResizeTopLeft:
-						point1.Offset(3, 0);
-						var point2 = new Point(ActiveElement.X + ActiveElement.Width, ActiveElement.Y + ActiveElement.Height);
-						ActiveElement.Location = point1;
-						var size1 = ActiveElement.Size;
-						var location1 = ActiveElement.Location;
-						size1.Width = point2.X - point1.X;
-						size1.Height = point2.Y - point1.Y;
-						if (size1.Width < 1)
+					{
+						point.Offset(3, 0);
+
+						var loc = new Point(ActiveElement.X + ActiveElement.Width, ActiveElement.Y + ActiveElement.Height);
+
+						ActiveElement.Location = point;
+
+						var p = ActiveElement.Location;
+						var s = ActiveElement.Size;
+
+						s.Width = loc.X - point.X;
+						s.Height = loc.Y - point.Y;
+
+						if (s.Width < 1)
 						{
-							location1.X = point2.X - 1;
-							size1.Width = 1;
+							p.X = loc.X - 1;
+							s.Width = 1;
 						}
-						if (size1.Height < 1)
+
+						if (s.Height < 1)
 						{
-							location1.Y = point2.Y - 1;
-							size1.Height = 1;
+							p.Y = loc.Y - 1;
+							s.Height = 1;
 						}
-						ActiveElement.Size = size1;
-						ActiveElement.Location = location1;
-						_picCanvas.Invalidate();
-						break;
+
+						ActiveElement.Size = s;
+						ActiveElement.Location = p;
+
+						ImageCanvas.Invalidate();
+					}
+					break;
+
 					case MoveModeType.ResizeTopRight:
-						point1.Offset(-3, 0);
-						var point3 = new Point(ActiveElement.X + ActiveElement.Width, ActiveElement.Y + ActiveElement.Height);
-						var location2 = ActiveElement.Location;
-						location2.Y = point1.Y;
-						ActiveElement.Location = location2;
-						var size2 = ActiveElement.Size;
-						size2.Height = point3.Y - point1.Y;
-						size2.Width = point1.X - ActiveElement.X;
-						if (size2.Height < 1)
+					{
+						point.Offset(-3, 0);
+
+						var loc = new Point(ActiveElement.X + ActiveElement.Width, ActiveElement.Y + ActiveElement.Height);
+
+						var p = ActiveElement.Location;
+
+						p.Y = point.Y;
+
+						ActiveElement.Location = p;
+
+						var s = ActiveElement.Size;
+
+						s.Height = loc.Y - point.Y;
+						s.Width = Math.Max(1, point.X - ActiveElement.X);
+
+						if (s.Height < 1)
 						{
-							location2.Y = point3.Y - 1;
-							size2.Height = 1;
-						}
-						if (size2.Width < 1)
-						{
-							size2.Width = 1;
+							p.Y = loc.Y - 1;
+							s.Height = 1;
 						}
 
-						location2.X = ActiveElement.Location.X;
-						ActiveElement.Size = size2;
-						ActiveElement.Location = location2;
-						_picCanvas.Invalidate();
-						break;
+						p.X = ActiveElement.Location.X;
+
+						ActiveElement.Size = s;
+						ActiveElement.Location = p;
+
+						ImageCanvas.Invalidate();
+					}
+					break;
+
 					case MoveModeType.ResizeBottomRight:
-
+					{
 						if (ActiveElement == null)
 						{
 							break;
 						}
 
-						point1.Offset(-3, -3);
-						var size3 = ActiveElement.Size;
-						size3.Width = point1.X - ActiveElement.X;
-						size3.Height = point1.Y - ActiveElement.Y;
-						if (size3.Width < 1)
-						{
-							size3.Width = 1;
-						}
+						point.Offset(-3, -3);
 
-						if (size3.Height < 1)
-						{
-							size3.Height = 1;
-						}
+						var s = ActiveElement.Size;
 
-						ActiveElement.Size = size3;
-						_picCanvas.Invalidate();
-						break;
+						s.Width = Math.Max(1, point.X - ActiveElement.X);
+						s.Height = Math.Max(1, point.Y - ActiveElement.Y);
+
+						ActiveElement.Size = s;
+
+						ImageCanvas.Invalidate();
+					}
+					break;
+
 					case MoveModeType.ResizeBottomLeft:
-
+					{
 						if (ActiveElement == null)
 						{
 							break;
 						}
 
-						point1.Offset(0, -3);
-						var point4 = new Point(ActiveElement.X + ActiveElement.Width, ActiveElement.Y + ActiveElement.Height);
-						var location3 = ActiveElement.Location;
-						location3.X = point1.X;
-						ActiveElement.Location = location3;
-						var size4 = ActiveElement.Size;
-						size4.Width = point4.X - point1.X;
-						size4.Height = point1.Y - ActiveElement.Y;
-						if (size4.Width < 1)
+						point.Offset(0, -3);
+
+						var loc = new Point(ActiveElement.X + ActiveElement.Width, ActiveElement.Y + ActiveElement.Height);
+
+						var p = ActiveElement.Location;
+
+						p.X = point.X;
+
+						ActiveElement.Location = p;
+
+						var s = ActiveElement.Size;
+
+						s.Width = loc.X - point.X;
+						s.Height = Math.Max(1, point.Y - ActiveElement.Y);
+
+						if (s.Width < 1)
 						{
-							location3.X = point4.X - 1;
-							size4.Width = 1;
-						}
-						if (size4.Height < 1)
-						{
-							size4.Height = 1;
+							p.X = loc.X - 1;
+							s.Width = 1;
 						}
 
-						location3.Y = ActiveElement.Y;
-						ActiveElement.Size = size4;
-						ActiveElement.Location = location3;
-						_picCanvas.Invalidate();
-						break;
+						p.Y = ActiveElement.Y;
+
+						ActiveElement.Size = s;
+						ActiveElement.Location = p;
+
+						ImageCanvas.Invalidate();
+					}
+					break;
+
 					case MoveModeType.Move:
-
+					{
 						if (ActiveElement == null)
 						{
 							break;
 						}
 
-						IEnumerator enumerator2 = null;
-						var location4 = ActiveElement.Location;
-						ActiveElement.Location = point1;
-						var dx = ActiveElement.X - location4.X;
-						var dy = ActiveElement.Y - location4.Y;
-						try
+						var p = ActiveElement.Location;
+
+						ActiveElement.Location = point;
+
+						var dx = ActiveElement.X - p.X;
+						var dy = ActiveElement.Y - p.Y;
+
+						foreach (var o in ElementStack.GetSelectedElements())
 						{
-							foreach (var selectedElement in ElementStack.GetSelectedElements())
+							if (o != ActiveElement)
 							{
-								var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(selectedElement);
-								if (objectValue != ActiveElement)
-								{
-									var location5 = objectValue.Location;
-									location5.Offset(dx, dy);
-									objectValue.Location = location5;
-								}
+								var loc = o.Location;
+
+								loc.Offset(dx, dy);
+
+								o.Location = loc;
 							}
 						}
-						finally
-						{
-							(enumerator2 as IDisposable)?.Dispose();
-						}
-						_picCanvas.Invalidate();
-						break;
+
+						ImageCanvas.Invalidate();
+					}
+					break;
+
 					case MoveModeType.ResizeLeft:
-						point1.Offset(3, 0);
-						var point5 = new Point(ActiveElement.X + ActiveElement.Width, ActiveElement.Y + ActiveElement.Height);
+					{
+						point.Offset(3, 0);
+
+						var loc = new Point(ActiveElement.X + ActiveElement.Width, ActiveElement.Y + ActiveElement.Height);
+
 						var y = ActiveElement.Y;
-						ActiveElement.Location = point1;
-						var size5 = ActiveElement.Size;
-						var location6 = ActiveElement.Location;
-						size5.Width = point5.X - point1.X;
-						if (size5.Width < 1)
+
+						ActiveElement.Location = point;
+
+						var p = ActiveElement.Location;
+						var s = ActiveElement.Size;
+
+						s.Width = loc.X - point.X;
+
+						if (s.Width < 1)
 						{
-							location6.X = point5.X - 1;
-							size5.Width = 1;
+							p.X = loc.X - 1;
+							s.Width = 1;
 						}
-						location6.Y = y;
-						ActiveElement.Size = size5;
-						ActiveElement.Location = location6;
-						_picCanvas.Invalidate();
-						break;
+
+						p.Y = y;
+
+						ActiveElement.Size = s;
+						ActiveElement.Location = p;
+
+						ImageCanvas.Invalidate();
+					}
+					break;
+
 					case MoveModeType.ResizeTop:
-						point1.Offset(0, 3);
-						var point6 = new Point(ActiveElement.X + ActiveElement.Width, ActiveElement.Y + ActiveElement.Height);
+					{
+						point.Offset(0, 3);
+
+						var loc = new Point(ActiveElement.X + ActiveElement.Width, ActiveElement.Y + ActiveElement.Height);
+
 						var x = ActiveElement.X;
-						ActiveElement.Location = point1;
-						var size6 = ActiveElement.Size;
-						var location7 = ActiveElement.Location;
-						size6.Height = point6.Y - point1.Y;
-						if (size6.Height < 1)
+
+						ActiveElement.Location = point;
+
+						var p = ActiveElement.Location;
+						var s = ActiveElement.Size;
+
+						s.Height = loc.Y - point.Y;
+
+						if (s.Height < 1)
 						{
-							location7.Y = point6.Y - 1;
-							size6.Height = 1;
+							p.Y = loc.Y - 1;
+							s.Height = 1;
 						}
-						location7.X = x;
-						ActiveElement.Size = size6;
-						ActiveElement.Location = location7;
-						_picCanvas.Invalidate();
-						break;
+
+						p.X = x;
+
+						ActiveElement.Size = s;
+						ActiveElement.Location = p;
+
+						ImageCanvas.Invalidate();
+					}
+					break;
+
 					case MoveModeType.ResizeRight:
-						point1.Offset(-3, 0);
-						var size7 = ActiveElement.Size;
-						size7.Width = point1.X - ActiveElement.X;
-						if (size7.Width < 1)
-						{
-							size7.Width = 1;
-						}
+					{
+						point.Offset(-3, 0);
 
-						ActiveElement.Size = size7;
-						_picCanvas.Invalidate();
-						break;
+						var s = ActiveElement.Size;
+
+						s.Width = Math.Max(1, point.X - ActiveElement.X);
+
+						ActiveElement.Size = s;
+
+						ImageCanvas.Invalidate();
+					}
+					break;
+
 					case MoveModeType.ResizeBottom:
-						point1.Offset(0, -3);
-						var size8 = ActiveElement.Size;
-						size8.Height = point1.Y - ActiveElement.Y;
-						if (size8.Height < 1)
-						{
-							size8.Height = 1;
-						}
+					{
+						point.Offset(0, -3);
 
-						ActiveElement.Size = size8;
-						_picCanvas.Invalidate();
-						break;
+						var s = ActiveElement.Size;
+
+						s.Height = Math.Max(1, point.Y - ActiveElement.Y);
+
+						ActiveElement.Size = s;
+
+						ImageCanvas.Invalidate();
+					}
+					break;
 				}
 			}
-			LastPos = point1;
+
+			_LastPosition = point;
 		}
 
-		private void picCanvas_MouseUp(object sender, MouseEventArgs e)
+		private void ImageCanvas_MouseUp(object sender, MouseEventArgs e)
 		{
-			var rectangle = new Rectangle();
-			var point = new Point(e.X, e.Y);
-			ElementStack.GetElementFromPoint(point);
-			ShowSelectionRect = false;
-			Cursor.Clip = rectangle;
-			if (MoveMode == MoveModeType.SelectionBox)
-			{
-				BaseElement Element = null;
+			var rectangle = Rectangle.Empty;
 
-				foreach (var element in ElementStack.GetElements())
+			var point = new Point(e.X, e.Y);
+
+			ElementStack.GetElementFromPoint(point);
+
+			_ShowSelectionRect = false;
+
+			Cursor.Clip = rectangle;
+
+			if (_MoveMode == MoveModeType.SelectionBox)
+			{
+				BaseElement selected = null;
+
+				foreach (var element in ElementStack.Elements)
 				{
-					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(element);
-					if (objectValue.ContainsTest(SelectionRect))
+					if (element.ContainsTest(_SelectionRect))
 					{
-						objectValue.Selected = true;
-						Element = objectValue;
+						element.Selected = true;
+						selected = element;
 					}
-					else if ((ModifierKeys & Keys.Control) <= Keys.None)
+					else if (!ModifierKeys.HasFlag(Keys.Control))
 					{
-						objectValue.Selected = false;
+						element.Selected = false;
 					}
 				}
 
-				SetActiveElement(Element, false);
+				SetActiveElement(selected, false);
 			}
-			if ((MoveMode == MoveModeType.None || MoveMode == MoveModeType.SelectionBox || !ElementChanged ? 0 : 1) != 0)
+
+			if (_MoveMode != MoveModeType.None && _MoveMode != MoveModeType.SelectionBox && _ElementChanged)
 			{
 				CreateUndoPoint("Element Moved");
-				ElementChanged = false;
+				_ElementChanged = false;
 			}
-			if ((e.Button & MouseButtons.Right) > MouseButtons.None)
+
+			if (e.Button.HasFlag(MouseButtons.Right))
 			{
-				var mnuContextMenu = m_mnuContextMenu;
-				GetContextMenu(ref ActiveElement, mnuContextMenu);
-				mnuContextMenu.Show(_picCanvas, point);
-				ClearContextMenu(mnuContextMenu);
+				var menu = _MenuContext;
+				var active = ActiveElement;
+
+				GetContextMenu(ref active, menu);
+
+				ActiveElement = active;
+
+				menu.Show(ImageCanvas, point);
+
+				ClearContextMenu(menu);
 			}
+
 			SetActiveElement(ActiveElement, false);
-			_picCanvas.Invalidate();
-			MoveMode = MoveModeType.None;
-			mAnchorOffset = new Size(0, 0);
+
+			ImageCanvas.Invalidate();
+
+			_MoveMode = MoveModeType.None;
+			_AnchorOffset = Size.Empty;
 		}
 
-		private void picCanvas_Paint(object sender, PaintEventArgs e)
+		private void ImageCanvas_Paint(object sender, PaintEventArgs e)
 		{
 			Render(e.Graphics);
 		}
 
-		private void pnlCanvasScroller_MouseLeave(object sender, EventArgs e)
+		private void CanvasScroller_MouseLeave(object sender, EventArgs e)
 		{
 			Cursor = Cursors.Default;
 		}
 
 		public void RebuildTabPages()
 		{
-			_TabPager.TabPages.Clear();
+			_TabPages.TabPages.Clear();
+
 			var num = -1;
 
 			foreach (var stack in Stacks)
 			{
-				var objectValue = RuntimeHelpers.GetObjectValue(stack);
-				++num;
-				_TabPager.TabPages.Add(new TabPage(Convert.ToString(num)));
-				if (ElementStack == objectValue)
+				_TabPages.TabPages.Add(new TabPage((++num).ToString()));
+
+				if (ElementStack == stack)
 				{
-					_TabPager.SelectedIndex = num;
+					_TabPages.SelectedIndex = num;
 				}
 			}
 		}
 
 		public void Redo()
 		{
-			if (CurrentUndoPoint < UndoPoints.Count)
+			if (_CurrentUndoPoint < _UndoPoints.Count)
 			{
-				++CurrentUndoPoint;
-				RevertToUndoPoint(CurrentUndoPoint);
-			}
-			if (CurrentUndoPoint == UndoPoints.Count - 1)
-			{
-				_mnuEditRedo.Enabled = false;
+				RevertToUndoPoint(++_CurrentUndoPoint);
 			}
 
-			_mnuEditUndo.Enabled = true;
+			if (_CurrentUndoPoint == _UndoPoints.Count - 1)
+			{
+				_MenuEditRedo.Enabled = false;
+			}
+
+			_MenuEditUndo.Enabled = true;
 		}
 
 		public void RefreshElementList()
 		{
-			m_cboElements.Items.Clear();
-			m_cboElements.Items.AddRange(ElementStack.GetElements().ToArray());
+			_ComboElements.Items.Clear();
+			_ComboElements.Items.AddRange(ElementStack.Elements.ToArray());
 		}
 
 		public void RefreshView(object sender)
 		{
 			RefreshElementList();
-			m_cboElements.SelectedItem = ActiveElement;
-			if (ElementStack.GetSelectedElements().Count > 1)
+
+			_ComboElements.SelectedItem = ActiveElement;
+
+			var selected = ElementStack.GetSelectedElements().ToArray();
+
+			if (selected.Length > 1)
 			{
-				m_ElementProperties.SelectedObjects = ElementStack.GetSelectedElements().ToArray();
+				_ElementProperties.SelectedObjects = selected;
 			}
 			else
 			{
-				m_ElementProperties.SelectedObject = ActiveElement;
+				_ElementProperties.SelectedObject = ActiveElement;
 			}
 		}
 
-		protected void Render(Graphics Target)
+		private void Render(Graphics target)
 		{
-			var Target1 = Graphics.FromImage(Canvas);
+			var g = Graphics.FromImage(_Canvas);
+
 			if (!PluginClearsCanvas)
 			{
-				Target1.Clear(Color.Black);
+				g.Clear(Color.Black);
 			}
 
 			var hookPreRender = HookPreRender;
-			hookPreRender?.Invoke(Canvas);
-			if (Stacks.Count > 0 && (!ShowPage0 || ElementStack == Stacks[0] ? 0 : 1) != 0)
+
+			hookPreRender?.Invoke(_Canvas);
+
+			if (Stacks.Count > 0 && _ShowPage0 && Stacks[0] is BaseElement e && e != ElementStack)
 			{
-				((BaseElement)Stacks[0]).Render(Target1);
+				e.Render(g);
 			}
 
-			ElementStack.Render(Target1);
+			ElementStack.Render(g);
 
-			foreach (var element in ElementStack.GetElements())
+			foreach (var element in ElementStack.Elements)
 			{
-				var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(element);
-				if ((!objectValue.Selected || objectValue == ActiveElement ? 0 : 1) != 0)
+				if (element.Selected && element != ActiveElement)
 				{
-					objectValue.DrawBoundingBox(Target1, false);
+					element.DrawBoundingBox(g, false);
 				}
 			}
 
-			ActiveElement?.DrawBoundingBox(Target1, true);
-			if (ShowSelectionRect)
+			ActiveElement?.DrawBoundingBox(g, true);
+
+			if (_ShowSelectionRect)
 			{
-				Target1.FillRectangle(SelBG, SelectionRect);
-				Target1.DrawRectangle(SelFG, SelectionRect);
+				g.FillRectangle(_SelectionBG, _SelectionRect);
+				g.DrawRectangle(_SelectionFG, _SelectionRect);
 			}
-			var hookPostRender = HookPostRender;
-			hookPostRender?.Invoke(Canvas);
-			Target1.Dispose();
-			Target.DrawImage(Canvas, 0, 0);
+
+			HookPostRender?.Invoke(_Canvas);
+
+			g.Dispose();
+
+			target.DrawImage(_Canvas, 0, 0);
 		}
 
-		public void RevertToUndoPoint(int Index)
+		public void RevertToUndoPoint(int index)
 		{
-			var undoPoint = (UndoPoint)UndoPoints[Index];
+			var undoPoint = (UndoPoint)_UndoPoints[index];
+
 			GumpProperties = (GumpProperties)undoPoint.GumpProperties.Clone();
-			Stacks = new ArrayList();
-			foreach (var obj in undoPoint.Stack)
+
+			Stacks.Clear();
+
+			foreach (GroupElement group in undoPoint.Stack)
 			{
-				var objectValue = (GroupElement)RuntimeHelpers.GetObjectValue(obj);
-				var groupElement = (GroupElement)objectValue.Clone();
-				Stacks.Add(groupElement);
-				if (undoPoint.ElementStack == objectValue)
+				var clone = (GroupElement)group.Clone();
+
+				Stacks.Add(clone);
+
+				if (undoPoint.ElementStack == group)
 				{
-					ElementStack = groupElement;
+					ElementStack = clone;
 				}
 			}
 
 			RebuildTabPages();
-			_picCanvas.Invalidate();
+
+			ImageCanvas.Invalidate();
+
 			SetActiveElement(null, true);
-			CurrentUndoPoint = Index;
+
+			_CurrentUndoPoint = index;
 		}
 
-		public void SaveTo(string Path)
+		public void SaveTo(string path)
 		{
 			_StatusBar.Text = $@"Saving gump...";
-			ElementStack.UpdateParent -= new BaseElement.UpdateParentEventHandler(ChangeActiveElementEventHandler);
-			ElementStack.Repaint -= new BaseElement.RepaintEventHandler(RefreshView);
-			var fileStream = new FileStream(Path, FileMode.Create);
-			var binaryFormatter = new BinaryFormatter { Binder = DeserializationBinder.Instance };
-			binaryFormatter.Serialize(fileStream, Stacks);
-			binaryFormatter.Serialize(fileStream, GumpProperties);
-			fileStream.Close();
-			ElementStack.UpdateParent += new BaseElement.UpdateParentEventHandler(ChangeActiveElementEventHandler);
-			ElementStack.Repaint += new BaseElement.RepaintEventHandler(RefreshView);
-			_StatusBar.Text = "";
+
+			ElementStack.UpdateParent -= ChangeActiveElementEventHandler;
+			ElementStack.Repaint -= RefreshView;
+
+			using (var fileStream = new FileStream(path, FileMode.Create))
+			{
+				var bin = new BinaryFormatter
+				{
+					Binder = DeserializationBinder.Instance
+				};
+
+				bin.Serialize(fileStream, Stacks);
+				bin.Serialize(fileStream, GumpProperties);
+			}
+
+			ElementStack.UpdateParent += ChangeActiveElementEventHandler;
+			ElementStack.Repaint += RefreshView;
+
+			_StatusBar.Text = String.Empty;
 		}
 
 		public void SelectAll()
 		{
 			foreach (var selectedElement in ElementStack.GetSelectedElements())
 			{
-				((BaseElement)RuntimeHelpers.GetObjectValue(selectedElement)).Selected = true;
+				selectedElement.Selected = true;
 			}
 
-			_picCanvas.Invalidate();
+			ImageCanvas.Invalidate();
 		}
 
 		public void SetActiveElement(BaseElement e)
@@ -2567,105 +2624,120 @@ namespace GumpStudio.Forms
 			SetActiveElement(e, false);
 		}
 
-		public void SetActiveElement(BaseElement Element, bool DeselectOthers)
+		public void SetActiveElement(BaseElement element, bool deselectOthers)
 		{
-			if (DeselectOthers)
+			if (deselectOthers)
 			{
-				foreach (var element in ElementStack.GetElements())
+				foreach (var e in ElementStack.Elements)
 				{
-					((BaseElement)RuntimeHelpers.GetObjectValue(element)).Selected = false;
+					e.Selected = false;
 				}
 			}
-			if (ActiveElement != Element)
+
+			if (ActiveElement != element)
 			{
 				RefreshElementList();
-				ActiveElement = Element;
-				m_cboElements.SelectedItem = Element;
-				if (Element != null)
+
+				ActiveElement = element;
+
+				_ComboElements.SelectedItem = element;
+
+				if (element != null)
 				{
-					Element.Selected = true;
+					element.Selected = true;
 				}
 			}
-			if (ElementStack.GetSelectedElements().Count > 1)
+
+			var selected = ElementStack.GetSelectedElements().ToArray();
+
+			if (selected.Length > 1)
 			{
-				m_ElementProperties.SelectedObjects = ElementStack.GetSelectedElements().ToArray();
+				_ElementProperties.SelectedObjects = selected;
 			}
-			else if (Element != null)
+			else if (element != null)
 			{
-				m_ElementProperties.SelectedObject = Element;
+				_ElementProperties.SelectedObject = element;
 			}
 			else
 			{
-				m_ElementProperties.SelectedObject = GumpProperties;
+				_ElementProperties.SelectedObject = GumpProperties;
 			}
 		}
 
-		public Point SnapLocToGrid(Point Position, Size GridSize)
+		public Point SnapLocToGrid(Point position, Size gridSize)
 		{
-			var point = Position;
-			point.X = point.X / GridSize.Width * GridSize.Width;
-			point.Y = point.Y / GridSize.Height * GridSize.Height;
+			var point = position;
+
+			point.X = point.X / gridSize.Width * gridSize.Width;
+			point.Y = point.Y / gridSize.Height * gridSize.Height;
+
 			return point;
 		}
 
-		private void TabPager_SelectedIndexChanged(object sender, EventArgs e)
+		private void TabPages_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			if (_TabPager.SelectedIndex != -1)
+			if (_TabPages.SelectedIndex >= 0)
 			{
-				ChangeActiveStack(_TabPager.SelectedIndex);
+				ChangeActiveStack(_TabPages.SelectedIndex);
 			}
 
 			RefreshElementList();
 		}
 
-		private void treGumplings_DoubleClick(object sender, EventArgs e)
+		private void Gumplings_DoubleClick(object sender, EventArgs e)
 		{
-			if (_treGumplings.SelectedNode.Tag == null || !(_treGumplings.SelectedNode.Tag is TreeGumpling))
+			if (_Gumplings.SelectedNode.Tag == null || !(_Gumplings.SelectedNode.Tag is TreeGumpling tg))
 			{
 				return;
 			}
 
-			var groupElement = (GroupElement)((TreeGumpling)_treGumplings.SelectedNode.Tag).Gumpling.Clone();
-			groupElement.mIsBaseWindow = false;
-			groupElement.RecalculateBounds();
-			var point = new Point(0, 0);
-			groupElement.Location = point;
-			AddElement(groupElement);
+			var group = (GroupElement)tg.Gumpling.Clone();
+
+			group._IsBaseWindow = false;
+
+			group.RecalculateBounds();
+
+			group.Location = Point.Empty;
+
+			AddElement(group);
 		}
 
-		private void treGumplings_MouseUp(object sender, MouseEventArgs e)
+		private void Gumplings_MouseUp(object sender, MouseEventArgs e)
 		{
-			_treGumplings.SelectedNode = _treGumplings.GetNodeAt(new Point(e.X, e.Y));
+			_Gumplings.SelectedNode = _Gumplings.GetNodeAt(new Point(e.X, e.Y));
 		}
 
 		public void Undo()
 		{
-			--CurrentUndoPoint;
-			RevertToUndoPoint(CurrentUndoPoint);
-			if (CurrentUndoPoint == 0)
+			RevertToUndoPoint(--_CurrentUndoPoint);
+
+			if (_CurrentUndoPoint <= 0)
 			{
-				_mnuEditUndo.Enabled = false;
+				_MenuEditUndo.Enabled = false;
 			}
 
-			_mnuEditRedo.Enabled = true;
+			_MenuEditRedo.Enabled = true;
 		}
 
 		public void WritePluginsToLoad()
 		{
-			if (PluginTypesToLoad != null)
-			{
-				var fileStream = new FileStream(Application.StartupPath + "\\LoadInfo.bin", FileMode.Create);
-				new BinaryFormatter { Binder = DeserializationBinder.Instance }.Serialize(fileStream, PluginTypesToLoad);
-				fileStream.Close();
-			}
-			else
-			{
-				if (!File.Exists(Application.StartupPath + "\\LoadInfo.bin"))
-				{
-					return;
-				}
+			var path = Path.Combine(Application.StartupPath, "LoadInfo.bin");
 
-				File.Delete(Application.StartupPath + "\\LoadInfo.bin");
+			if (PluginsInfo != null && PluginsInfo.Count > 0)
+			{
+				using (var fileStream = new FileStream(path, FileMode.Create))
+				{
+					var bin = new BinaryFormatter
+					{
+						Binder = DeserializationBinder.Instance
+					};
+
+					bin.Serialize(fileStream, PluginsInfo.ToArray());
+				}
+			}
+			else if (File.Exists(path))
+			{
+				File.Delete(path);
 			}
 		}
 

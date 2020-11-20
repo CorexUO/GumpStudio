@@ -70,7 +70,7 @@ namespace GumpStudio.Elements
 
 		public TextEntryElement()
 		{
-			mSize = new Size(200, 20);
+			_Size = new Size(200, 20);
 			mHue = Hues.GetHue(0);
 		}
 

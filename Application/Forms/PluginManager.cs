@@ -5,7 +5,8 @@
 // Assembly location: C:\GumpStudio_1_8_R3_quinted-02\GumpStudioCore.dll
 
 using System;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
@@ -34,10 +35,10 @@ namespace GumpStudio
 		private TextBox _txtDescription;
 		private TextBox _txtEmail;
 		private TextBox _txtVersion;
-		public ArrayList AvailablePlugins;
-		public ArrayList LoadedPlugins;
+		public HashSet<BasePlugin> AvailablePlugins;
+		public HashSet<BasePlugin> LoadedPlugins;
+		public HashSet<PluginInfo> OrderList;
 		public DesignerForm MainForm;
-		public PluginInfo[] OrderList;
 
 		public PluginManager()
 		{
@@ -87,35 +88,11 @@ namespace GumpStudio
 
 		private void cmdOK_Click(object sender, EventArgs e)
 		{
-			IEnumerator enumerator = null;
 			MessageBox.Show("You will need to restart the program for plugin changes to take effect.");
-			PluginInfo[] pluginInfoArray = null;
-			try
-			{
-				foreach (var obj in _lstLoaded.Items)
-				{
-					var objectValue = (PluginInfo)RuntimeHelpers.GetObjectValue(obj);
 
-					if (pluginInfoArray != null)
-					{
-						Array.Resize(ref pluginInfoArray, pluginInfoArray.Length + 1);
-					}
-					else
-					{
-						pluginInfoArray = new PluginInfo[1];
-					}
+			MainForm.PluginsInfo.Clear();
+			MainForm.PluginsInfo.UnionWith(_lstLoaded.Items.OfType<PluginInfo>());
 
-					pluginInfoArray[pluginInfoArray.Length - 1] = objectValue;
-				}
-			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
-				}
-			}
-			MainForm.PluginTypesToLoad = pluginInfoArray;
 			MainForm.WritePluginsToLoad();
 			DialogResult = DialogResult.OK;
 		}

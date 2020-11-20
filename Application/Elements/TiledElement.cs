@@ -66,7 +66,7 @@ namespace GumpStudio.Elements
 			DoingRenderRetry = false;
 			mHue = Hues.GetHue(0);
 			GumpID = gumpID;
-			mSize = mTileSize;
+			_Size = mTileSize;
 		}
 
 		public TiledElement(SerializationInfo info, StreamingContext context) : base(info, context)
@@ -98,7 +98,7 @@ namespace GumpStudio.Elements
 
 		protected virtual void DoResetSizeMenu(object sender, EventArgs e)
 		{
-			mSize = mTileSize;
+			_Size = mTileSize;
 			RaiseUpdateEvent(this, false);
 			GlobalObjects.DesignerForm.CreateUndoPoint();
 		}

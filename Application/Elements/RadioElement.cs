@@ -27,7 +27,7 @@ namespace GumpStudio.Elements
 					return;
 				}
 
-				foreach (var obj in mParent.GetElementsRecursive())
+				foreach (var obj in _Parent.GetElementsRecursive())
 				{
 					var objectValue = RuntimeHelpers.GetObjectValue(obj);
 

@@ -117,7 +117,7 @@ namespace GumpStudio.Elements
 				CheckedID = 211;
 			}
 
-			mSize = mChecked ? Image2Cache.Size : Image1Cache.Size;
+			_Size = mChecked ? Image2Cache.Size : Image1Cache.Size;
 		}
 
 		public override void Render(Graphics Target)

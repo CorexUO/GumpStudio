@@ -115,7 +115,7 @@ namespace GumpStudio.Elements
 					throw new ArgumentException("Size may only be changed if the label is cropped.");
 				}
 
-				mSize = value;
+				_Size = value;
 			}
 		}
 
@@ -175,13 +175,13 @@ namespace GumpStudio.Elements
 			if (int32 >= 2)
 			{
 				mCropped = info.GetBoolean(nameof(Cropped));
-				mSize = (Size)info.GetValue(nameof(Size), typeof(Size));
+				_Size = (Size)info.GetValue(nameof(Size), typeof(Size));
 			}
 			else
 			{
 				mCropped = false;
 				var stringImage = UnicodeFonts.GetStringImage(mFontIndex, mText + " ");
-				mSize = stringImage.Size;
+				_Size = stringImage.Size;
 				stringImage.Dispose();
 			}
 			RefreshCache();
@@ -214,7 +214,7 @@ namespace GumpStudio.Elements
 
 			if (mCropped)
 			{
-				var bitmap = new Bitmap(mSize.Width, mSize.Height, PixelFormat.Format32bppArgb);
+				var bitmap = new Bitmap(_Size.Width, _Size.Height, PixelFormat.Format32bppArgb);
 				var graphics = Graphics.FromImage(bitmap);
 				graphics.Clear(Color.Transparent);
 				graphics.DrawImage(mCache, 0, 0);
@@ -222,7 +222,7 @@ namespace GumpStudio.Elements
 				mCache.Dispose();
 				mCache = bitmap;
 			}
-			mSize = mCache.Size;
+			_Size = mCache.Size;
 		}
 
 		public override void Render(Graphics Target)

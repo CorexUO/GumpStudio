@@ -81,9 +81,9 @@ namespace Server.Gumps
 		{
 			_Designer = designer;
 
-			_Designer.mnuFileExport.Enabled = true;
+			_Designer.MenuFileExport.Enabled = true;
 
-			_Designer.mnuFileExport.MenuItems.Add(new MenuItem(".NET C#", new[]
+			_Designer.MenuFileExport.MenuItems.Add(new MenuItem(".NET C#", new[]
 			{
 				new MenuItem("All Elements", ExportFileClick),
 				new MenuItem("Selected Elements", ExportSelectionClick)

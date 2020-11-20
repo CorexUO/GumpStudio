@@ -100,7 +100,7 @@ namespace GumpStudio.Elements
 				mHue.ApplyTo(ImageCache, false);
 			}
 
-			mSize = ImageCache.Size;
+			_Size = ImageCache.Size;
 		}
 
 		public override void Render(Graphics Target)

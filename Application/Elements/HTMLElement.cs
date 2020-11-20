@@ -77,7 +77,7 @@ namespace GumpStudio.Elements
 			mBackground = true;
 			mTextType = HTMLElementType.HTML;
 			mHTML = "";
-			mSize = new Size(200, 100);
+			_Size = new Size(200, 100);
 			mFont = new Font("Arial", 12f, FontStyle.Regular, GraphicsUnit.Point);
 			RefreshCache();
 		}

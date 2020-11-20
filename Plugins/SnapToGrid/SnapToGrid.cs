@@ -33,14 +33,14 @@ namespace GumpStudio.Plugins
 
 		private void DoConfigGridMenu(object Sender, EventArgs E)
 		{
-			_designer.picCanvas.Refresh();
+			_designer.ImageCanvas.Refresh();
 		}
 
 		private void DoToggleGridMenu(object Sender, EventArgs E)
 		{
 			Config.ShowGrid = !Config.ShowGrid;
 			ShowGridMenu.Checked = Config.ShowGrid;
-			_designer.picCanvas.Refresh();
+			_designer.ImageCanvas.Refresh();
 		}
 
 		private void HookKeyDown(object sender, ref KeyEventArgs e)
@@ -179,7 +179,7 @@ namespace GumpStudio.Plugins
 			if (modified)
 			{
 				e.Handled = true;
-				_designer.picCanvas.Invalidate();
+				_designer.ImageCanvas.Invalidate();
 			}
 		}
 
@@ -206,7 +206,7 @@ namespace GumpStudio.Plugins
 				Checked = Config.ShowGrid
 			};
 
-			_designer.mnuPlugins.MenuItems.Add(menuItem);
+			_designer.MenuPlugins.MenuItems.Add(menuItem);
 			_designer.HookPreRender += RenderGrid;
 			_designer.HookKeyDown += HookKeyDown;
 		}
@@ -304,7 +304,7 @@ namespace GumpStudio.Plugins
 		{
 			Config.ShowGrid = !Config.ShowGrid;
 			((MenuItem)sender).Checked = Config.ShowGrid;
-			_designer.picCanvas.Invalidate();
+			_designer.ImageCanvas.Invalidate();
 		}
 	}
 }

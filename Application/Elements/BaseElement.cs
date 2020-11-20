@@ -1,75 +1,57 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: GumpStudio.Elements.BaseElement
-// Assembly: GumpStudioCore, Version=1.8.3024.24259, Culture=neutral, PublicKeyToken=null
-// MVID: A77D32E5-7519-4865-AA26-DCCB34429732
-// Assembly location: C:\GumpStudio_1_8_R3_quinted-02\GumpStudioCore.dll
-
-using System;
+﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
 
 using GumpStudio.Plugins;
 
-using Microsoft.VisualBasic.CompilerServices;
-
 namespace GumpStudio.Elements
 {
 	[Serializable]
 	public abstract class BaseElement : ISerializable, ICloneable
 	{
-		protected static Hashtable mIDs = new Hashtable();
-		protected string mComment;
-		protected static ArrayList mExtenders;
-		protected Point mLocation;
-		protected string mName;
-		protected GroupElement mParent;
-		protected bool mSelected;
-		protected Size mSize;
+		protected static readonly Hashtable _IDs = new Hashtable();
+
+		internal static void ResetID()
+		{
+			_IDs.Clear();
+		}
+
+		protected string _Comment;
+		protected static ArrayList _Extenders;
+		protected Point _Location;
+		protected string _Name;
+		protected GroupElement _Parent;
+		protected bool _Selected;
+		protected Size _Size;
 
 		[Browsable(false)]
-		public virtual Rectangle Bounds => new Rectangle(mLocation, mSize);
+		public virtual Rectangle Bounds => new Rectangle(_Location, _Size);
 
 		[Description("A user defined comment for this element. UO does not use this.")]
 		[MergableProperty(false)]
 		[ParenthesizePropertyName(true)]
-		public string Comment
-		{
-			get => mComment;
-			set => mComment = value;
-		}
+		public string Comment { get => _Comment; set => _Comment = value; }
 
 		[Browsable(false)]
-		public virtual int Height
-		{
-			get => mSize.Height;
-			set
-			{
-			}
-		}
+		public virtual int Height { get => _Size.Height; set { } }
 
 		[MergableProperty(false)]
-		public Point Location
-		{
-			get => mLocation;
-			set => mLocation = value;
-		}
+		public Point Location { get => _Location; set => _Location = value; }
 
 		[MergableProperty(false)]
 		[ParenthesizePropertyName(true)]
 		[Description("A name used to identify the element in the Editor, or in script.  UO does not use this.")]
-		public string Name
-		{
-			get => mName;
-			set => mName = value;
-		}
+		public string Name { get => _Name; set => _Name = value; }
 
 		[Browsable(false)]
 		[Description("The group elements that this element belongs to.")]
-		public GroupElement Parent => mParent;
+		public GroupElement Parent => _Parent;
 
 		[Browsable(false)]
 		[Description("The group elements that this element belongs to.")]
@@ -89,171 +71,149 @@ namespace GumpStudio.Elements
 		}
 
 		[Browsable(false)]
-		public bool Selected
-		{
-			get => mSelected;
-			set => mSelected = value;
-		}
+		public bool Selected { get => _Selected; set => _Selected = value; }
 
 		[Browsable(false)]
 		[MergableProperty(true)]
-		public virtual Size Size
-		{
-			get => mSize;
-			set
-			{
-			}
-		}
+		public virtual Size Size { get => _Size; set { } }
 
 		[MergableProperty(false)]
 		public abstract string Type { get; }
 
 		[Browsable(false)]
-		public virtual int Width
-		{
-			get => mSize.Width;
-			set
-			{
-			}
-		}
+		public virtual int Width { get => _Size.Width; set { } }
 
 		[Browsable(false)]
-		public int X
-		{
-			get => mLocation.X;
-			set => mLocation.X = value;
-		}
+		public int X { get => _Location.X; set => _Location.X = value; }
 
 		[Browsable(false)]
-		public int Y
-		{
-			get => mLocation.Y;
-			set => mLocation.Y = value;
-		}
+		public int Y { get => _Location.Y; set => _Location.Y = value; }
 
 		[Description("The Z order of this element. Highest is on top.")]
 		[MergableProperty(false)]
 		public int Z
 		{
-			get => mParent.mElements.IndexOf(this);
+			get => _Parent._Elements.IndexOf(this);
 			set
 			{
-				mParent.mElements.Remove(this);
-				mParent.mElements.Insert(value, this);
+				_Parent._Elements.Remove(this);
+				_Parent._Elements.Insert(value, this);
 			}
 		}
 
-		public event BaseElement.RepaintEventHandler Repaint;
-
-		public event BaseElement.UpdateParentEventHandler UpdateParent;
+		public event RepaintEventHandler Repaint;
+		public event UpdateParentEventHandler UpdateParent;
 
 		public BaseElement()
 		{
 			long num1;
-			if (BaseElement.mIDs.Contains(Type))
+
+			if (_IDs.Contains(Type))
 			{
-				var num2 = Conversions.ToLong(BaseElement.mIDs[Type]) + 1L;
-				BaseElement.mIDs[Type] = num2;
-				num1 = num2;
+				_IDs[Type] = num1 = 1L + Convert.ToInt64(_IDs[Type]);
 			}
 			else
 			{
-				BaseElement.mIDs.Add(Type, 1);
-				num1 = 1L;
+				_IDs.Add(Type, num1 = 1L);
 			}
-			mName = Type + " " + Conversions.ToString(num1);
+
+			_Name = Type + " " + num1;
 		}
 
 		public BaseElement(string Name)
 		{
-			mName = Name;
+			_Name = Name;
 		}
 
 		protected BaseElement(SerializationInfo info, StreamingContext context)
 		{
-			var int32 = info.GetInt32("BaseElementVersion");
-			mName = info.GetString(nameof(Name));
-			mLocation = (Point)info.GetValue(nameof(Location), typeof(Point));
-			mSize = (Size)info.GetValue(nameof(Size), typeof(Size));
-			mParent = (GroupElement)info.GetValue(nameof(Parent), typeof(GroupElement));
-			if (int32 >= 2)
+			var version = info.GetInt32("BaseElementVersion");
+
+			_Name = info.GetString("Name");
+			_Location = (Point)info.GetValue("Location", typeof(Point));
+			_Size = (Size)info.GetValue("Size", typeof(Size));
+			_Parent = (GroupElement)info.GetValue("Parent", typeof(GroupElement));
+
+			if (version >= 2)
 			{
-				mComment = info.GetString(nameof(Comment));
+				_Comment = info.GetString("Comment");
 			}
 			else
 			{
-				mComment = "";
+				_Comment = String.Empty;
 			}
+		}
+
+		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			info.AddValue("BaseElementVersion", 2);
+			info.AddValue("Name", _Name);
+			info.AddValue("Location", _Location);
+			info.AddValue("Size", _Size);
+			info.AddValue("Parent", _Parent);
+			info.AddValue("Comment", _Comment);
 		}
 
 		public virtual void AddContextMenus(ref MenuItem GroupMenu, ref MenuItem PositionMenu, ref MenuItem OrderMenu, ref MenuItem MiscMenu)
 		{
-			var num = mParent.GetElements().Count - 1;
+			var num = _Parent._Elements.Count - 1;
+
 			if (num > 0)
 			{
 				if (Z < num)
 				{
-					OrderMenu.MenuItems.Add(new MenuItem("Move Front", new EventHandler(DoMoveFrontMenu)));
-					OrderMenu.MenuItems.Add(new MenuItem("Move First", new EventHandler(DoMoveFirstMenu)));
+					OrderMenu.MenuItems.Add(new MenuItem("Move Front", DoMoveFrontMenu));
+					OrderMenu.MenuItems.Add(new MenuItem("Move First", DoMoveFirstMenu));
 				}
+
 				if (Z >= 1)
 				{
-					OrderMenu.MenuItems.Add(new MenuItem("Move Back", new EventHandler(DoMoveBackMenu)));
-					OrderMenu.MenuItems.Add(new MenuItem("Move Last", new EventHandler(DoMoveLastMenu)));
+					OrderMenu.MenuItems.Add(new MenuItem("Move Back", DoMoveBackMenu));
+					OrderMenu.MenuItems.Add(new MenuItem("Move Last", DoMoveLastMenu));
 				}
-			}
-			if (mParent.GetSelectedElements().Count > 1)
-			{
-				PositionMenu.MenuItems.Add(new MenuItem("Align Lefts", new EventHandler(DoAlignLeftsMenu)));
-				PositionMenu.MenuItems.Add(new MenuItem("Align Rights", new EventHandler(DoAlignRightsMenu)));
-				PositionMenu.MenuItems.Add(new MenuItem("Align Tops", new EventHandler(DoAlignTopsMenu)));
-				PositionMenu.MenuItems.Add(new MenuItem("Align Bottoms", new EventHandler(DoAlignBottomsMenu)));
-				PositionMenu.MenuItems.Add(new MenuItem("-"));
-				PositionMenu.MenuItems.Add(new MenuItem("Center Horizontally", new EventHandler(DoAlignCentersMenu)));
-				PositionMenu.MenuItems.Add(new MenuItem("Center Vertically", new EventHandler(DoAlignMiddlesMenu)));
-				if (mParent.GetSelectedElements().Count > 2)
-				{
-					PositionMenu.MenuItems.Add(new MenuItem("-"));
-					PositionMenu.MenuItems.Add(new MenuItem("Equalize Vertical Spacing", new EventHandler(DoVerticalSpacingMenu)));
-					PositionMenu.MenuItems.Add(new MenuItem("Equalize Horizontal Spacing", new EventHandler(DoHorizontalSpacingMenu)));
-				}
-			}
-			if (BaseElement.mExtenders == null)
-			{
-				return;
 			}
 
-			IEnumerator enumerator = null;
-			try
+			var selected = _Parent.GetSelectedElements().Count();
+
+			if (selected > 1)
 			{
-				foreach (var mExtender in BaseElement.mExtenders)
+				PositionMenu.MenuItems.Add(new MenuItem("Align Lefts", DoAlignLeftsMenu));
+				PositionMenu.MenuItems.Add(new MenuItem("Align Rights", DoAlignRightsMenu));
+				PositionMenu.MenuItems.Add(new MenuItem("Align Tops", DoAlignTopsMenu));
+				PositionMenu.MenuItems.Add(new MenuItem("Align Bottoms", DoAlignBottomsMenu));
+				PositionMenu.MenuItems.Add(new MenuItem("-"));
+				PositionMenu.MenuItems.Add(new MenuItem("Center Horizontally", DoAlignCentersMenu));
+				PositionMenu.MenuItems.Add(new MenuItem("Center Vertically", DoAlignMiddlesMenu));
+
+				if (selected > 2)
 				{
-					((ElementExtender)RuntimeHelpers.GetObjectValue(mExtender)).AddContextMenus(ref GroupMenu, ref PositionMenu, ref OrderMenu, ref MiscMenu);
+					PositionMenu.MenuItems.Add(new MenuItem("-"));
+					PositionMenu.MenuItems.Add(new MenuItem("Equalize Vertical Spacing", DoVerticalSpacingMenu));
+					PositionMenu.MenuItems.Add(new MenuItem("Equalize Horizontal Spacing", DoHorizontalSpacingMenu));
 				}
 			}
-			finally
+
+			if (_Extenders != null)
 			{
-				if (enumerator is IDisposable)
+				foreach (ElementExtender extender in _Extenders)
 				{
-					(enumerator as IDisposable).Dispose();
+					extender.AddContextMenus(ref GroupMenu, ref PositionMenu, ref OrderMenu, ref MiscMenu);
 				}
 			}
 		}
 
-		[Description("Inserts an element extender into this element type's extendor lsit.")]
+		[Description("Inserts an element extender into this element type's extender lsit.")]
 		public void AddExtender(ElementExtender Extender)
 		{
-			if (BaseElement.mExtenders == null)
+			if (_Extenders == null)
 			{
-				BaseElement.mExtenders = new ArrayList();
+				_Extenders = new ArrayList();
 			}
 
-			if (BaseElement.mExtenders.Contains(Extender))
+			if (!_Extenders.Contains(Extender))
 			{
-				return;
+				_Extenders.Add(Extender);
 			}
-
-			BaseElement.mExtenders.Add(Extender);
 		}
 
 		[Description("Creates a copy of this element.")]
@@ -265,10 +225,13 @@ namespace GumpStudio.Elements
 		[Description("Creates a copy of this element.")]
 		protected virtual object CloneMe()
 		{
-			var baseElement = (BaseElement)MemberwiseClone();
-			baseElement.RefreshCache();
+			var element = (BaseElement)MemberwiseClone();
+
+			element.RefreshCache();
+
 			RefreshCache();
-			return baseElement;
+
+			return element;
 		}
 
 		public virtual bool ContainsTest(Rectangle Rect)
@@ -287,133 +250,67 @@ namespace GumpStudio.Elements
 
 		protected virtual void DoAlignBottomsMenu(object sender, EventArgs e)
 		{
-			IEnumerator enumerator = null;
-			try
+			foreach (var selectedElement in _Parent.GetSelectedElements())
 			{
-				foreach (var selectedElement in mParent.GetSelectedElements())
-				{
-					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(selectedElement);
-					objectValue.Y = Y + Height - objectValue.Height;
-				}
+				selectedElement.Y = Y + Height - selectedElement.Height;
 			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
-				}
-			}
+
 			GlobalObjects.DesignerForm.CreateUndoPoint();
 		}
 
 		protected virtual void DoAlignCentersMenu(object sender, EventArgs e)
 		{
-			IEnumerator enumerator = null;
-			try
+			foreach (var selectedElement in _Parent.GetSelectedElements())
 			{
-				foreach (var selectedElement in mParent.GetSelectedElements())
+				if (selectedElement != this)
 				{
-					var objectValue = RuntimeHelpers.GetObjectValue(selectedElement);
-					if (objectValue != this)
-					{
-						var baseElement = (BaseElement)objectValue;
-						baseElement.X = (int)Math.Round(X + Width / 2.0 - baseElement.Width / 2.0);
-					}
+					selectedElement.X = (int)Math.Round(X + Width / 2.0 - selectedElement.Width / 2.0);
 				}
 			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
-				}
-			}
+
 			GlobalObjects.DesignerForm.CreateUndoPoint();
 		}
 
 		protected virtual void DoAlignLeftsMenu(object sender, EventArgs e)
 		{
-			IEnumerator enumerator = null;
-			try
+			foreach (var selectedElement in _Parent.GetSelectedElements())
 			{
-				foreach (var selectedElement in mParent.GetSelectedElements())
-				{
-					((BaseElement)RuntimeHelpers.GetObjectValue(selectedElement)).X = X;
-				}
+				selectedElement.X = X;
 			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
-				}
-			}
+
 			GlobalObjects.DesignerForm.CreateUndoPoint();
 		}
 
 		protected virtual void DoAlignMiddlesMenu(object sender, EventArgs e)
 		{
-			IEnumerator enumerator = null;
-			try
+			foreach (var selectedElement in _Parent.GetSelectedElements())
 			{
-				foreach (var selectedElement in mParent.GetSelectedElements())
+				if (selectedElement != this)
 				{
-					var objectValue = RuntimeHelpers.GetObjectValue(selectedElement);
-					if (objectValue != this)
-					{
-						var baseElement = (BaseElement)objectValue;
-						baseElement.Y = (int)Math.Round(Y + Height / 2.0 - baseElement.Height / 2.0);
-					}
+					selectedElement.Y = (int)Math.Round(Y + Height / 2.0 - selectedElement.Height / 2.0);
 				}
 			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
-				}
-			}
+
 			GlobalObjects.DesignerForm.CreateUndoPoint();
 		}
 
 		protected virtual void DoAlignRightsMenu(object sender, EventArgs e)
 		{
-			IEnumerator enumerator = null;
-			try
+			foreach (var selectedElement in _Parent.GetSelectedElements())
 			{
-				foreach (var selectedElement in mParent.GetSelectedElements())
-				{
-					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(selectedElement);
-					objectValue.X = X + Width - objectValue.Width;
-				}
+				selectedElement.X = X + Width - selectedElement.Width;
 			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
-				}
-			}
+
 			GlobalObjects.DesignerForm.CreateUndoPoint();
 		}
 
 		protected virtual void DoAlignTopsMenu(object sender, EventArgs e)
 		{
-			IEnumerator enumerator = null;
-			try
+			foreach (var selectedElement in _Parent.GetSelectedElements())
 			{
-				foreach (var selectedElement in mParent.GetSelectedElements())
-				{
-					((BaseElement)RuntimeHelpers.GetObjectValue(selectedElement)).Y = Y;
-				}
+				selectedElement.Y = Y;
 			}
-			finally
-			{
-				if (enumerator is IDisposable)
-				{
-					(enumerator as IDisposable).Dispose();
-				}
-			}
+
 			GlobalObjects.DesignerForm.CreateUndoPoint();
 		}
 
@@ -425,56 +322,43 @@ namespace GumpStudio.Elements
 		protected virtual void DoHorizontalSpacingMenu(object sender, EventArgs e)
 		{
 			var num1 = 0;
-			IEnumerator enumerator1 = null;
-			IEnumerator enumerator2 = null;
-			var arrayList = new ArrayList();
+
+			var elements = new List<BaseElement>();
+
 			var num2 = Int32.MaxValue;
-			try
-			{
-				foreach (var selectedElement in mParent.GetSelectedElements())
-				{
-					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(selectedElement);
-					var num3 = objectValue.Width / 2 + objectValue.X;
-					if (num3 < num2)
-					{
-						num2 = num3;
-					}
 
-					if (num3 > num1)
-					{
-						num1 = num3;
-					}
-
-					arrayList.Add(objectValue);
-				}
-			}
-			finally
+			foreach (var selectedElement in _Parent.GetSelectedElements())
 			{
-				if (enumerator1 is IDisposable)
+				var num3 = selectedElement.Width / 2 + selectedElement.X;
+
+				if (num3 < num2)
 				{
-					(enumerator1 as IDisposable).Dispose();
+					num2 = num3;
 				}
+
+				if (num3 > num1)
+				{
+					num1 = num3;
+				}
+
+				elements.Add(selectedElement);
 			}
-			arrayList.Sort(new BaseElement.ElementHorizontalSorter());
-			var num4 = (num1 - num2) / (double)(arrayList.Count - 1);
+
+			elements.Sort(new ElementHorizontalSorter());
+
+			var num4 = (num1 - num2) / (double)(elements.Count - 1);
+
 			double num5 = num2;
-			try
+
+			foreach (var element in elements)
 			{
-				foreach (var obj in arrayList)
-				{
-					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(obj);
-					objectValue.X = (int)Math.Round(num5 - objectValue.Width / 2.0);
-					num5 += num4;
-				}
+				element.X = (int)Math.Round(num5 - element.Width / 2.0);
+
+				num5 += num4;
 			}
-			finally
-			{
-				if (enumerator2 is IDisposable)
-				{
-					(enumerator2 as IDisposable).Dispose();
-				}
-			}
+
 			RaiseRepaintEvent(this);
+
 			GlobalObjects.DesignerForm.CreateUndoPoint();
 		}
 
@@ -501,68 +385,60 @@ namespace GumpStudio.Elements
 		protected virtual void DoVerticalSpacingMenu(object sender, EventArgs e)
 		{
 			var num1 = 0;
-			IEnumerator enumerator1 = null;
-			IEnumerator enumerator2 = null;
-			var arrayList = new ArrayList();
+
+			var elements = new List<BaseElement>();
+
 			var num2 = Int32.MaxValue;
-			try
-			{
-				foreach (var selectedElement in mParent.GetSelectedElements())
-				{
-					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(selectedElement);
-					var num3 = objectValue.Height / 2 + objectValue.Y;
-					if (num3 < num2)
-					{
-						num2 = num3;
-					}
 
-					if (num3 > num1)
-					{
-						num1 = num3;
-					}
-
-					arrayList.Add(objectValue);
-				}
-			}
-			finally
+			foreach (var element in _Parent.GetSelectedElements())
 			{
-				if (enumerator1 is IDisposable)
+				var num3 = element.Height / 2 + element.Y;
+
+				if (num3 < num2)
 				{
-					(enumerator1 as IDisposable).Dispose();
+					num2 = num3;
 				}
+
+				if (num3 > num1)
+				{
+					num1 = num3;
+				}
+
+				elements.Add(element);
 			}
-			arrayList.Sort(new BaseElement.ElementVerticalSorter());
-			var num4 = (num1 - num2) / (double)(arrayList.Count - 1);
+
+			elements.Sort(new ElementVerticalSorter());
+
+			var num4 = (num1 - num2) / (double)(elements.Count - 1);
+
 			double num5 = num2;
-			try
+
+			foreach (var element in elements)
 			{
-				foreach (var obj in arrayList)
-				{
-					var objectValue = (BaseElement)RuntimeHelpers.GetObjectValue(obj);
-					objectValue.Y = (int)Math.Round(num5 - objectValue.Height / 2.0);
-					num5 += num4;
-				}
+				element.Y = (int)Math.Round(num5 - element.Height / 2.0);
+
+				num5 += num4;
 			}
-			finally
-			{
-				if (enumerator2 is IDisposable)
-				{
-					(enumerator2 as IDisposable).Dispose();
-				}
-			}
+
 			RaiseRepaintEvent(this);
+
 			GlobalObjects.DesignerForm.CreateUndoPoint();
 		}
 
 		public virtual void DrawBoundingBox(Graphics Target, bool Active)
 		{
-			var bounds = Bounds;
-			bounds.Inflate(3, 3);
-			var pen = !Active ? new Pen(Color.DarkGray) : new Pen(Color.White);
-			Target.DrawRectangle(Pens.Gray, bounds);
-			bounds.Inflate(1, 1);
-			Target.DrawRectangle(pen, bounds);
-			pen.Dispose();
+			using (var pen = new Pen(Active ? Color.White : Color.DarkGray))
+			{
+				var bounds = Bounds;
+
+				bounds.Inflate(3, 3);
+
+				Target.DrawRectangle(Pens.Gray, bounds);
+
+				bounds.Inflate(1, 1);
+
+				Target.DrawRectangle(pen, bounds);
+			}
 		}
 
 		public virtual string GetAboutText()
@@ -579,24 +455,17 @@ namespace GumpStudio.Elements
 			}
 
 			var absolutePosition = Parent.GetAbsolutePosition();
-			absolutePosition.Offset(X, Y);
-			return absolutePosition;
-		}
 
-		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-		{
-			info.AddValue("BaseElementVersion", 2);
-			info.AddValue("Name", mName);
-			info.AddValue("Location", mLocation);
-			info.AddValue("Size", mSize);
-			info.AddValue("Parent", mParent);
-			info.AddValue("Comment", mComment);
+			absolutePosition.Offset(X, Y);
+
+			return absolutePosition;
 		}
 
 		public virtual MoveModeType HitTest(Point Location)
 		{
 			var rectangle = Rectangle.Inflate(Bounds, 3, 3);
 			var moveModeType = MoveModeType.None;
+
 			if (rectangle.Contains(Location))
 			{
 				moveModeType = MoveModeType.Move;
@@ -617,14 +486,15 @@ namespace GumpStudio.Elements
 
 		public void MoveFirst()
 		{
-			mParent.mElements.Remove(this);
-			mParent.mElements.Add(this);
+			_Parent._Elements.Remove(this);
+			_Parent._Elements.Add(this);
+
 			GlobalObjects.DesignerForm.CreateUndoPoint("Move first");
 		}
 
 		public void MoveFront()
 		{
-			if (Z < Parent.mElements.Count - 1)
+			if (Z < Parent._Elements.Count - 1)
 			{
 				++Z;
 			}
@@ -635,29 +505,18 @@ namespace GumpStudio.Elements
 		public void MoveLast()
 		{
 			Z = 0;
+
 			GlobalObjects.DesignerForm.CreateUndoPoint("Move last");
 		}
 
 		public void RaiseRepaintEvent(object sender)
 		{
-			var repaint = Repaint;
-			if (repaint == null)
-			{
-				return;
-			}
-
-			repaint(RuntimeHelpers.GetObjectValue(sender));
+			Repaint?.Invoke(RuntimeHelpers.GetObjectValue(sender));
 		}
 
 		public void RaiseUpdateEvent(BaseElement Element, bool ClearSelected)
 		{
-			var updateParent = UpdateParent;
-			if (updateParent == null)
-			{
-				return;
-			}
-
-			updateParent(Element, ClearSelected);
+			UpdateParent?.Invoke(Element, ClearSelected);
 		}
 
 		public abstract void RefreshCache();
@@ -666,38 +525,32 @@ namespace GumpStudio.Elements
 
 		public void Reparent(GroupElement Parent)
 		{
-			if (mParent != null)
+			if (_Parent != null)
 			{
-				UpdateParent -= new BaseElement.UpdateParentEventHandler(mParent.RaiseUpdateEvent);
+				UpdateParent -= _Parent.RaiseUpdateEvent;
 			}
 
-			mParent = Parent;
-		}
-
-		internal static void ResetID()
-		{
-			BaseElement.mIDs = new Hashtable();
+			_Parent = Parent;
 		}
 
 		public override string ToString()
 		{
-			return mName;
+			return _Name;
 		}
 
 		object ICloneable.Clone()
 		{
-			return null;
+			return Clone();
 		}
 
 		[Description("A sorter that will sort elemenets in the ascending order of thier Horizontal center point.")]
-		protected class ElementHorizontalSorter : IComparer
+		protected class ElementHorizontalSorter : IComparer<BaseElement>
 		{
-			public int Compare(object x, object y)
+			public int Compare(BaseElement x, BaseElement y)
 			{
-				var baseElement1 = (BaseElement)x;
-				var baseElement2 = (BaseElement)y;
-				var num1 = (baseElement1.X + baseElement1.Width) / 2;
-				var num2 = (baseElement2.X + baseElement2.Width) / 2;
+				var num1 = (x.X + x.Width) / 2;
+				var num2 = (y.X + y.Width) / 2;
+
 				if (num1 > num2)
 				{
 					return 1;
@@ -708,14 +561,13 @@ namespace GumpStudio.Elements
 		}
 
 		[Description("A sorter that will sort elemenets in the ascending order of thier Vertical center point.")]
-		protected class ElementVerticalSorter : IComparer
+		protected class ElementVerticalSorter : IComparer<BaseElement>
 		{
-			public int Compare(object x, object y)
+			public int Compare(BaseElement x, BaseElement y)
 			{
-				var baseElement1 = (BaseElement)x;
-				var baseElement2 = (BaseElement)y;
-				var num1 = (baseElement1.Y + baseElement1.Height) / 2;
-				var num2 = (baseElement2.Y + baseElement2.Height) / 2;
+				var num1 = (x.Y + x.Height) / 2;
+				var num2 = (y.Y + y.Height) / 2;
+
 				if (num1 > num2)
 				{
 					return 1;
@@ -726,7 +578,6 @@ namespace GumpStudio.Elements
 		}
 
 		public delegate void RepaintEventHandler(object sender);
-
 		public delegate void UpdateParentEventHandler(BaseElement Element, bool ClearSelected);
 	}
 }

@@ -17,22 +17,22 @@ namespace GumpStudio.Elements
 		[Browsable(false)]
 		public override int Height
 		{
-			get => mSize.Height;
-			set => mSize.Height = value;
+			get => _Size.Height;
+			set => _Size.Height = value;
 		}
 
 		[Browsable(true)]
 		public override Size Size
 		{
-			get => mSize;
-			set => mSize = value;
+			get => _Size;
+			set => _Size = value;
 		}
 
 		[Browsable(false)]
 		public override int Width
 		{
-			get => mSize.Width;
-			set => mSize.Width = value;
+			get => _Size.Width;
+			set => _Size.Width = value;
 		}
 
 		public ResizeableElement()
@@ -98,7 +98,7 @@ namespace GumpStudio.Elements
 				moveModeType = MoveModeType.Move;
 			}
 
-			if (mSelected)
+			if (_Selected)
 			{
 				var rectangle2 = new Rectangle(rectangle1.X - 2, rectangle1.Y - 2, 5, 5);
 				var rectangle3 = new Rectangle((int)Math.Round(rectangle1.X + rectangle1.Width / 2.0 - 2.0), rectangle1.Y - 2, 5, 5);

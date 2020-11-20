@@ -136,7 +136,7 @@ namespace GumpStudio.Elements
 				return;
 			}
 
-			mSize = Cache.Size;
+			_Size = Cache.Size;
 		}
 
 		public override void Render(Graphics Target)
