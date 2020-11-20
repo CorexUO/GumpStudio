@@ -78,9 +78,11 @@ namespace GumpStudio.Elements
 			get
 			{
 				var p = Parent;
-				
+
 				while (p?.Parent != null)
+				{
 					p = p.Parent;
+				}
 
 				return p;
 			}

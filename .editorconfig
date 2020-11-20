@@ -65,7 +65,7 @@ csharp_preserve_single_line_statements = true
 #Style - Code block preferences
 
 #prefer no curly braces if allowed
-csharp_prefer_braces = true
+csharp_prefer_braces = false
 
 #Style - expression bodied member options
 
@@ -82,7 +82,7 @@ csharp_style_expression_bodied_properties = true:suggestion
 
 #prefer out variables to be declared within the method call
 csharp_style_inlined_variable_declaration = true:suggestion
-#prefer the type name for member access expressions, instead of the language keyword
+#prefer the language keyword for member access expressions, instead of the type name
 dotnet_style_predefined_type_for_member_access = false:suggestion
 
 #Style - Expression-level  preferences

@@ -223,19 +223,29 @@ namespace GumpStudio.Forms
 					var count = group.Count();
 
 					if (count == 0)
+					{
 						continue;
+					}
 
 					foreach (var o in group)
 					{
 						if (o is TextEntryElement te)
+						{
 							te.ID = index;
+						}
 
 						if (o is ButtonElement)
+						{
 							o.Name = $"{name}{++buttons}";
+						}
 						else if (o is CheckboxElement)
+						{
 							o.Name = $"{name}{++switches}";
+						}
 						else
+						{
 							o.Name = $"{name}{++index}";
+						}
 					}
 				}
 			}

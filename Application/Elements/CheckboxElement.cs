@@ -135,7 +135,9 @@ namespace GumpStudio.Elements
 			var buttonName = $"(int)Switches.{Name.Replace(" ", String.Empty)}";
 
 			if (this is RadioElement)
+			{
 				return $"AddRadio({X}, {Y}, {UnCheckedID}, {CheckedID}, {Checked}, {buttonName}); // {Name}";
+			}
 
 			return $"AddCheck({X}, {Y}, {UnCheckedID}, {CheckedID}, {Checked}, {buttonName}); // {Name}";
 		}

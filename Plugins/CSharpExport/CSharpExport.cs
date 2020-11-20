@@ -91,7 +91,7 @@ namespace Server.Gumps
 		}
 
 		private void ExportFileClick(object sender, EventArgs e)
-		{ 
+		{
 			ExportFile(false);
 		}
 
@@ -281,9 +281,13 @@ namespace Server.Gumps
 			}
 
 			if (layout.Length > 0)
+			{
 				template = template.Replace("~gump_controls~", $"{Environment.NewLine}{tabs}{layout.ToString().Trim()}{Environment.NewLine}");
+			}
 			else
+			{
 				template = template.Replace("~gump_controls~", String.Empty);
+			}
 
 			try
 			{

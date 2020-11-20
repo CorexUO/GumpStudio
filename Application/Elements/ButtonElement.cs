@@ -151,8 +151,10 @@ namespace GumpStudio.Elements
 
 		public string ToCSharpString()
 		{
-			if(ButtonType == ButtonTypeEnum.Page)
+			if (ButtonType == ButtonTypeEnum.Page)
+			{
 				return $"AddButton({X}, {Y}, {NormalID}, {PressedID}, 0, GumpButtonType.Page, {Param}); // {Name}";
+			}
 
 			return $"AddButton({X}, {Y}, {NormalID}, {PressedID}, (int)Buttons.{Name.Replace(" ", String.Empty)}, GumpButtonType.Reply, 0);";
 		}
