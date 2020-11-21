@@ -103,7 +103,7 @@ namespace GumpStudio
 
 		public void Edit()
 		{
-			_Editor.Show();
+			_Editor.Show(Form.ActiveForm);
 		}
 
 		public void Save()
