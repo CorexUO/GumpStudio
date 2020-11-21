@@ -89,13 +89,13 @@ namespace GumpStudio.Elements
 			info.AddValue("ResizableElementVersion", 1);
 		}
 
-		public override MoveModeType HitTest(Point Location)
+		public override MoveType HitTest(Point Location)
 		{
 			var rectangle1 = Rectangle.Inflate(Bounds, 4, 4);
-			var moveModeType = MoveModeType.None;
+			var moveModeType = MoveType.None;
 			if (rectangle1.Contains(Location))
 			{
-				moveModeType = MoveModeType.Move;
+				moveModeType = MoveType.Move;
 			}
 
 			if (_Selected)
@@ -110,42 +110,42 @@ namespace GumpStudio.Elements
 				var rectangle9 = new Rectangle(rectangle1.X - 2, (int)Math.Round(rectangle1.Y + rectangle1.Height / 2.0 - 2.0), 5, 5);
 				if (rectangle6.Contains(Location))
 				{
-					moveModeType = MoveModeType.ResizeBottomRight;
+					moveModeType = MoveType.ResizeBottomRight;
 				}
 
 				if (rectangle2.Contains(Location))
 				{
-					moveModeType = MoveModeType.ResizeTopLeft;
+					moveModeType = MoveType.ResizeTopLeft;
 				}
 
 				if (rectangle4.Contains(Location))
 				{
-					moveModeType = MoveModeType.ResizeTopRight;
+					moveModeType = MoveType.ResizeTopRight;
 				}
 
 				if (rectangle8.Contains(Location))
 				{
-					moveModeType = MoveModeType.ResizeBottomLeft;
+					moveModeType = MoveType.ResizeBottomLeft;
 				}
 
 				if (rectangle9.Contains(Location))
 				{
-					moveModeType = MoveModeType.ResizeLeft;
+					moveModeType = MoveType.ResizeLeft;
 				}
 
 				if (rectangle3.Contains(Location))
 				{
-					moveModeType = MoveModeType.ResizeTop;
+					moveModeType = MoveType.ResizeTop;
 				}
 
 				if (rectangle5.Contains(Location))
 				{
-					moveModeType = MoveModeType.ResizeRight;
+					moveModeType = MoveType.ResizeRight;
 				}
 
 				if (rectangle7.Contains(Location))
 				{
-					moveModeType = MoveModeType.ResizeBottom;
+					moveModeType = MoveType.ResizeBottom;
 				}
 			}
 			return moveModeType;

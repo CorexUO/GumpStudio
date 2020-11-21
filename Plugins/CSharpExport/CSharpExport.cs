@@ -8,10 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 
 using GumpStudio.Elements;
-using GumpStudio.Forms;
-using GumpStudio.Plugins;
 
-namespace CSharpExport
+namespace GumpStudio.Plugins
 {
 	public class CSharpExport : BasePlugin
 	{
@@ -73,26 +71,42 @@ namespace Server.Gumps
 }
 ";
 
-		private DesignerForm _Designer;
+		private readonly Settings _Config = new Settings();
 
-		public override PluginInfo Info { get; } = new PluginInfo("C# Exporter", "1.0", "Vorspire", "admin@vita-nex.com", "Exports a C# file compatible with emulators targeting .NET");
+		public override BaseConfig Config => _Config;
 
-		public override void Load(DesignerForm designer)
+		public override PluginInfo Info { get; } = new PluginInfo("C# Exporter", "1.1", "Vorspire", "admin@vita-nex.com", "Exports a C# file compatible with emulators targeting .NET");
+
+		private MenuItem _MenuFileExport;
+
+		protected override void OnLoaded()
 		{
-			if (IsLoaded && _Designer == designer)
+			base.OnLoaded();
+
+			Designer.MenuFileExport.Enabled = true;
+
+			if (_MenuFileExport == null)
 			{
-				return;
+				_MenuFileExport = new MenuItem(".NET C#", new[]
+				{
+					new MenuItem("All Elements", ExportFileClick),
+					new MenuItem("Selected Elements", ExportSelectionClick)
+				});
 			}
 
-			_Designer = designer;
+			Designer.MenuFileExport.MenuItems.Add(_MenuFileExport);
+		}
 
-			_Designer.MenuFileExport.Enabled = true;
+		protected override void OnUnloaded()
+		{
+			base.OnUnloaded();
+			
+			Designer.MenuFileExport.MenuItems.Remove(_MenuFileExport);
 
-			_Designer.MenuFileExport.MenuItems.Add(new MenuItem(".NET C#", new[]
+			if (Designer.MenuFileExport.MenuItems.Count == 0)
 			{
-				new MenuItem("All Elements", ExportFileClick),
-				new MenuItem("Selected Elements", ExportSelectionClick)
-			}));
+				Designer.MenuFileExport.Enabled = false;
+			}
 		}
 
 		private void ExportFileClick(object sender, EventArgs e)
@@ -138,18 +152,18 @@ namespace Server.Gumps
 
 			if (selected)
 			{
-				var elements = _Designer.ElementStack.GetSelectedElements().OfType<ICSharpExportable>().ToArray();
+				var elements = Designer.ElementStack.SelectedElements.OfType<ICSharpExportable>().ToArray();
 
 				if (elements.Length > 0)
 				{
-					stacks[_Designer.ElementStack] = elements;
+					stacks[Designer.ElementStack] = elements;
 				}
 			}
 			else
 			{
-				foreach (var stack in _Designer.Stacks.Cast<GroupElement>())
+				foreach (var stack in Designer.Stacks)
 				{
-					var elements = stack.GetElementsRecursive().OfType<ICSharpExportable>().ToArray();
+					var elements = stack.AllElements.OfType<ICSharpExportable>().ToArray();
 
 					if (elements.Length > 0)
 					{
@@ -158,22 +172,28 @@ namespace Server.Gumps
 				}
 			}
 
-			var location = new Point(Int32.MaxValue, Int32.MaxValue);
+			var location = Point.Empty;
 
-			foreach (var element in stacks.Values.SelectMany(o => o.OfType<BaseElement>()))
+			if (_Config.RelativeOffsets)
 			{
-				location.X = Math.Min(location.X, element.X);
-				location.Y = Math.Min(location.Y, element.Y);
-			}
+				location.X = Int32.MaxValue;
+				location.Y = Int32.MaxValue;
 
-			if (location.X == Int32.MaxValue)
-			{
-				location.X = 0;
-			}
+				foreach (var element in stacks.Values.SelectMany(o => o.OfType<BaseElement>()))
+				{
+					location.X = Math.Min(location.X, element.X);
+					location.Y = Math.Min(location.Y, element.Y);
+				}
 
-			if (location.Y == Int32.MaxValue)
-			{
-				location.Y = 0;
+				if (location.X == Int32.MaxValue)
+				{
+					location.X = 0;
+				}
+
+				if (location.Y == Int32.MaxValue)
+				{
+					location.Y = 0;
+				}
 			}
 
 			template = template.Replace("~gump_location~", $"{location.X}, {location.Y}");
@@ -193,13 +213,19 @@ namespace Server.Gumps
 				{
 					if (exportable is BaseElement element)
 					{
-						element.X -= location.X;
-						element.Y -= location.Y;
+						if (_Config.RelativeOffsets)
+						{
+							element.X -= location.X;
+							element.Y -= location.Y;
+						}
 
 						layout.AppendLine($"{tabs}{exportable.ToCSharpString()}");
 
-						element.X += location.X;
-						element.Y += location.Y;
+						if (_Config.RelativeOffsets)
+						{
+							element.X += location.X;
+							element.Y += location.Y;
+						}
 					}
 				}
 			}
@@ -304,6 +330,12 @@ namespace Server.Gumps
 				});
 			}
 			catch { }
+		}
+
+		[Serializable]
+		public class Settings : BaseConfig
+		{
+			public bool RelativeOffsets { get; set; } = false;
 		}
 	}
 }

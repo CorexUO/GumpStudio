@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
 
+using GumpStudio.Forms;
 using GumpStudio.Plugins;
 
 namespace GumpStudio.Elements
@@ -23,7 +24,6 @@ namespace GumpStudio.Elements
 		}
 
 		protected string _Comment;
-		protected static ArrayList _Extenders;
 		protected Point _Location;
 		protected string _Name;
 		protected GroupElement _Parent;
@@ -154,7 +154,7 @@ namespace GumpStudio.Elements
 			info.AddValue("Comment", _Comment);
 		}
 
-		public virtual void AddContextMenus(ref MenuItem GroupMenu, ref MenuItem PositionMenu, ref MenuItem OrderMenu, ref MenuItem MiscMenu)
+		public virtual void AddContextMenus(ref MenuItem groupMenu, ref MenuItem positionMenu, ref MenuItem orderMenu, ref MenuItem miscMenu)
 		{
 			var num = _Parent._Elements.Count - 1;
 
@@ -162,14 +162,14 @@ namespace GumpStudio.Elements
 			{
 				if (Z < num)
 				{
-					OrderMenu.MenuItems.Add(new MenuItem("Move Front", DoMoveFrontMenu));
-					OrderMenu.MenuItems.Add(new MenuItem("Move First", DoMoveFirstMenu));
+					orderMenu.MenuItems.Add(new MenuItem("Move Front", DoMoveFrontMenu));
+					orderMenu.MenuItems.Add(new MenuItem("Move First", DoMoveFirstMenu));
 				}
 
 				if (Z >= 1)
 				{
-					OrderMenu.MenuItems.Add(new MenuItem("Move Back", DoMoveBackMenu));
-					OrderMenu.MenuItems.Add(new MenuItem("Move Last", DoMoveLastMenu));
+					orderMenu.MenuItems.Add(new MenuItem("Move Back", DoMoveBackMenu));
+					orderMenu.MenuItems.Add(new MenuItem("Move Last", DoMoveLastMenu));
 				}
 			}
 
@@ -177,42 +177,20 @@ namespace GumpStudio.Elements
 
 			if (selected > 1)
 			{
-				PositionMenu.MenuItems.Add(new MenuItem("Align Lefts", DoAlignLeftsMenu));
-				PositionMenu.MenuItems.Add(new MenuItem("Align Rights", DoAlignRightsMenu));
-				PositionMenu.MenuItems.Add(new MenuItem("Align Tops", DoAlignTopsMenu));
-				PositionMenu.MenuItems.Add(new MenuItem("Align Bottoms", DoAlignBottomsMenu));
-				PositionMenu.MenuItems.Add(new MenuItem("-"));
-				PositionMenu.MenuItems.Add(new MenuItem("Center Horizontally", DoAlignCentersMenu));
-				PositionMenu.MenuItems.Add(new MenuItem("Center Vertically", DoAlignMiddlesMenu));
+				positionMenu.MenuItems.Add(new MenuItem("Align Lefts", DoAlignLeftsMenu));
+				positionMenu.MenuItems.Add(new MenuItem("Align Rights", DoAlignRightsMenu));
+				positionMenu.MenuItems.Add(new MenuItem("Align Tops", DoAlignTopsMenu));
+				positionMenu.MenuItems.Add(new MenuItem("Align Bottoms", DoAlignBottomsMenu));
+				positionMenu.MenuItems.Add(new MenuItem("-"));
+				positionMenu.MenuItems.Add(new MenuItem("Center Horizontally", DoAlignCentersMenu));
+				positionMenu.MenuItems.Add(new MenuItem("Center Vertically", DoAlignMiddlesMenu));
 
 				if (selected > 2)
 				{
-					PositionMenu.MenuItems.Add(new MenuItem("-"));
-					PositionMenu.MenuItems.Add(new MenuItem("Equalize Vertical Spacing", DoVerticalSpacingMenu));
-					PositionMenu.MenuItems.Add(new MenuItem("Equalize Horizontal Spacing", DoHorizontalSpacingMenu));
+					positionMenu.MenuItems.Add(new MenuItem("-"));
+					positionMenu.MenuItems.Add(new MenuItem("Equalize Vertical Spacing", DoVerticalSpacingMenu));
+					positionMenu.MenuItems.Add(new MenuItem("Equalize Horizontal Spacing", DoHorizontalSpacingMenu));
 				}
-			}
-
-			if (_Extenders != null)
-			{
-				foreach (ElementExtender extender in _Extenders)
-				{
-					extender.AddContextMenus(ref GroupMenu, ref PositionMenu, ref OrderMenu, ref MiscMenu);
-				}
-			}
-		}
-
-		[Description("Inserts an element extender into this element type's extender lsit.")]
-		public void AddExtender(ElementExtender Extender)
-		{
-			if (_Extenders == null)
-			{
-				_Extenders = new ArrayList();
-			}
-
-			if (!_Extenders.Contains(Extender))
-			{
-				_Extenders.Add(Extender);
 			}
 		}
 
@@ -461,14 +439,14 @@ namespace GumpStudio.Elements
 			return absolutePosition;
 		}
 
-		public virtual MoveModeType HitTest(Point Location)
+		public virtual MoveType HitTest(Point Location)
 		{
 			var rectangle = Rectangle.Inflate(Bounds, 3, 3);
-			var moveModeType = MoveModeType.None;
+			var moveModeType = MoveType.None;
 
 			if (rectangle.Contains(Location))
 			{
-				moveModeType = MoveModeType.Move;
+				moveModeType = MoveType.Move;
 			}
 
 			return moveModeType;

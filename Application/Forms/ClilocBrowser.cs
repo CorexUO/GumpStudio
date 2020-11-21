@@ -49,7 +49,7 @@ namespace GumpStudio.Forms
 
 		private void ClilocBrowser_Load(object sender, EventArgs e)
 		{
-			foreach (var file in Directory.GetFiles(XMLSettings.CurrentOptions.ClientPath, "Cliloc.*"))
+			foreach (var file in Directory.GetFiles(XMLSettings.AppSettings.ClientPath, "Cliloc.*"))
 			{
 				cboLanguage.Items.Add(Path.GetExtension(file).Substring(1));
 			}

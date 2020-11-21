@@ -720,6 +720,8 @@ namespace GumpStudio.Forms
 
 	public sealed partial class DesignerForm
 	{
+		public static string AppPath => Application.StartupPath;
+
 		private IContainer _Components;
 
 		private ComponentResourceManager _Resources;
@@ -742,7 +744,7 @@ namespace GumpStudio.Forms
 		private string _FileName = String.Empty;
 		private string _AboutElementAppend = String.Empty;
 
-		private MoveModeType _MoveMode;
+		private MoveType _MoveMode;
 
 		private Bitmap _Canvas;
 
@@ -755,6 +757,8 @@ namespace GumpStudio.Forms
 		private readonly HashSet<BasePlugin> _LoadedPlugins = new HashSet<BasePlugin>();
 
 		public HashSet<PluginInfo> PluginsInfo { get; } = new HashSet<PluginInfo>();
+
+		public HashSet<BaseElement> ToolboxElements { get; } = new HashSet<BaseElement>();
 
 		public List<GroupElement> Stacks { get; } = new List<GroupElement>();
 
@@ -777,8 +781,6 @@ namespace GumpStudio.Forms
 		public GumpProperties GumpProperties { get; set; } = new GumpProperties();
 
 		public IEnumerable<BaseElement> AllElements => Stacks.OfType<GroupElement>().SelectMany(s => s.AllElements);
-
-		public string AppPath => Application.StartupPath;
 
 		public event HookKeyDownEventHandler HookKeyDown;
 		public event HookPostRenderEventHandler HookPostRender;
@@ -909,19 +911,23 @@ namespace GumpStudio.Forms
 
 		private void BuildToolbox()
 		{
+			ToolboxElements.Clear();
+
 			_PanelToolbox.Controls.Clear();
 
-			try
-			{
-				var y = 0;
+			var y = 0;
 
-				foreach (Type type in _RegisteredTypes)
+			foreach (Type type in _RegisteredTypes)
+			{
+				try
 				{
-					var instance = (BaseElement)Activator.CreateInstance(type);
+					var element = (BaseElement)Activator.CreateInstance(type);
+
+					ToolboxElements.Add(element);
 
 					var button = new Button
 					{
-						Text = instance.Type,
+						Text = element.Type,
 						Location = new Point(0, y),
 						FlatStyle = FlatStyle.System,
 						Width = _PanelToolbox.Width,
@@ -935,20 +941,15 @@ namespace GumpStudio.Forms
 
 					button.Click += CreateElementFromToolbox;
 
-					if (instance.DispayInAbout())
+					if (element.DispayInAbout())
 					{
-						_AboutElementAppend += $"{Environment.NewLine}{instance.Type}: {instance.GetAboutText()}{Environment.NewLine}";
-					}
-
-					foreach (var plugin in _LoadedPlugins)
-					{
-						plugin.InitializeElementExtenders(instance);
+						_AboutElementAppend += $"{Environment.NewLine}{element.Type}: {element.GetAboutText()}{Environment.NewLine}";
 					}
 				}
-			}
-			catch (Exception ex)
-			{
-				MessageBox.Show($"{ex.Message}{Environment.NewLine}{ex.StackTrace}");
+				catch (Exception ex)
+				{
+					MessageBox.Show($"{ex.Message}{Environment.NewLine}{ex.StackTrace}");
+				}
 			}
 
 			BaseElement.ResetID();
@@ -1148,8 +1149,8 @@ namespace GumpStudio.Forms
 
 		private void DesignerForm_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			XMLSettings.CurrentOptions.DesignerFormSize = WindowState != FormWindowState.Normal ? RestoreBounds.Size : Size;
-			XMLSettings.Save(this, XMLSettings.CurrentOptions);
+			XMLSettings.AppSettings.DesignerFormSize = WindowState != FormWindowState.Normal ? RestoreBounds.Size : Size;
+			XMLSettings.AppSettings.Save();
 		}
 
 		private void DesignerForm_KeyDown(object sender, KeyEventArgs e)
@@ -1286,9 +1287,9 @@ namespace GumpStudio.Forms
 
 		private void DesignerForm_Load(object sender, EventArgs e)
 		{
-			XMLSettings.CurrentOptions = XMLSettings.Load(this);
+			XMLSettings.AppSettings.Load();
 
-			if (!File.Exists(Path.Combine(XMLSettings.CurrentOptions.ClientPath, "client.exe")))
+			if (!File.Exists(Path.Combine(XMLSettings.AppSettings.ClientPath, "client.exe")))
 			{
 				var folderBrowserDialog = new FolderBrowserDialog
 				{
@@ -1306,15 +1307,15 @@ namespace GumpStudio.Forms
 				}
 				while (!File.Exists(Path.Combine(folderBrowserDialog.SelectedPath, "client.exe")));
 
-				XMLSettings.CurrentOptions.ClientPath = folderBrowserDialog.SelectedPath;
-				XMLSettings.Save(this, XMLSettings.CurrentOptions);
+				XMLSettings.AppSettings.ClientPath = folderBrowserDialog.SelectedPath;
+				XMLSettings.AppSettings.Save();
 			}
 
 			Files.CacheData = false;
-			Files.SetMulPath(XMLSettings.CurrentOptions.ClientPath);
+			Files.SetMulPath(XMLSettings.AppSettings.ClientPath);
 
-			Size = XMLSettings.CurrentOptions.DesignerFormSize;
-			MaxUndoPoints = XMLSettings.CurrentOptions.UndoLevels;
+			Size = XMLSettings.AppSettings.DesignerFormSize;
+			MaxUndoPoints = XMLSettings.AppSettings.UndoLevels;
 
 			CanvasImage.Width = 1600;
 			CanvasImage.Height = 1200;
@@ -1479,7 +1480,15 @@ namespace GumpStudio.Forms
 				groupMenu.MenuItems.Add(new MenuItem("Create Group", MenuGroupCreate_Click));
 			}
 
-			element?.AddContextMenus(ref groupMenu, ref positionMenu, ref orderMenu, ref miscMenu);
+			if (element != null)
+			{
+				element.AddContextMenus(ref groupMenu, ref positionMenu, ref orderMenu, ref miscMenu);
+
+				foreach (var plugin in _LoadedPlugins)
+				{
+					plugin.AddContextMenus(element, ref groupMenu, ref positionMenu, ref orderMenu, ref miscMenu);
+				}
+			}
 
 			if (groupMenu.MenuItems.Count == 0)
 			{
@@ -1702,8 +1711,8 @@ namespace GumpStudio.Forms
 			}
 			while (!File.Exists(Path.Combine(folderBrowserDialog.SelectedPath, "client.exe")));
 
-			XMLSettings.CurrentOptions.ClientPath = folderBrowserDialog.SelectedPath;
-			XMLSettings.Save(this, XMLSettings.CurrentOptions);
+			XMLSettings.AppSettings.ClientPath = folderBrowserDialog.SelectedPath;
+			XMLSettings.AppSettings.Save();
 
 			MessageBox.Show("Changes will be applied after restarting Gump Studio.", "Data Files");
 		}
@@ -1957,7 +1966,7 @@ namespace GumpStudio.Forms
 
 			var element = ElementStack.GetElementFromPoint(point);
 
-			if (ActiveElement != null && ActiveElement.HitTest(point) != MoveModeType.None)
+			if (ActiveElement != null && ActiveElement.HitTest(point) != MoveType.None)
 			{
 				element = ActiveElement;
 			}
@@ -1966,7 +1975,7 @@ namespace GumpStudio.Forms
 			{
 				_MoveMode = element.HitTest(point);
 
-				if (ActiveElement != null && ActiveElement.HitTest(point) == MoveModeType.None)
+				if (ActiveElement != null && ActiveElement.HitTest(point) == MoveType.None)
 				{
 					if (element.Selected)
 					{
@@ -2002,13 +2011,13 @@ namespace GumpStudio.Forms
 					{
 						SetActiveElement(null, true);
 
-						_MoveMode = MoveModeType.None;
+						_MoveMode = MoveType.None;
 					}
 				}
 			}
 			else
 			{
-				_MoveMode = MoveModeType.None;
+				_MoveMode = MoveType.None;
 
 				if (e.Button.HasFlag(MouseButtons.Left))
 				{
@@ -2036,34 +2045,34 @@ namespace GumpStudio.Forms
 
 			var element = ElementStack.GetElementFromPoint(point);
 
-			if (ActiveElement != null && ActiveElement.HitTest(point) != MoveModeType.None)
+			if (ActiveElement != null && ActiveElement.HitTest(point) != MoveType.None)
 			{
 				element = ActiveElement;
 			}
 
-			if (_MoveMode == MoveModeType.Move)
+			if (_MoveMode == MoveType.Move)
 			{
 				point.Offset(_AnchorOffset.Width, _AnchorOffset.Height);
 			}
 
-			var args = new MouseMoveHookEventArgs
+			var args = new MouseMovementEventArgs(element)
 			{
 				Keys = ModifierKeys,
-				MouseButtons = e.Button,
-				MouseLocation = point,
-				MoveMode = _MoveMode
+				Button = e.Button,
+				Location = point,
+				Mode = _MoveMode
 			};
 
 			foreach (var plugin in _LoadedPlugins)
 			{
-				plugin.OnMouseMove(ref args);
+				plugin.MouseMovement(args);
 			}
 
-			point = args.MouseLocation;
+			point = args.Location;
 
-			if (_MoveMode == MoveModeType.None && Math.Abs(point.X - _LastPosition.X) > 0 && Math.Abs(point.Y - _LastPosition.Y) > 0)
+			if (_MoveMode == MoveType.None && Math.Abs(point.X - _LastPosition.X) > 0 && Math.Abs(point.Y - _LastPosition.Y) > 0)
 			{
-				_MoveMode = MoveModeType.SelectionBox;
+				_MoveMode = MoveType.SelectionBox;
 			}
 
 			if (e.Button != MouseButtons.Left)
@@ -2072,15 +2081,15 @@ namespace GumpStudio.Forms
 				{
 					switch (element.HitTest(point))
 					{
-						case MoveModeType.ResizeTopLeft: Cursor = Cursors.SizeNWSE; break;
-						case MoveModeType.ResizeBottomRight: Cursor = Cursors.SizeNWSE; break;
-						case MoveModeType.ResizeTopRight: Cursor = Cursors.SizeNESW; break;
-						case MoveModeType.ResizeBottomLeft: Cursor = Cursors.SizeNESW; break;
-						case MoveModeType.ResizeLeft: Cursor = Cursors.SizeWE; break;
-						case MoveModeType.ResizeRight: Cursor = Cursors.SizeWE; break;
-						case MoveModeType.ResizeTop: Cursor = Cursors.SizeNS; break;
-						case MoveModeType.ResizeBottom: Cursor = Cursors.SizeNS; break;
-						case MoveModeType.Move: Cursor = Cursors.SizeAll; break;
+						case MoveType.ResizeTopLeft: Cursor = Cursors.SizeNWSE; break;
+						case MoveType.ResizeBottomRight: Cursor = Cursors.SizeNWSE; break;
+						case MoveType.ResizeTopRight: Cursor = Cursors.SizeNESW; break;
+						case MoveType.ResizeBottomLeft: Cursor = Cursors.SizeNESW; break;
+						case MoveType.ResizeLeft: Cursor = Cursors.SizeWE; break;
+						case MoveType.ResizeRight: Cursor = Cursors.SizeWE; break;
+						case MoveType.ResizeTop: Cursor = Cursors.SizeNS; break;
+						case MoveType.ResizeBottom: Cursor = Cursors.SizeNS; break;
+						case MoveType.Move: Cursor = Cursors.SizeAll; break;
 						default: Cursor = Cursors.Default; break;
 					}
 				}
@@ -2102,19 +2111,19 @@ namespace GumpStudio.Forms
 
 				Cursor.Clip = CanvasImage.RectangleToScreen(rectangle);
 
-				if (_MoveMode != MoveModeType.None)
+				if (_MoveMode != MoveType.None)
 				{
 					switch (_MoveMode)
 					{
-						case MoveModeType.ResizeTopLeft: Cursor = Cursors.SizeNWSE; break;
-						case MoveModeType.ResizeBottomRight: Cursor = Cursors.SizeNWSE; break;
-						case MoveModeType.ResizeTopRight: Cursor = Cursors.SizeNESW; break;
-						case MoveModeType.ResizeBottomLeft: Cursor = Cursors.SizeNESW; break;
-						case MoveModeType.ResizeLeft: Cursor = Cursors.SizeWE; break;
-						case MoveModeType.ResizeRight: Cursor = Cursors.SizeWE; break;
-						case MoveModeType.ResizeTop: Cursor = Cursors.SizeNS; break;
-						case MoveModeType.ResizeBottom: Cursor = Cursors.SizeNS; break;
-						case MoveModeType.Move: Cursor = Cursors.SizeAll; break;
+						case MoveType.ResizeTopLeft: Cursor = Cursors.SizeNWSE; break;
+						case MoveType.ResizeBottomRight: Cursor = Cursors.SizeNWSE; break;
+						case MoveType.ResizeTopRight: Cursor = Cursors.SizeNESW; break;
+						case MoveType.ResizeBottomLeft: Cursor = Cursors.SizeNESW; break;
+						case MoveType.ResizeLeft: Cursor = Cursors.SizeWE; break;
+						case MoveType.ResizeRight: Cursor = Cursors.SizeWE; break;
+						case MoveType.ResizeTop: Cursor = Cursors.SizeNS; break;
+						case MoveType.ResizeBottom: Cursor = Cursors.SizeNS; break;
+						case MoveType.Move: Cursor = Cursors.SizeAll; break;
 						default: Cursor = Cursors.Default; break;
 					}
 
@@ -2126,7 +2135,7 @@ namespace GumpStudio.Forms
 
 				switch (_MoveMode)
 				{
-					case MoveModeType.SelectionBox:
+					case MoveType.SelectionBox:
 					{
 						rectangle = new Rectangle(_Anchor, new Size(point.X - _Anchor.X, point.Y - _Anchor.Y));
 
@@ -2138,7 +2147,7 @@ namespace GumpStudio.Forms
 					}
 					break;
 
-					case MoveModeType.ResizeTopLeft:
+					case MoveType.ResizeTopLeft:
 					{
 						point.Offset(3, 0);
 
@@ -2171,7 +2180,7 @@ namespace GumpStudio.Forms
 					}
 					break;
 
-					case MoveModeType.ResizeTopRight:
+					case MoveType.ResizeTopRight:
 					{
 						point.Offset(-3, 0);
 
@@ -2203,7 +2212,7 @@ namespace GumpStudio.Forms
 					}
 					break;
 
-					case MoveModeType.ResizeBottomRight:
+					case MoveType.ResizeBottomRight:
 					{
 						if (ActiveElement == null)
 						{
@@ -2223,7 +2232,7 @@ namespace GumpStudio.Forms
 					}
 					break;
 
-					case MoveModeType.ResizeBottomLeft:
+					case MoveType.ResizeBottomLeft:
 					{
 						if (ActiveElement == null)
 						{
@@ -2260,7 +2269,7 @@ namespace GumpStudio.Forms
 					}
 					break;
 
-					case MoveModeType.Move:
+					case MoveType.Move:
 					{
 						if (ActiveElement == null)
 						{
@@ -2290,7 +2299,7 @@ namespace GumpStudio.Forms
 					}
 					break;
 
-					case MoveModeType.ResizeLeft:
+					case MoveType.ResizeLeft:
 					{
 						point.Offset(3, 0);
 
@@ -2320,7 +2329,7 @@ namespace GumpStudio.Forms
 					}
 					break;
 
-					case MoveModeType.ResizeTop:
+					case MoveType.ResizeTop:
 					{
 						point.Offset(0, 3);
 
@@ -2350,7 +2359,7 @@ namespace GumpStudio.Forms
 					}
 					break;
 
-					case MoveModeType.ResizeRight:
+					case MoveType.ResizeRight:
 					{
 						point.Offset(-3, 0);
 
@@ -2364,7 +2373,7 @@ namespace GumpStudio.Forms
 					}
 					break;
 
-					case MoveModeType.ResizeBottom:
+					case MoveType.ResizeBottom:
 					{
 						point.Offset(0, -3);
 
@@ -2395,7 +2404,7 @@ namespace GumpStudio.Forms
 
 			Cursor.Clip = rectangle;
 
-			if (_MoveMode == MoveModeType.SelectionBox)
+			if (_MoveMode == MoveType.SelectionBox)
 			{
 				BaseElement selected = null;
 
@@ -2415,7 +2424,7 @@ namespace GumpStudio.Forms
 				SetActiveElement(selected, false);
 			}
 
-			if (_MoveMode != MoveModeType.None && _MoveMode != MoveModeType.SelectionBox && _ElementChanged)
+			if (_MoveMode != MoveType.None && _MoveMode != MoveType.SelectionBox && _ElementChanged)
 			{
 				CreateUndoPoint("Element Moved");
 				_ElementChanged = false;
@@ -2439,7 +2448,7 @@ namespace GumpStudio.Forms
 
 			CanvasImage.Invalidate();
 
-			_MoveMode = MoveModeType.None;
+			_MoveMode = MoveType.None;
 			_AnchorOffset = Size.Empty;
 		}
 

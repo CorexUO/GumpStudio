@@ -1,129 +1,74 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 using System.Runtime.InteropServices;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
-
-using GumpStudio.Elements;
-using GumpStudio.Forms;
 
 namespace GumpStudio.Plugins
 {
 	public class SnapToGrid : BasePlugin
 	{
-		private DesignerForm _Designer;
-		private SnapToGridExtender _Extender;
-
-		private readonly PropertyEditor _ConfigEditor = new PropertyEditor();
-
-		public GridConfiguration Config { get; } = new GridConfiguration();
-
 		public override PluginInfo Info { get; } = new PluginInfo("Snap To Grid", "1.1", "Bradley Uffner", "buffner@tkpups.com", "Allows elements to be snapped to a grid.");
 
-		public MenuItem Menu { get; } = new MenuItem();
+		private readonly Settings _Config = new Settings();
 
-		public override void Load(DesignerForm designer)
+		public override BaseConfig Config => _Config;
+
+		protected override void OnLoaded()
 		{
-			if (IsLoaded && _Designer == designer)
-			{
-				return; 
-			}
+			base.OnLoaded();
 
-			_Designer = designer;
-
-			if (_Extender == null)
-			{
-				_Extender = new SnapToGridExtender(_Designer);
-			}
-
-			LoadConfig();
-
-			_Extender.Config = Config;
-
-			_ConfigEditor.Text = Name;
-			_ConfigEditor.SourceObject = Config;
-
-			_ConfigEditor.PropertyValueChanged += OnConfigValueChanged;
-			_ConfigEditor.FormClosing += OnConfigEditorClosing;
-
-			Menu.Text = "Snap To Grid";
-			Menu.Click += OnOpenSettingsEditor;
-
-			_Designer.MenuPlugins.MenuItems.Add(Menu);
-			_Designer.HookPreRender += OnRenderGrid;
-			_Designer.HookKeyDown += OnKeyDown;
+			Designer.HookPreRender += OnPreRender;
+			Designer.HookKeyDown += OnKeyDown;
 		}
 
-		public void LoadConfig()
+		protected override void OnUnloaded()
 		{
-			var path = Path.Combine(_Designer.AppPath, "SnapToGrid.bin");
+			base.OnUnloaded();
 
-			if (!File.Exists(path))
+			Designer.HookPreRender -= OnPreRender;
+			Designer.HookKeyDown -= OnKeyDown;
+		}
+
+		private int SnapX(int x)
+		{
+			return x / _Config.GridSize.Width * _Config.GridSize.Width;
+		}
+
+		private int SnapY(int y)
+		{
+			return y / _Config.GridSize.Height * _Config.GridSize.Height;
+		}
+
+		private Point Snap(Point p)
+		{
+			p.X = SnapX(p.X);
+			p.Y = SnapY(p.Y);
+
+			return p;
+		}
+
+		public override void MouseMovement(MouseMovementEventArgs e)
+		{
+			if (e.Mode == MoveType.Move && !e.Keys.HasFlag(Keys.Shift))
 			{
-				return;
-			}
-
-			using (var fileStream = new FileStream(path, FileMode.Open))
-			{
-				var bin = new BinaryFormatter();
-
-				var config = (GridConfiguration)bin.Deserialize(fileStream);
-
-				foreach (var f in typeof(GridConfiguration).GetFields())
-				{
-					f.SetValue(Config, f.GetValue(config));
-				}
-
-				foreach (var p in typeof(GridConfiguration).GetProperties())
-				{
-					if (p.CanRead && p.CanWrite)
-					{
-						p.SetValue(Config, p.GetValue(config));
-					}
-				}
-			}
-		}
-
-		public void SaveConfig()
-		{
-			var path = Path.Combine(_Designer.AppPath, "SnapToGrid.bin");
-
-			using (var fileStream = new FileStream(path, FileMode.Create))
-			{
-				var bin = new BinaryFormatter();
-
-				bin.Serialize(fileStream, Config);
-			}
-		}
-
-		public override void InitializeElementExtenders(BaseElement element)
-		{
-			element.AddExtender(_Extender);
-		}
-
-		private void OnOpenSettingsEditor(object sender, EventArgs e)
-		{
-			_ConfigEditor.Show(_Designer);
-		}
-
-		private void OnConfigValueChanged(object s, PropertyValueChangedEventArgs e)
-		{
-			_Designer.CanvasImage.Refresh();
-		}
-
-		private void OnConfigEditorClosing(object sender, FormClosingEventArgs e)
-		{
-			if (_ConfigEditor.ChangesPending)
-			{
-				SaveConfig();
+				e.Location = Snap(e.Location);
 			}
 		}
 
 		private void OnKeyDown(object sender, ref KeyEventArgs e)
 		{
-			if (!Config.Enabled || _Designer.ActiveElement == null || sender != _Designer.CanvasFocus || e.Modifiers.HasFlag(Keys.Shift))
+			if (!_Config.Enabled)
+			{
+				return;
+			}
+
+			if (Designer.ActiveElement == null || sender != Designer.CanvasFocus)
+			{
+				return;
+			}
+
+			if (e.Handled || e.Modifiers.HasFlag(Keys.Shift))
 			{
 				return;
 			}
@@ -134,10 +79,9 @@ namespace GumpStudio.Plugins
 			{
 				case Keys.Up:
 				{
-					foreach (var element in _Designer.ElementStack.GetSelectedElements())
+					foreach (var element in Designer.ElementStack.SelectedElements)
 					{
-						element.Y -= Config.GridSize.Height;
-						element.Y = _Extender.SnapYToGrid(element.Y);
+						element.Y = SnapY(element.Y - _Config.GridSize.Height);
 
 						modified = true;
 					}
@@ -146,10 +90,9 @@ namespace GumpStudio.Plugins
 
 				case Keys.Down:
 				{
-					foreach (var element in _Designer.ElementStack.GetSelectedElements())
+					foreach (var element in Designer.ElementStack.SelectedElements)
 					{
-						element.Y += Config.GridSize.Height;
-						element.Y = _Extender.SnapYToGrid(element.Y);
+						element.Y = SnapY(element.Y + _Config.GridSize.Height);
 
 						modified = true;
 					}
@@ -158,10 +101,9 @@ namespace GumpStudio.Plugins
 
 				case Keys.Left:
 				{
-					foreach (var element in _Designer.ElementStack.GetSelectedElements())
+					foreach (var element in Designer.ElementStack.SelectedElements)
 					{
-						element.X -= Config.GridSize.Height;
-						element.X = _Extender.SnapYToGrid(element.X);
+						element.X = SnapX(element.X - _Config.GridSize.Width);
 
 						modified = true;
 					}
@@ -170,10 +112,9 @@ namespace GumpStudio.Plugins
 
 				case Keys.Right:
 				{
-					foreach (var element in _Designer.ElementStack.GetSelectedElements())
+					foreach (var element in Designer.ElementStack.SelectedElements)
 					{
-						element.X += Config.GridSize.Height;
-						element.X = _Extender.SnapYToGrid(element.X);
+						element.X = SnapX(element.X + _Config.GridSize.Width);
 
 						modified = true;
 					}
@@ -185,22 +126,24 @@ namespace GumpStudio.Plugins
 			{
 				e.Handled = true;
 
-				_Designer.CreateUndoPoint("Move Elements");
-				_Designer.CanvasImage.Invalidate();
+				Designer.CreateUndoPoint("Move Elements");
+				Designer.CanvasImage.Invalidate();
 			}
 		}
 
-		private void OnRenderGrid(Bitmap target)
+		private void OnPreRender(Bitmap target)
 		{
-			if (!Config.Enabled || !Config.GridVisible)
+			if (!_Config.Enabled || !_Config.GridVisible)
 			{
 				return;
 			}
 
+			var argb = Color.FromKnownColor(_Config.GridColor).ToArgb();
+
 			var rect = new Rectangle(0, 0, target.Width, target.Height);
 			var data = target.LockBits(rect, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
 
-			var size = _Extender.Config.GridSize;
+			var size = _Config.GridSize;
 
 			var boundX = target.Width - 1;
 			var boundY = target.Height - 1;
@@ -213,12 +156,7 @@ namespace GumpStudio.Plugins
 
 				while (indexY <= boundY)
 				{
-					var offset = data.Stride * indexY + 4 * indexX;
-
-					Marshal.WriteByte(data.Scan0, offset, Config.GridColor.R);
-					Marshal.WriteByte(data.Scan0, offset + 1, Config.GridColor.G);
-					Marshal.WriteByte(data.Scan0, offset + 2, Config.GridColor.B);
-					Marshal.WriteByte(data.Scan0, offset + 3, Byte.MaxValue);
+					Marshal.WriteInt32(data.Scan0, data.Stride * indexY + 4 * indexX, argb);
 
 					indexY += size.Height;
 				}
@@ -229,12 +167,16 @@ namespace GumpStudio.Plugins
 			target.UnlockBits(data);
 		}
 
-		public override void OnMouseMove(ref MouseMoveHookEventArgs e)
+		[Serializable]
+		public class Settings : BaseConfig
 		{
-			if (e.MoveMode == MoveModeType.Move && !e.Keys.HasFlag(Keys.Shift))
-			{
-				e.MouseLocation = _Extender.SnapToGrid(e.MouseLocation);
-			}
+			public bool Enabled { get; set; } = true;
+
+			public bool GridVisible { get; set; } = true;
+
+			public Size GridSize { get; set; } = new Size(10, 10);
+
+			public KnownColor GridColor { get; set; } = KnownColor.LightGray;
 		}
 	}
 }

@@ -24,7 +24,8 @@ namespace GumpStudio.Elements
 		public override string Type => "Group";
 
 		public IEnumerable<BaseElement> Elements => _Elements.Cast<BaseElement>();
-		public IEnumerable<BaseElement> AllElements => GetElementsRecursive().OfType<BaseElement>();
+		public IEnumerable<BaseElement> SelectedElements => GetSelectedElements();
+		public IEnumerable<BaseElement> AllElements => GetElementsRecursive();
 
 		public GroupElement(GroupElement Parent)
 		  : this(Parent, null, null, false)

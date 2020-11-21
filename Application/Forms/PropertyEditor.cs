@@ -24,7 +24,7 @@ namespace GumpStudio
 			remove => _Properties.PropertyValueChanged -= value;
 		}
 
-		public bool ChangesPending { get; private set; }
+		public bool ChangesPending { get; internal set; }
 
 		public PropertyEditor()
 		{
