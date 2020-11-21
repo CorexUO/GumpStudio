@@ -79,6 +79,11 @@ namespace Server.Gumps
 
 		public override void Load(DesignerForm designer)
 		{
+			if (IsLoaded && _Designer == designer)
+			{
+				return;
+			}
+
 			_Designer = designer;
 
 			_Designer.MenuFileExport.Enabled = true;

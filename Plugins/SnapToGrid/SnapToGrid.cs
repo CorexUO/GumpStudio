@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Windows.Forms;
@@ -15,37 +13,117 @@ namespace GumpStudio.Plugins
 {
 	public class SnapToGrid : BasePlugin
 	{
-		private DesignerForm _designer;
-		private SnapToGridExtender _extender;
+		private DesignerForm _Designer;
+		private SnapToGridExtender _Extender;
 
-		protected GridConfiguration Config;
+		private readonly PropertyEditor _ConfigEditor = new PropertyEditor();
 
-		public MenuItem ShowGridMenu { get; set; }
+		public GridConfiguration Config { get; } = new GridConfiguration();
 
-		public override PluginInfo Info { get; } = new PluginInfo("SnapToGrid", "1.0", "Bradley Uffner", "buffner@tkpups.com", "Allows elements to be snapped to a grid.");
+		public override PluginInfo Info { get; } = new PluginInfo("Snap To Grid", "1.1", "Bradley Uffner", "buffner@tkpups.com", "Allows elements to be snapped to a grid.");
 
-		public SnapToGrid()
+		public MenuItem Menu { get; } = new MenuItem();
+
+		public override void Load(DesignerForm designer)
 		{
-			var gridSize = new Size(10, 10);
+			if (IsLoaded && _Designer == designer)
+			{
+				return; 
+			}
 
-			Config = new GridConfiguration(gridSize, Color.LightGray, true);
+			_Designer = designer;
+
+			if (_Extender == null)
+			{
+				_Extender = new SnapToGridExtender(_Designer);
+			}
+
+			LoadConfig();
+
+			_Extender.Config = Config;
+
+			_ConfigEditor.Text = Name;
+			_ConfigEditor.SourceObject = Config;
+
+			_ConfigEditor.PropertyValueChanged += OnConfigValueChanged;
+			_ConfigEditor.FormClosing += OnConfigEditorClosing;
+
+			Menu.Text = "Snap To Grid";
+			Menu.Click += OnOpenSettingsEditor;
+
+			_Designer.MenuPlugins.MenuItems.Add(Menu);
+			_Designer.HookPreRender += OnRenderGrid;
+			_Designer.HookKeyDown += OnKeyDown;
 		}
 
-		private void DoConfigGridMenu(object Sender, EventArgs E)
+		public void LoadConfig()
 		{
-			_designer.ImageCanvas.Refresh();
+			var path = Path.Combine(_Designer.AppPath, "SnapToGrid.bin");
+
+			if (!File.Exists(path))
+			{
+				return;
+			}
+
+			using (var fileStream = new FileStream(path, FileMode.Open))
+			{
+				var bin = new BinaryFormatter();
+
+				var config = (GridConfiguration)bin.Deserialize(fileStream);
+
+				foreach (var f in typeof(GridConfiguration).GetFields())
+				{
+					f.SetValue(Config, f.GetValue(config));
+				}
+
+				foreach (var p in typeof(GridConfiguration).GetProperties())
+				{
+					if (p.CanRead && p.CanWrite)
+					{
+						p.SetValue(Config, p.GetValue(config));
+					}
+				}
+			}
 		}
 
-		private void DoToggleGridMenu(object Sender, EventArgs E)
+		public void SaveConfig()
 		{
-			Config.ShowGrid = !Config.ShowGrid;
-			ShowGridMenu.Checked = Config.ShowGrid;
-			_designer.ImageCanvas.Refresh();
+			var path = Path.Combine(_Designer.AppPath, "SnapToGrid.bin");
+
+			using (var fileStream = new FileStream(path, FileMode.Create))
+			{
+				var bin = new BinaryFormatter();
+
+				bin.Serialize(fileStream, Config);
+			}
 		}
 
-		private void HookKeyDown(object sender, ref KeyEventArgs e)
+		public override void InitializeElementExtenders(BaseElement element)
 		{
-			if (_designer.ActiveElement == null || sender != _designer.CanvasFocus || e.Modifiers.HasFlag(Keys.Shift) || !Config.ShowGrid)
+			element.AddExtender(_Extender);
+		}
+
+		private void OnOpenSettingsEditor(object sender, EventArgs e)
+		{
+			_ConfigEditor.Show(_Designer);
+		}
+
+		private void OnConfigValueChanged(object s, PropertyValueChangedEventArgs e)
+		{
+			_Designer.CanvasImage.Refresh();
+		}
+
+		private void OnConfigEditorClosing(object sender, FormClosingEventArgs e)
+		{
+			if (_ConfigEditor.ChangesPending)
+			{
+				SaveConfig();
+			}
+		}
+
+		private void OnKeyDown(object sender, ref KeyEventArgs e)
+		{
+			if (!Config.Enabled || _Designer.ActiveElement == null || sender != _Designer.CanvasFocus || e.Modifiers.HasFlag(Keys.Shift))
 			{
 				return;
 			}
@@ -56,255 +134,107 @@ namespace GumpStudio.Plugins
 			{
 				case Keys.Up:
 				{
-					IEnumerator enumerator = default;
-
-					try
+					foreach (var element in _Designer.ElementStack.GetSelectedElements())
 					{
-						enumerator = _designer.ElementStack.GetSelectedElements().GetEnumerator();
+						element.Y -= Config.GridSize.Height;
+						element.Y = _Extender.SnapYToGrid(element.Y);
 
-						while (enumerator.MoveNext())
-						{
-							var objectValue = RuntimeHelpers.GetObjectValue(enumerator.Current);
-							var val = (BaseElement)objectValue;
-							var val2 = val;
-							val2.Y = val2.Y - Config.GridSize.Height;
-							val.Y = _extender.SnapYToGrid(val.Y);
-						}
+						modified = true;
 					}
-					finally
-					{
-						(enumerator as IDisposable)?.Dispose();
-					}
-
-					modified = true;
-					_designer.CreateUndoPoint();
-
-					break;
 				}
+				break;
 
 				case Keys.Down:
 				{
-					IEnumerator enumerator2 = default;
-
-					try
+					foreach (var element in _Designer.ElementStack.GetSelectedElements())
 					{
-						enumerator2 = _designer.ElementStack.GetSelectedElements().GetEnumerator();
+						element.Y += Config.GridSize.Height;
+						element.Y = _Extender.SnapYToGrid(element.Y);
 
-						while (enumerator2.MoveNext())
-						{
-							var objectValue2 = RuntimeHelpers.GetObjectValue(enumerator2.Current);
-							var val3 = (BaseElement)objectValue2;
-							var val2 = val3;
-							val2.Y = val2.Y + Config.GridSize.Height;
-							val3.Y = _extender.SnapYToGrid(val3.Y);
-						}
+						modified = true;
 					}
-					finally
-					{
-						if (enumerator2 is IDisposable)
-						{
-							(enumerator2 as IDisposable).Dispose();
-						}
-					}
-
-					modified = true;
-					_designer.CreateUndoPoint();
-
-					break;
 				}
+				break;
 
 				case Keys.Left:
 				{
-					IEnumerator enumerator3 = default;
-
-					try
+					foreach (var element in _Designer.ElementStack.GetSelectedElements())
 					{
-						enumerator3 = _designer.ElementStack.GetSelectedElements().GetEnumerator();
+						element.X -= Config.GridSize.Height;
+						element.X = _Extender.SnapYToGrid(element.X);
 
-						while (enumerator3.MoveNext())
-						{
-							var objectValue3 = RuntimeHelpers.GetObjectValue(enumerator3.Current);
-							var val4 = (BaseElement)objectValue3;
-							var val2 = val4;
-							val2.X = val2.X - Config.GridSize.Width;
-							val4.X = _extender.SnapXToGrid(val4.X);
-						}
+						modified = true;
 					}
-					finally
-					{
-						if (enumerator3 is IDisposable disposable)
-						{
-							disposable.Dispose();
-						}
-					}
-
-					modified = true;
-					_designer.CreateUndoPoint();
-
-					break;
 				}
+				break;
 
 				case Keys.Right:
 				{
-					IEnumerator enumerator4 = default;
-
-					try
+					foreach (var element in _Designer.ElementStack.GetSelectedElements())
 					{
-						enumerator4 = _designer.ElementStack.GetSelectedElements().GetEnumerator();
+						element.X += Config.GridSize.Height;
+						element.X = _Extender.SnapYToGrid(element.X);
 
-						while (enumerator4.MoveNext())
-						{
-							var objectValue4 = RuntimeHelpers.GetObjectValue(enumerator4.Current);
-							var val5 = (BaseElement)objectValue4;
-							var val2 = val5;
-							val2.X = val2.X + Config.GridSize.Width;
-							val5.X = _extender.SnapXToGrid(val5.X);
-						}
+						modified = true;
 					}
-					finally
-					{
-						if (enumerator4 is IDisposable)
-						{
-							(enumerator4 as IDisposable).Dispose();
-						}
-					}
-
-					modified = true;
-					_designer.CreateUndoPoint();
-
-					break;
 				}
+				break;
 			}
 
 			if (modified)
 			{
 				e.Handled = true;
-				_designer.ImageCanvas.Invalidate();
+
+				_Designer.CreateUndoPoint("Move Elements");
+				_Designer.CanvasImage.Invalidate();
 			}
 		}
 
-		public override void InitializeElementExtenders(BaseElement Element)
+		private void OnRenderGrid(Bitmap target)
 		{
-			Element.AddExtender(_extender);
-		}
-
-		public override void Load(DesignerForm frmDesigner)
-		{
-			_designer = frmDesigner;
-
-			LoadConfig();
-
-			if (_extender == null)
-			{
-				_extender = new SnapToGridExtender(_designer);
-			}
-
-			_extender.Config = Config;
-
-			var menuItem = new MenuItem("Snap To Grid", ToggleSnapToGrid)
-			{
-				Checked = Config.ShowGrid
-			};
-
-			_designer.MenuPlugins.MenuItems.Add(menuItem);
-			_designer.HookPreRender += RenderGrid;
-			_designer.HookKeyDown += HookKeyDown;
-		}
-
-		protected void LoadConfig()
-		{
-			if (!File.Exists(_designer.AppPath + "\\Plugins\\SnapToGrid.config"))
+			if (!Config.Enabled || !Config.GridVisible)
 			{
 				return;
 			}
 
-			var fileStream = new FileStream(_designer.AppPath + "\\Plugins\\SnapToGrid.config", FileMode.Open);
-			var binaryFormatter = new BinaryFormatter();
-			Config = (GridConfiguration)binaryFormatter.Deserialize(fileStream);
-			fileStream.Close();
-		}
+			var rect = new Rectangle(0, 0, target.Width, target.Height);
+			var data = target.LockBits(rect, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
 
-		public override void MouseMoveHook(ref MouseMoveHookEventArgs e)
-		{
-			if (!Config.ShowGrid)
+			var size = _Extender.Config.GridSize;
+
+			var boundX = target.Width - 1;
+			var boundY = target.Height - 1;
+
+			var indexX = 0;
+
+			while (indexX <= boundX)
 			{
-				return;
-			}
+				var indexY = 0;
 
-			if (e.MoveMode == MoveModeType.Move && !e.Keys.HasFlag(Keys.Shift))
-			{
-				e.MouseLocation = _extender.SnapToGrid(e.MouseLocation);
-			}
-		}
-
-		private void RenderGrid(Bitmap Target)
-		{
-			var rect = new Rectangle(0, 0, Target.Width, Target.Height);
-			var bitmapData = Target.LockBits(rect, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
-
-			checked
-			{
-				if (Config.ShowGrid)
+				while (indexY <= boundY)
 				{
-					var num = Target.Width - 1;
-					var width = _extender.Config.GridSize.Width;
-					var num2 = num;
-					var num3 = 0;
+					var offset = data.Stride * indexY + 4 * indexX;
 
-					while (true)
-					{
-						var num4 = (width >> 31) ^ num3;
-						var num5 = (width >> 31) ^ num2;
+					Marshal.WriteByte(data.Scan0, offset, Config.GridColor.R);
+					Marshal.WriteByte(data.Scan0, offset + 1, Config.GridColor.G);
+					Marshal.WriteByte(data.Scan0, offset + 2, Config.GridColor.B);
+					Marshal.WriteByte(data.Scan0, offset + 3, Byte.MaxValue);
 
-						if (num4 > num5)
-						{
-							break;
-						}
-
-						var num6 = Target.Height - 1;
-						var height = _extender.Config.GridSize.Height;
-						var num7 = num6;
-						var num8 = 0;
-
-						while (true)
-						{
-							var num9 = (height >> 31) ^ num8;
-							num5 = (height >> 31) ^ num7;
-
-							if (num9 > num5)
-							{
-								break;
-							}
-
-							var num10 = bitmapData.Stride * num8 + 4 * num3;
-							Marshal.WriteByte(bitmapData.Scan0, num10, Config.GridColor.R);
-							Marshal.WriteByte(bitmapData.Scan0, num10 + 1, Config.GridColor.G);
-							Marshal.WriteByte(bitmapData.Scan0, num10 + 2, Config.GridColor.B);
-							Marshal.WriteByte(bitmapData.Scan0, num10 + 3, Byte.MaxValue);
-							num8 += height;
-						}
-
-						num3 += width;
-					}
+					indexY += size.Height;
 				}
 
-				Target.UnlockBits(bitmapData);
+				indexX += size.Width;
 			}
+
+			target.UnlockBits(data);
 		}
 
-		protected void SaveConfig()
+		public override void OnMouseMove(ref MouseMoveHookEventArgs e)
 		{
-			var fileStream = new FileStream(_designer.AppPath + "\\Plugins\\SnapToGrid.config", FileMode.Create);
-			var binaryFormatter = new BinaryFormatter();
-			binaryFormatter.Serialize(fileStream, Config);
-			fileStream.Close();
-		}
-
-		private void ToggleSnapToGrid(object sender, EventArgs e)
-		{
-			Config.ShowGrid = !Config.ShowGrid;
-			((MenuItem)sender).Checked = Config.ShowGrid;
-			_designer.ImageCanvas.Invalidate();
+			if (e.MoveMode == MoveModeType.Move && !e.Keys.HasFlag(Keys.Shift))
+			{
+				e.MouseLocation = _Extender.SnapToGrid(e.MouseLocation);
+			}
 		}
 	}
 }

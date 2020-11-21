@@ -22,7 +22,7 @@ namespace GumpStudio.Plugins
 		public virtual void Unload()
 		{ }
 
-		public virtual void MouseMoveHook(ref MouseMoveHookEventArgs e)
+		public virtual void OnMouseMove(ref MouseMoveHookEventArgs e)
 		{ }
 	}
 }
