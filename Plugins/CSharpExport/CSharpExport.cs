@@ -219,7 +219,19 @@ namespace Server.Gumps
 							element.Y -= location.Y;
 						}
 
-						layout.AppendLine($"{tabs}{exportable.ToCSharpString()}");
+						var csharp = exportable.ToCSharpString();
+
+						if (_Config.NoComments)
+						{
+							var index = csharp.IndexOf("//");
+
+							if (index >= 0)
+							{
+								csharp = csharp.Substring(0, index);
+							}
+						}
+
+						layout.AppendLine($"{tabs}{csharp}");
 
 						if (_Config.RelativeOffsets)
 						{
@@ -335,7 +347,11 @@ namespace Server.Gumps
 		[Serializable]
 		public class Settings : BaseConfig
 		{
+			public override string Name => "C# Exporter";
+
 			public bool RelativeOffsets { get; set; } = false;
+
+			public bool NoComments { get; set; } = true;
 		}
 	}
 }

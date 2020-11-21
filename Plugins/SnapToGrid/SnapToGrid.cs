@@ -170,6 +170,8 @@ namespace GumpStudio.Plugins
 		[Serializable]
 		public class Settings : BaseConfig
 		{
+			public override string Name => "Snap To Grid";
+
 			public bool Enabled { get; set; } = true;
 
 			public bool GridVisible { get; set; } = true;
