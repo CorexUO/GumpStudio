@@ -72,6 +72,7 @@ namespace GumpStudio.Elements
 		{
 			_Size = new Size(200, 20);
 			mHue = Hues.GetHue(0);
+			mInitialText = string.Empty;
 		}
 
 		public TextEntryElement(SerializationInfo info, StreamingContext context) : base(info, context)
@@ -142,11 +143,9 @@ namespace GumpStudio.Elements
 		public string ToCSharpString()
 		{
 			if (MaxLength > 0)
-			{
-				return $"AddTextEntry({X}, {Y}, {Width}, {Height}, {Hue}, (int)Inputs.{Name.Replace(" ", String.Empty)}, {InitialText.Replace("\"", "\\\"")}, {MaxLength});";
-			}
-
-			return $"AddTextEntry({X}, {Y}, {Width}, {Height}, {Hue}, (int)Inputs.{Name.Replace(" ", String.Empty)}, {InitialText.Replace("\"", "\\\"")});";
+				return $"AddTextEntry({X}, {Y}, {Width}, {Height}, {Hue}, (int)Inputs.{Name?.Replace(" ", string.Empty)}, \"{InitialText?.Replace("\"", "\\\"")}\", {MaxLength});";
+				
+			return $"AddTextEntry({X}, {Y}, {Width}, {Height}, {Hue}, (int)Inputs.{Name?.Replace(" ", string.Empty)}, \"{InitialText?.Replace("\"", "\\\"")}\");";
 		}
 	}
 }
