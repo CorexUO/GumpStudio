@@ -1,0 +1,101 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net48</TargetFramework>
+		<RootNamespace>GumpStudio</RootNamespace>
+		<UseWindowsForms>true</UseWindowsForms>
+		<AssemblyTitle>Gump Studio.NET</AssemblyTitle>
+		<Company>Bradley Uffner</Company>
+		<Product>Gump Studio.NET</Product>
+		<Description>Gump Studio</Description>
+		<Copyright>January 2008</Copyright>
+		<AssemblyVersion>1.9.2</AssemblyVersion>
+		<FileVersion>1.9.2</FileVersion>
+		<Version>1.9.2</Version>
+		<ApplicationIcon>Resources\Icon.ico</ApplicationIcon>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<OutputPath>..\Build\</OutputPath>
+		<AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+		<StartupObject>GumpStudio.GumpDesignerMain</StartupObject>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <PlatformTarget>AnyCPU</PlatformTarget>
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	  <PlatformTarget>AnyCPU</PlatformTarget>
+	  <DefineConstants>DEBUG;TRACE</DefineConstants>
+	</PropertyGroup>
+	<ItemGroup>
+		<Reference Include="Microsoft.VisualBasic" />
+		<Reference Include="UOFont">
+			<HintPath>Resources\UOFont.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Ultima\Ultima.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="Forms\GumpArtBrowser.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>GumpArtBrowser.resx</DependentUpon>
+		</Compile>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+		<Compile Update="HuePickerControl.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="FontBrowser.cs">
+			<SubType>UserControl</SubType>
+		</Compile>
+		<Compile Update="Forms\LargeTextEditor.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Forms\StaticArtBrowser.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Forms\DesignerForm.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Forms\Settings.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Forms\GumpArtBrowser.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Forms\PluginManager.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Forms\SplashBox.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Forms\AboutBox.cs">
+			<SubType>Form</SubType>
+		</Compile>
+		<Compile Update="Forms\ClilocBrowser.cs">
+			<SubType>Form</SubType>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="README.md">
+			<Generator>TextTemplatingFileGenerator</Generator>
+			<LastGenOutput>README.cs</LastGenOutput>
+		</None>
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Update="Forms\GumpArtBrowser.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>GumpArtBrowser.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>PublicResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
+	</ItemGroup>
+</Project>

@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+
 using Microsoft.Win32.SafeHandles;
 
 namespace Ultima
@@ -12,7 +13,7 @@ namespace Ultima
 		public static extern int GetWindowThreadProcessId(ClientWindowHandle window, ref ClientProcessHandle processID);
 
 		[DllImport("Kernel32")]
-		public unsafe static extern int _lread(SafeFileHandle hFile, void* lpBuffer, int wBytes);
+		public static unsafe extern int _lread(SafeFileHandle hFile, void* lpBuffer, int wBytes);
 
 		[DllImport("Kernel32")]
 		public static extern ClientProcessHandle OpenProcess(int desiredAccess, int inheritClientHandle, ClientProcessHandle processID);
@@ -48,25 +49,34 @@ namespace Ultima
 		/// <returns></returns>
 		public static short SwapEndian(short x)
 		{
-			ushort y = (ushort)x;
+			var y = (ushort)x;
 			return (short)((y >> 8) | (y << 8));
 		}
 
 		private static byte[] m_StringBuffer;
-		public unsafe static string ReadNameString(byte* buffer, int len)
+		public static unsafe string ReadNameString(byte* buffer, int len)
 		{
 			if ((m_StringBuffer == null) || (m_StringBuffer.Length < len))
+			{
 				m_StringBuffer = new byte[20];
+			}
+
 			int count;
 			for (count = 0; count < len && *buffer != 0; ++count)
+			{
 				m_StringBuffer[count] = *buffer++;
+			}
 
 			return System.Text.Encoding.Default.GetString(m_StringBuffer, 0, count);
 		}
-		public unsafe static string ReadNameString(byte[] buffer, int len)
+		public static unsafe string ReadNameString(byte[] buffer, int len)
 		{
 			int count;
-			for (count = 0; count < 20 && buffer[count] != 0; ++count) ;
+			for (count = 0; count < 20 && buffer[count] != 0; ++count)
+			{
+				;
+			}
+
 			return System.Text.Encoding.Default.GetString(buffer, 0, count);
 		}
 	}
