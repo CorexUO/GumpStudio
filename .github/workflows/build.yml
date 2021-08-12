@@ -9,10 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-       os: [ macos-latest, ubuntu-latest, windows-latest ]
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -27,5 +24,5 @@ jobs:
 
     - uses: actions/upload-artifact@v2
       with:
-        name: GumpStudio-${{ matrix.os }}
+        name: GumpStudio
         path: Build/
