@@ -17,10 +17,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
         
-    - name: Setup .NET 4.8
+    - name: Setup .NET 5
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '4.8.x'
+        dotnet-version: 5.0.100
             
     - name: Build
       run: dotnet build -c Release
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: GumpStudio-${{ matrix.os }}
+        path: Build/
