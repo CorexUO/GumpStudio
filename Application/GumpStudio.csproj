@@ -18,6 +18,7 @@
 		<OutputPath>..\Build\</OutputPath>
 		<AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
 		<StartupObject>GumpStudio.GumpDesignerMain</StartupObject>
+		<GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 	  <PlatformTarget>AnyCPU</PlatformTarget>
@@ -87,6 +88,9 @@
 			<Generator>TextTemplatingFileGenerator</Generator>
 			<LastGenOutput>README.cs</LastGenOutput>
 		</None>
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="System.Resources.Extensions" Version="5.0.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Update="Forms\GumpArtBrowser.resx">
